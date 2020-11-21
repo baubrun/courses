@@ -11,13 +11,10 @@ const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1000)
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        // cb(null, "../../uploads/")
         cb(null, "./uploadsTemp/")
     },
     filename: function (req, file, cb) {
         const ext = path.extname(file.originalname)
-        const splits = file.originalname.split(".").slice(-1,1)
-        console.log('splits :>> ', splits);
         cb(null, file.fieldname + "-" + uniqueSuffix + ext)
     }
 })
@@ -32,7 +29,6 @@ export const upload = multer({
 export const moveFilesToApp = () => {
 
     let rootPath = process.cwd()
-    console.log("rootPath :>> ", rootPath);
     let imgPath = rootPath + "/uploadsTemp"
     let newPath = rootPath + "/src/uploads"
     let found = []

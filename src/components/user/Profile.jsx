@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -36,23 +36,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Profile = () => {
+const Profile = ({match}) => {
   const classes = useStyles();
   const [auth, setAuth] = useState(false);
   const { loggedIn, user } = useSelector(userState);
 
+  const userId = match.params.userId
+  console.log('userId :>> ', userId);
 
-  const authorized = async () => {
-    const res = await read(userPath);
-    const auth = res.user._id === user._id
-    if (auth) {
-      setAuth(auth);
-    }
-  };
 
-  useEffect(() => {
-    authorized();
-  }, []);
+
+  if (!loggedIn) {
+    return <Redirect to='/signin'/>
+  }
 
   return (
     <Paper className={classes.root} elevation={4}>
@@ -67,7 +63,7 @@ const Profile = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={user.name} secondary={user.email} />
-          {auth && loggedIn && (
+          {loggedIn && (
             <ListItemSecondaryAction>
               <Link to={`/user/edit/${user._id}`}>
                 <IconButton color="primary">

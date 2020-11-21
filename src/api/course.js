@@ -10,27 +10,41 @@ import {
 const createCourse = async (data, id = "") => {
   const token = getToken();
   try {
-    const res = await axios.post(
-      `${domain}/${coursePath}/${id}`,
-      data
-      // {
-      // course: data
-      , {
+    const res = await axios.post(`${domain}/${coursePath}/${id}`,
+      data, {
         headers: {
           "x-auth-token": token,
           "Content-Type": "multipart/form-data",
-        }
-      }
-    );
+        },
+      });
     return res.data;
   } catch (error) {
     return {
-      error: error.response.data.message
+      error: error.response.data.message,
     };
+  }
+};
 
+
+
+const listCourseByInstructor = async (id = "") => {
+  const token = getToken();
+  try {
+    const res = await axios.get(`${domain}/${coursePath}/${id}`,
+      null, {
+        headers: {
+          "x-auth-token": token,
+        },
+      });
+    return res.data;
+  } catch (error) {
+    return {
+      error: error.response.data.message,
+    };
   }
 };
 
 export {
-  createCourse
+  createCourse,
+  listCourseByInstructor,
 };

@@ -24,8 +24,8 @@ const Routers = () => {
             <PrivateRoute  path="/users" component={Users}/>
             <Route path="/signUp" component={SignUp}/>
             <Route path="/signIn" component={SignIn}/>
-            <Route path="/teach/course/new" component={NewCourse} />
             <Route path="/teach/courses" component={MyCourses}/>
+            <Route path="/teach/course/new" component={NewCourse} />
             <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
             <Route path="/user/:userId" component={Profile}/>
             <Route component={NotFound} />

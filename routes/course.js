@@ -8,7 +8,7 @@ const router = express.Router()
 
 
 router.route("/api/courses/by/:userId")
-    .get(courseController.list)
+    .get(courseController.listByInstructor)
     .post(
         upload.any(),
         // authController.hasAuthorization,

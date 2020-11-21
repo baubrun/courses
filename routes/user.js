@@ -19,6 +19,7 @@ router.route("/api/users")
 router
   .route("/api/user/:userId")
   .get(
+    authController.reqSignIn,
     userController.read
   )
   .patch(
@@ -29,6 +30,10 @@ router
     authController.hasAuthorization,
     userController.remove
   );
+
+
+  router.param('userId', userController.userById)
+
 
 
 export default router;

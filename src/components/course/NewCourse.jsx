@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
 
-import FormControl from '@material-ui/core/FormControl';
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -16,7 +15,7 @@ import { Redirect } from "react-router-dom";
 import { createCourse } from "../../api/course";
 import _ from "lodash";
 
-import { addCourseAction } from "../../redux/courseSlice";
+// import { addCourseAction } from "../../redux/courseSlice";
 import { userState } from "../../redux/userSlice";
 
 const IMG_DIM = 200;
@@ -65,7 +64,7 @@ const NewCourse = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
-  const { user } = useSelector(userState);
+  // const { user } = useSelector(userState);
   const [file, setFile] = useState({});
   const [values, setValues] = useState({
     category: "",
@@ -75,7 +74,6 @@ const NewCourse = () => {
     name: "",
     redirect: false,
   });
-  // const [uploadedFile, setupLoadedFile] = useState("");
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -91,7 +89,7 @@ const NewCourse = () => {
     const newCourse = new FormData();
     newCourse.append("category", values.category);
     newCourse.append("description", values.description);
-    newCourse.append("instructor", true);
+    newCourse.append("instructor", "5fb6c60af624e64b689ec938") // on server if false not auth
     newCourse.append("name", values.name);
     newCourse.append("image", file);
 

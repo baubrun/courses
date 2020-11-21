@@ -34,11 +34,22 @@ app.use(compress())
 app.use(helmet())
 app.use(cors())
 
+app.use((error, req, res, next) => {
+    if (error.name === "UnauthorizedError") {
+        return res.status(401).json({
+            message: error.name + ": " + error.message
+        })
+    } else if (error) {
+        return res.status(400).json({
+            message: error.name + ": " + error.message
+        })
+    }
+})
+
 
 app.use("/", userRoutes)
 app.use("/", authRoutes)
 app.use("/", courseRoutes)
-
 
 
 /* =======================

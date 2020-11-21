@@ -7,7 +7,6 @@ import helmet from "helmet"
 import userRoutes from "./routes/user.js"
 import authRoutes from "./routes/auth.js"
 import courseRoutes from "./routes/course.js"
-import fileUpload from "express-fileupload"
 
 const app = express()
 dotenv.config()
@@ -25,14 +24,16 @@ const options = {
 /* =======================
 Middleware
 =========================*/
-app.use(express.json({limit: "25mb"}))
+app.use(express.json({
+    limit: "25mb"
+}))
 app.use(express.urlencoded({
     extended: true
 }))
 app.use(compress())
 app.use(helmet())
 app.use(cors())
-app.use(fileUpload())
+
 
 app.use("/", userRoutes)
 app.use("/", authRoutes)

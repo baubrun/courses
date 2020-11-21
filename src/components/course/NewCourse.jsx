@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
-import Box from "@material-ui/core/Box";
+
+import FormControl from '@material-ui/core/FormControl';
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -17,6 +18,7 @@ import _ from "lodash";
 
 import { addCourseAction } from "../../redux/courseSlice";
 import { userState } from "../../redux/userSlice";
+
 const IMG_DIM = 200;
 
 const useStyles = makeStyles((theme) => ({
@@ -65,14 +67,15 @@ const NewCourse = () => {
   const history = useHistory();
   const { user } = useSelector(userState);
   const [file, setFile] = useState({});
-  const [uploadedFile, setupLoadedFile] = useState({});
   const [values, setValues] = useState({
     category: "",
     description: "",
     error: "",
+    image: "",
     name: "",
     redirect: false,
   });
+  // const [uploadedFile, setupLoadedFile] = useState("");
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -83,7 +86,8 @@ const NewCourse = () => {
   };
 
   const handleSubmit = async (evt) => {
-    evt.preventDefault();
+    evt.preventDefault()
+    // evt.stopPropagation()
     const newCourse = new FormData();
     newCourse.append("category", values.category);
     newCourse.append("description", values.description);
@@ -91,28 +95,17 @@ const NewCourse = () => {
     newCourse.append("name", values.name);
     newCourse.append("image", file);
 
-    // const newCourse = {
-    //   category: values.category,
-    //   description: values.description,
-    //   image: values.image.name,
-    //   // instructor: user.instructor,
-    //   instructor: true,
-    //   name: values.name,
-    // };
-
     const data = await createCourse(newCourse, "5fb6c60af624e64b689ec938");
-    // const data = await create(newCourse, coursePath, user._id);
-    if (data && data.error) {
-      setValues({ ...values, error: data.error });
-      console.log("data.error :>> ", data);
-    } else {
-      if (data) {
+    if (data) {
+      const { error, image } = data;
+      if (error) {
+        setValues({ ...values, error });
+      } else {
         setValues({
           ...values,
+          image,
           // redirect: true,
         });
-        // setupLoadedFile(data.image);
-        console.log("data :>> ", data);
         // dispatch(addCourseAction(newCourse));
       }
     }
@@ -123,7 +116,7 @@ const NewCourse = () => {
   }
 
   return (
-    <>
+    <form >
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h6" className={classes.title}>
@@ -146,8 +139,17 @@ const NewCourse = () => {
           </label>
 
           <span className={classes.filename}>
-            {uploadedFile ? uploadedFile.name : ""}
+            {values.image ? values.image : ""}
           </span>
+
+          {/* {values.image && (
+            <img
+              className={classes.image}
+              src={require("../../uploads/" + values.image)}
+              alt={""}
+            />
+          )} */}
+
           <br />
           <TextField
             className={classes.textField}
@@ -195,6 +197,7 @@ const NewCourse = () => {
             className={classes.btn}
             color="primary"
             onClick={(evt) => handleSubmit(evt)}
+            type="submit"
             variant="contained"
           >
             Submit
@@ -204,13 +207,14 @@ const NewCourse = () => {
               className={classes.btn}
               onClick={() => history.push("/teach/courses")}
               variant="contained"
+
             >
               Cancel
             </Button>
           </Link>
         </CardActions>
       </Card>
-    </>
+    </form>
   );
 };
 

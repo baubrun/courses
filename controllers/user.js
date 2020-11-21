@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs"
 import dotenv from "dotenv"
 import {
     SALT
-} from "../helpers/index.js"
+} from "../serverUtils/index.js"
 import jwt from "jsonwebtoken";
 dotenv.config()
 

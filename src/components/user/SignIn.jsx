@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     textDecoration: "none",
     "&:hover": {
-      fontSize: "16px"
-    }
+      fontSize: "16px",
+    },
   },
   submit: {
     margin: "auto",
@@ -79,19 +79,23 @@ const SignIn = (props) => {
     };
 
     const data = await signIn(user);
-    if (data && data.error) {
-      setValues({ ...values, error: data.error });
-    } else {
-      setToken(data.token, () => {
-        dispatch(
-          signInAction({
-            ...data.user,
-          })
-        );
-        setValues({ redirect: true });
-      });
+    if (data) {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setToken(data.token, () => {
+          dispatch(
+            signInAction({
+              ...data.user,
+            })
+          );
+          setValues({ redirect: true });
+        });
+      }
     }
   };
+
+
 
   const from = props.location.state || "/";
 

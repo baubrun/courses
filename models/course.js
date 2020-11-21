@@ -11,8 +11,11 @@ const CourseSchema = new mongoose.Schema({
     required: "Name is required."
   },
   image: {
-    data: Buffer,
-    contentType: String
+    // data: Buffer,
+    // contentType: String
+    type: String,
+    required: "Image is required."
+
   },
   description: {
     type: String,

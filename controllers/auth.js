@@ -1,31 +1,24 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv"
-dotenv.config()
-
+import dotenv from "dotenv";
+dotenv.config();
 
 const hasAuthorization = async (req, res, next) => {
   try {
-    const token = req.header("x-auth-token")
+    const token = req.header("x-auth-token");
     if (!token) {
-      return res.json(false)
+      return res.json(false);
     }
-    const verified = jwt.verify(token, process.env.JWT_SECRET)
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
     if (!verified) {
-      return res.json(false)
+      return res.json(false);
     }
-    next()
+    next();
   } catch (error) {
     return res.json({
-      msg: `error : ${error.message}`
-    })
+      msg: error.message,
+    });
   }
 };
-
-
-
-
-
-
 
 export default {
   hasAuthorization,

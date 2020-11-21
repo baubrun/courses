@@ -1,6 +1,11 @@
 import axios from "axios";
-import { domain, coursePath } from "./utils";
-import { getToken } from "./auth";
+import {
+  domain,
+  coursePath
+} from "./utils";
+import {
+  getToken
+} from "./auth";
 
 const createCourse = async (data, id = "") => {
   const token = getToken();
@@ -10,16 +15,22 @@ const createCourse = async (data, id = "") => {
       data
       // {
       // course: data
-      // }, {
-      //   headers: {
-      //     "x-auth-token": token
-      //   }
-      // }
+      , {
+        headers: {
+          "x-auth-token": token,
+          "Content-Type": "multipart/form-data",
+        }
+      }
     );
     return res.data;
   } catch (error) {
-    console.log(error);
+    return {
+      error: error.response.data.message
+    };
+
   }
 };
 
-export { createCourse };
+export {
+  createCourse
+};

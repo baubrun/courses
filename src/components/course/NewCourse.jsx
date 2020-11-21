@@ -13,9 +13,7 @@ import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 import { Redirect } from "react-router-dom";
 import { createCourse } from "../../api/course";
-import { coursePath } from "../../api/utils";
-
-import { fileBase64 } from "../../utils";
+import _ from "lodash";
 
 import { addCourseAction } from "../../redux/courseSlice";
 import { userState } from "../../redux/userSlice";
@@ -66,11 +64,11 @@ const NewCourse = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { user } = useSelector(userState);
-
+  const [file, setFile] = useState({});
+  const [uploadedFile, setupLoadedFile] = useState({});
   const [values, setValues] = useState({
     category: "",
     description: "",
-    image: "",
     error: "",
     name: "",
     redirect: false,
@@ -78,7 +76,6 @@ const NewCourse = () => {
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
-   
     setValues({
       ...values,
       [name]: value,
@@ -87,33 +84,37 @@ const NewCourse = () => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    // const newCourse = new FormData()
-    // newCourse.append("category", values.category,)
-    // newCourse.append("description", values.description)
-    // newCourse.append("instructor", true)
-    // newCourse.append("name", values.name)
-    // newCourse.append("image", file)
-    
-    const newCourse = {
-      category: values.category,
-      description: values.description,
-      image: values.image.name,
-      // instructor: user.instructor,
-      instructor: true,
-      name: values.name,
-    };
+    const newCourse = new FormData();
+    newCourse.append("category", values.category);
+    newCourse.append("description", values.description);
+    newCourse.append("instructor", true);
+    newCourse.append("name", values.name);
+    newCourse.append("image", file);
 
+    // const newCourse = {
+    //   category: values.category,
+    //   description: values.description,
+    //   image: values.image.name,
+    //   // instructor: user.instructor,
+    //   instructor: true,
+    //   name: values.name,
+    // };
 
     const data = await createCourse(newCourse, "5fb6c60af624e64b689ec938");
     // const data = await create(newCourse, coursePath, user._id);
     if (data && data.error) {
       setValues({ ...values, error: data.error });
+      console.log("data.error :>> ", data);
     } else {
-      setValues({
-        ...values,
-        // redirect: true,
-      });
-      // dispatch(addCourseAction(newCourse));
+      if (data) {
+        setValues({
+          ...values,
+          // redirect: true,
+        });
+        // setupLoadedFile(data.image);
+        console.log("data :>> ", data);
+        // dispatch(addCourseAction(newCourse));
+      }
     }
   };
 
@@ -134,8 +135,8 @@ const NewCourse = () => {
             className={classes.input}
             id="icon-button-file"
             name="image"
-            onChange={(evt) => handleChange(evt)}
-            // onChange={(evt) => setFile(evt.target.files[0])}
+            // onChange={(evt) => handleChange(evt)}
+            onChange={(evt) => setFile(evt.target.files[0])}
             type="file"
           />
           <label htmlFor="icon-button-file">
@@ -145,7 +146,7 @@ const NewCourse = () => {
           </label>
 
           <span className={classes.filename}>
-            {values.image ? values.image.name : ""}
+            {uploadedFile ? uploadedFile.name : ""}
           </span>
           <br />
           <TextField
@@ -199,13 +200,13 @@ const NewCourse = () => {
             Submit
           </Button>
           <Link to="/teach/courses" className={classes.btn}>
-          <Button
-            className={classes.btn}
-            onClick={() => history.push("/teach/courses")}
-            variant="contained"
-          >
-            Cancel
-          </Button>
+            <Button
+              className={classes.btn}
+              onClick={() => history.push("/teach/courses")}
+              variant="contained"
+            >
+              Cancel
+            </Button>
           </Link>
         </CardActions>
       </Card>

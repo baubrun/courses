@@ -1,9 +1,13 @@
 import axios from "axios";
-import { domain } from "./utils";
-import { getToken } from "./auth";
+import {
+  domain
+} from "./utils";
+import {
+  getToken
+} from "./auth";
 
 
-const create = async (data, path, id="") => {
+const create = async (data, path, id = "") => {
   let res;
   try {
     if (!id) {
@@ -13,7 +17,9 @@ const create = async (data, path, id="") => {
     }
     return res.data;
   } catch (error) {
-    console.log(error);
+    return {
+      error: error.response.data.message
+    };
   }
 };
 
@@ -22,7 +28,9 @@ const list = async (path) => {
     const res = await axios.get(`${domain}/${path}`);
     return res.data;
   } catch (error) {
-    console.log(error);
+    return {
+      error: error.response.data.message
+    };
   }
 };
 
@@ -31,8 +39,7 @@ const read = async (path) => {
   try {
     const res = await axios.post(
       `${domain}/${path}`,
-    null,
-      {
+      null, {
         headers: {
           "x-auth-token": token,
         },
@@ -40,7 +47,9 @@ const read = async (path) => {
     );
     return res.data;
   } catch (error) {
-    console.log(error.message);
+    return {
+      error: error.response.data.message
+    };
   }
 };
 
@@ -53,18 +62,21 @@ const remove = async (id, path) => {
       },
     });
     return res.data;
-  } catch (error) {}
+  } catch (error) {
+    return {
+      error: error.response.data.message
+    };
+
+  }
 };
 
 const update = async (data, id, path) => {
   const token = getToken();
   try {
     const res = await axios.patch(
-      `${domain}/${path}/${id}`,
-      {
+      `${domain}/${path}/${id}`, {
         user: data,
-      },
-      {
+      }, {
         headers: {
           "x-auth-token": token,
         },
@@ -72,8 +84,16 @@ const update = async (data, id, path) => {
     );
     return res.data;
   } catch (error) {
-    console.log(error);
+    return {
+      error: error.response.data.message
+    };
   }
 };
 
-export { create, list, read, remove, update };
+export {
+  create,
+  list,
+  read,
+  remove,
+  update
+};

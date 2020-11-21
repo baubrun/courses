@@ -79,7 +79,7 @@ const SignIn = (props) => {
     };
 
     const data = await signIn(user);
-    if ((data && data.error) || !data.token) {
+    if (data && data.error) {
       setValues({ ...values, error: data.error });
     } else {
       setToken(data.token, () => {

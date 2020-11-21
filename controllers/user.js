@@ -63,7 +63,7 @@ const isInstructor = async (req, res, next) => {
     } = req.body
     if (!instructor) {
         return res.status(403).json({
-            error: "User is not an instructor."
+            message: "User is not an instructor."
         })
     }
     next()
@@ -82,7 +82,7 @@ const read = async (req, res) => {
         }
     } catch (error) {
         return res.status(400).json({
-            message: error
+            message: error.message
         })
     }
 }
@@ -96,7 +96,7 @@ const remove = async (req, res, next) => {
         return res.json(deletedUser)
     } catch (error) {
         return res.status(400).json({
-            message: error
+            message: error.message
         })
     }
 }
@@ -113,7 +113,7 @@ const signIn = async (req, res) => {
 
         if (!user) {
             return res.status(401).json({
-                error: "User not found.",
+                message: "User not found.",
             });
         }
         const validPassword = await bcrypt.compare(password, user.password)
@@ -144,7 +144,7 @@ const signIn = async (req, res) => {
 
     } catch (error) {
         return res.status(401).json({
-            error: error.message
+            message: error.message
         });
     }
 };

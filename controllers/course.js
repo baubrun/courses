@@ -4,7 +4,7 @@ import fileUpload from "express-fileupload"
 
 const create = async (req, res, next) => {
     const {
-        // files,
+        files,
         body: {
             name,
             description,
@@ -19,31 +19,31 @@ const create = async (req, res, next) => {
     })
 
     if (courseExists) {
-        return res.status(403).json({
+        return res.status(401).json({
             message: "Course already exists."
         })
     }
 
-    // if (!files){
-    //     return res.status(400).json({
-    //         message: "File required. "
-    //     })
-    // }
+    if (!files){
+        return res.status(400).json({
+            message: "File required. "
+        })
+    }
 
-    // const file = files.file
-    // file.mv()
-
-    // const course = new Course()
-    // course.category = category
-    // course.description = description
-    // course.image.data = fs.readFileSync(file.path)
-    // course.image.contentType = file.detectedMimeType
-    // course.name = name
-    // course.published = published
+    const file = files.image
+    file.mv(`${__dirname}public/uploads/${file.name}`, err => {
+    // file.mv(`../public/uploads/${file.name}`, err => {
+        if (err) {
+            return res.status(500).json({
+                message: err.message
+            })
+        }
+ 
+    })
 
     const course = new Course({
         name: name,
-        image: image,
+        image: file,
         description: description,
         category: category,
         published: published,
@@ -52,16 +52,22 @@ const create = async (req, res, next) => {
 
     try {
         await course.save()
-        return res.status(200).json({
-            message: "Course is successfully registered."
+        return res.json({
+            name: course.name,
+            image: course.image,
+            description: course.description,
+            category: course.category,
+            published: course.published,
+
         })
+
     } catch (error) {
         return res.status(400).json({
             message: error.message
         })
 
     }
-   
+
 }
 
 

@@ -13,8 +13,9 @@ const signIn = async (user) => {
         return res.data;
     } catch (error) {
         return {
-            error: "Invalid email or password."
+            error: error.response.data.message
         };
+
     }
 };
 
@@ -25,7 +26,7 @@ const signOut = async () => {
         return res.data;
     } catch (error) {
         return {
-            error: "Internal Error."
+            error: error.response.data.message
         };
     }
 };

@@ -1,6 +1,5 @@
 import Course from "../models/course.js"
-import fs from "fs"
-import fileUpload from "express-fileupload"
+import path from "path"
 
 const create = async (req, res, next) => {
     const {
@@ -24,22 +23,22 @@ const create = async (req, res, next) => {
         })
     }
 
-    if (!files){
+    if (!files) {
         return res.status(400).json({
             message: "File required. "
         })
     }
 
     const file = files.image
-    file.mv(`${__dirname}public/uploads/${file.name}`, err => {
-    // file.mv(`../public/uploads/${file.name}`, err => {
-        if (err) {
-            return res.status(500).json({
-                message: err.message
-            })
-        }
- 
-    })
+    try {
+        await file.mv(path.join(`public/uploads/${file.name}`))
+    } catch (error) {
+        console.log('error : >>', error.message)
+        return res.status(400).json({
+            message: error.message
+        })
+
+    }
 
     const course = new Course({
         name: name,

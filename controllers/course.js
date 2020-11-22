@@ -4,24 +4,27 @@ import { moveFilesToApp } from "../serverUtils/index.js";
 import path from "path";
 import mongoose from "mongoose";
 
+// works
 const courseByID = async (req, res, next, id) => {
   try {
-    let course = await Course.findById(id).populate("instructor", "_id name");
+    let course = await Course.findById(id)
+        .populate("instructor", "_id name");
+
     if (!course)
       return res.status(400).json({
         error: "Course not found.",
       });
     req.course = course;
-    console.log('req.course :>> ', req.course);
+    console.log("req.course courseByID Ctrl:>> ", req.course);
+
     next();
-  } catch (err) {
+  } catch (error) {
     return res.status(400).json({
-      error: "Could not retrieve course.",
+      //   error: "Could not retrieve course.",
+      error: error.message,
     });
   }
 };
-
-
 
 const create = async (req, res, next) => {
   const {
@@ -91,19 +94,17 @@ const create = async (req, res, next) => {
   }
 };
 
+
+// not work
 const listByInstructor = async (req, res) => {
-  //   const { instructor } = req.body;
-  //   console.log('instructor :>> ', instructor);
-  console.log("req.body :>> ", req.body);
+//   console.log("req.profile course Ctrl:>> ", req.profile);
+//   console.log('req.params.id :>> ', req.params.id);
   try {
-    const courses = await Course
-      .find
-      // {
-      //   instructor: instructor._id,
-      // instructor: mongoose.Types.ObjectId(req.profile._id),
-      // }
-      ();
-    // .populate("instructor", "_id name");
+    const courses = await Course.find({
+      instructor: mongoose.Types.ObjectId(req.param.id),
+    //   instructor: req.profile
+    })
+    .populate("instructor", "_id name");
 
     return res.status(200).json(courses);
   } catch (error) {
@@ -113,12 +114,11 @@ const listByInstructor = async (req, res) => {
   }
 };
 
+// works
 const read = (req, res) => {
-    req.profile.password = undefined
-    console.log('req.profile :>> ', req.profile);
-    return res.json(req.profile)
-  }
-  
+  req.course.image = undefined;
+  return res.json(req.course);
+};
 
 export default {
   create,

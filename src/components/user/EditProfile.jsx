@@ -15,7 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import api from "../../api";
 import { userState, loadUser } from "../../redux/userSlice";
-import {editPath} from "../../api/utils"
+import {usersPath} from "../../api/utils"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -93,7 +93,7 @@ const EditProfile = () => {
       password: values.password,
     };
 
-    const data = await api.update(newData, user._id, editPath);
+    const data = await api.update(newData, user._id, usersPath);
     if (data && data.error) {
       setValues({ ...values, error: data.error });
     } else {

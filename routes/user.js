@@ -4,20 +4,13 @@ import authController from "../controllers/auth.js";
 
 const router = express.Router();
 
-router.route("/api/user")
-  .post(
-    authController.hasAuthorization,
-    userController.read,
-  )
-
-
 router.route("/api/users")
   .get(userController.list)
   .post(userController.create);
 
 
 router
-  .route("/api/user/:userId")
+  .route("/api/users/:userId")
   .get(
     authController.reqSignIn,
     userController.read

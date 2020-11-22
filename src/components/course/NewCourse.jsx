@@ -66,7 +66,7 @@ const NewCourse = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
-  // const { user } = useSelector(userState);
+  const { user } = useSelector(userState);
   const [file, setFile] = useState({});
   const [values, setValues] = useState({
     category: "",
@@ -85,17 +85,20 @@ const NewCourse = () => {
     });
   };
 
+
   const handleSubmit = async (evt) => {
     evt.preventDefault()
     // evt.stopPropagation()
     const newCourse = new FormData();
     newCourse.append("category", values.category);
     newCourse.append("description", values.description);
-    newCourse.append("instructor", "5fb6c60af624e64b689ec938") // on server if false not auth
+    newCourse.append("instructor", user._id) // on server if false not auth
+    // newCourse.append("instructor", "5fb6c60af624e64b689ec938") // on server if false not auth
     newCourse.append("name", values.name);
     newCourse.append("image", file);
 
-    const data = await api.createCourse(newCourse, "5fb6c60af624e64b689ec938");
+    // const data = await api.createCourse(newCourse, "5fb6c60af624e64b689ec938");
+    const data = await api.createCourse(newCourse, user._id);
     if (data) {
       const { error, image } = data;
       if (error) {
@@ -104,7 +107,7 @@ const NewCourse = () => {
         setValues({
           ...values,
           image,
-          // redirect: true,
+          redirect: true,
         });
         // dispatch(addCourseAction(newCourse));
       }
@@ -197,7 +200,6 @@ const NewCourse = () => {
             className={classes.btn}
             color="primary"
             onClick={(evt) => handleSubmit(evt)}
-            type="submit"
             variant="contained"
           >
             Submit

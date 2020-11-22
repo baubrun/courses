@@ -20,7 +20,6 @@ import {
   domain,
   signInPath,
   signOutPath,
-  userPath,
   usersPath,
 } from "../../api/utils"
 

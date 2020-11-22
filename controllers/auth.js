@@ -1,4 +1,4 @@
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import expressJwt from "express-jwt"
 import dotenv from "dotenv";
 dotenv.config();
@@ -8,19 +8,19 @@ const hasAuthorization = async (req, res, next) => {
     const token = req.header("x-auth-token");
     if (!token) {
       return res.status(403).json({
-        mesage: error.message,
+        message: error.message,
       });
     }
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     if (!verified) {
       return res.status(403).json({
-        mesage: error.message,
+        message: error.message,
       });
     }
     next();
   } catch (error) {
     return res.status(400).json({
-      mesage: error.message,
+      message: error.message,
     });
   }
 };

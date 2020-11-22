@@ -1,17 +1,15 @@
 const domain = "http://localhost:5000";
-const editPath = "api/user"
-const coursePath = "api/courses/by"
+const coursesPath = "api/courses"
+const coursesByPath = "api/courses/by"
 const signInPath = "auth/signIn";
 const signOutPath = "auth/signOut";
-const userPath = "api/user"
 const usersPath = "api/users"
 
 export {
-  coursePath,
+  coursesPath,
+  coursesByPath,
   domain,
-  editPath,
   signInPath,
   signOutPath,
-  userPath,
   usersPath,
 };

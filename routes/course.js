@@ -9,24 +9,25 @@ import {
 const router = express.Router()
 
 
-
-router.route('/api/courses/:courseId')
-    .get(courseController.read)
-router.param('courseId', courseController.courseByID)
-
-
-router.route("/api/users")
-    .post(userController.create);
-
-
 router.route("/api/courses/by/:userId")
-    .get(courseController.listByInstructor)
+    .get(
+        // authController.reqSignIn,
+        // authController.hasAuthorization,
+        courseController.listByInstructor
+    )
     .post(
         upload.any(),
         // authController.hasAuthorization,
         // userController.isInstructor,
         courseController.create,
     )
+
+
+router.route('/api/courses/:courseId')
+    .get(courseController.read)
+router.param('courseId', courseController.courseByID)
+
+
 
 
 

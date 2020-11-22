@@ -61,8 +61,8 @@ const MyCourses = () => {
   const [error, setError] = useState(false);
 
   const getCourses = async () => {
-    const data = await api.listCourseByInstructor("5fb6c60af624e64b689ec938");
-    // const data = await listCourseByInstructor(user._id);
+    // const data = await api.listCourseByInstructor("5fb6c60af624e64b689ec938");
+    const data = await api.listCourseByInstructor(user._id);
     console.log('data :>> ', data);
     // if (data) {
     //     setCourses(data);
@@ -71,7 +71,7 @@ const MyCourses = () => {
 
   useEffect(() => {
     getCourses();
-  }, [user]);
+  }, []);
 
   if (redirect) {
     return <Redirect to="/signin" />;

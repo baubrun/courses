@@ -195,6 +195,7 @@ const update = async (req, res) => {
     }
 }
 const userById = async (req, res, next, id) => {
+    console.log('id userById Ctrl :>> ', id);
     try {
       let user = await User.findById(id)
       if (!user)

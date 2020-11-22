@@ -22,14 +22,16 @@ const Routers = () => {
         <Menu />
         <Switch>
             <Route exact path="/" component={Home}/>
-            <PrivateRoute  path="/users" component={Users}/>
+            <Route  path="/users" component={Users}/>
             <Route path="/signUp" component={SignUp}/>
             <Route path="/signIn" component={SignIn}/>
-            <Route path="/teach/courses" component={MyCourses}/>
-            <Route path="/teach/course/new" component={NewCourse} />
             <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
             <Route path="/user/:userId" component={Profile}/>
+
             <Route path="/course/:courseId" component={Course}/>
+            <PrivateRoute path="/teach/courses" component={MyCourses}/>
+            <PrivateRoute path="/teach/course/new" component={NewCourse} />
+
             <Route component={NotFound} />
         </Switch>
         </>

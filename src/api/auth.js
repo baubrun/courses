@@ -1,7 +1,5 @@
-
-
 const isAuthorized = (profile, user) => {
-    return profile === user
+  return profile === user
 }
 
 
@@ -12,7 +10,12 @@ const deleteToken = () => {
 
 const getToken = () => {
   let token = JSON.parse(localStorage.getItem("jwt"))
-  return token
+  if (!token) {
+    return false
+  } else {
+    return token
+
+  }
 };
 
 

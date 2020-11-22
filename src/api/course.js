@@ -70,25 +70,6 @@ const listCourseByInstructor = async (id = "") => {
   }
 };
 
-// const listCourseByInstructor = async (id = "") => {
-//   const token = getToken();
-//   try {
-//     const res = await axios.get(`${domain}/${coursesByPath}/${id}`, {
-//       instructor: id
-//     }, {
-//       headers: {
-//         "Authorization": `Bearer ${token}`,
-//       },
-//     });
-//     return res.data;
-//   } catch (error) {
-//     return {
-//       error: error.response.data.message,
-//     };
-//   }
-// };
-
-
 
 
 const read = async (id) => {

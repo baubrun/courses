@@ -70,29 +70,10 @@ const isInstructor = async (req, res, next) => {
 }
 
 
-// const read = async (req, res) => {
-//     const token = req.header("x-auth-token")
-//     const verified = jwt.verify(token, process.env.JWT_SECRET);
-//     try {
-//         let user = await User.findById(verified._id).select("-password -__v")
-//         if (user) {
-//             return res.json({
-//                 user: user
-//             })
-//         }
-//     } catch (error) {
-//         return res.status(400).json({
-//             message: error.message
-//         })
-//     }
-// }
-
 //works
 const read = (req, res) => {
         req.profile.password = undefined
         req.profile.__v = undefined
-        console.log("------------------------------\n")
-        console.log('req.profile read user ctrl :>> ', req.profile);
         return res.json(req.profile)
     
 }

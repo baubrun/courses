@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector, } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
@@ -61,13 +61,16 @@ const MyCourses = () => {
   const [error, setError] = useState(false);
 
   const getCourses = async () => {
-    // const data = await api.listCourseByInstructor("5fb6c60af624e64b689ec938");
     const data = await api.listCourseByInstructor(user._id);
-    console.log('data :>> ', data);
-    // if (data) {
-    //     setCourses(data);
-    // }
+    if (data) {
+      if (data.error) {
+        setCourses([])
+      } else {
+        setCourses(data);
+      }
+    }
   };
+
 
   useEffect(() => {
     getCourses();
@@ -77,8 +80,9 @@ const MyCourses = () => {
     return <Redirect to="/signin" />;
   }
 
-  return (
+  if (courses.length < 1) return null;
 
+  return (
     <div>
       <Paper className={classes.root} elevation={4}>
         <Typography type="title" className={classes.title}>
@@ -105,12 +109,7 @@ const MyCourses = () => {
                   <ListItem button>
                     <ListItemAvatar>
                       <Avatar
-                        src={
-                          "/api/courses/photo/" +
-                          course._id +
-                          "?" +
-                          new Date().getTime()
-                        }
+                        src={`/api/courses/photo/${course._id} `}
                         className={classes.avatar}
                       />
                     </ListItemAvatar>

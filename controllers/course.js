@@ -4,8 +4,6 @@ import { moveFilesToApp } from "../serverUtils/index.js";
 import path from "path";
 import mongoose from "mongoose";
 
-
-// works
 const courseByID = async (req, res, next, id) => {
   try {
     let course = await Course.findById(id).populate("instructor", "_id name");
@@ -15,12 +13,10 @@ const courseByID = async (req, res, next, id) => {
         error: "Course not found.",
       });
     req.course = course;
-    console.log("req.course courseByID Ctrl:>> ", req.course);
 
     next();
   } catch (error) {
     return res.status(400).json({
-      //   error: "Could not retrieve course.",
       error: error.message,
     });
   }
@@ -48,12 +44,11 @@ const create = async (req, res, next) => {
       return res.status(400).json({
         message: "Image required.",
       });
-    } 
-    else {
+    } else {
       const ext = path.extname(file.originalname);
       if (![".jpeg", ".jpg", ".png"].some((x) => x === ext)) {
         return res.status(400).json({
-          message: "Invalid image type."
+          message: "Invalid image type.",
         });
       }
     }
@@ -95,21 +90,17 @@ const create = async (req, res, next) => {
   }
 };
 
-const photo = (req, res,) => {
-    if(req.course.image.data){
-      res.set("Content-Type", req.course.image.contentType)
-      return res.send(req.course.image.data)
-    }
+const photo = (req, res) => {
+  if (req.course.image.data) {
+    res.set("Content-Type", req.course.image.contentType);
+    return res.send(req.course.image.data);
   }
-  
+};
 
-// not work
 const listByInstructor = async (req, res) => {
-  console.log("------------------------------\n")
-  console.log('req.profile listByInstructor :>> ', req.profile);
   try {
     const courses = await Course.find({
-        instructor: req.profile
+      instructor: req.profile,
     }).populate("instructor", "_id name");
 
     return res.status(200).json(courses);
@@ -120,7 +111,6 @@ const listByInstructor = async (req, res) => {
   }
 };
 
-// works
 const read = (req, res) => {
   req.course.image = undefined;
   return res.json(req.course);

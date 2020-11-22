@@ -85,6 +85,7 @@ const EditProfile = () => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+
     const newData = {
       instructor: values.instructor,
       email: values.email,
@@ -94,6 +95,7 @@ const EditProfile = () => {
     };
 
     const data = await api.update(newData, user._id, usersPath);
+    console.log('data :>> ', data);
     if (data && data.error) {
       setValues({ ...values, error: data.error });
     } else {

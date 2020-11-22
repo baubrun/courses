@@ -9,24 +9,22 @@ import {
 
 const create = async (data, path, id = "") => {
   let req;
+  const headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
+  }
   try {
     if (!id) {
       req = await fetch(`${domain}/${path}`, {
         method: "POST",
         body: JSON.stringify(data),
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json"
-        }
+        headers,
       });
     } else {
       req = await fetch(`${domain}/${path}/${id}`, {
         method: "POST",
         body: JSON.stringify(data),
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json"
-        }
+        headers,
       })
       const res = await req.text()
       return JSON.parse(res)
@@ -40,11 +38,12 @@ const create = async (data, path, id = "") => {
 
 const list = async (path) => {
   try {
-    const res = await axios.get(`${domain}/${path}`);
-    return res.data;
+    const req = await fetch(`${domain}/${path}`);
+    const res = await req.text()
+    return JSON.parse(res)
   } catch (error) {
     return {
-      error: error.response.data.message
+      error: error.message
     };
   }
 };
@@ -53,38 +52,67 @@ const list = async (path) => {
 const read = async (path) => {
   const token = getToken();
   try {
-    const res = await axios.post(
-      `${domain}/${path}`,
-      null, {
+    let req = await fetch(
+      `${domain}/${path}`, {
+        method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      }
-    );
-    return res.data;
+          "Authorization": `Bearer ${token}`
+        }
+      })
+    const res = await req.text()
+    return JSON.parse(res)
   } catch (error) {
     return {
-      error: error.response.data.message
+      error: error.message
     };
   }
-};
+}
+
+
 
 const remove = async (id, path) => {
   const token = getToken();
   try {
-    const res = await axios.delete(`${domain}/${path}/${id}`, {
+    const req = await fetch(`${domain}/${path}/${id}`, {
+      method: "DELETE",
       headers: {
         "Authorization": `Bearer ${token}`,
       },
     });
-    return res.data;
+    const res = await req.text()
+    return JSON.parse(res)
   } catch (error) {
     return {
-      error: error.response.data.message
+      error: error.message
     };
 
   }
 };
+
+
+// const update = async (data, id, path) => {
+//   const token = getToken();
+//   try {
+//     const req = await fetch(`${domain}/${path}/${id}`, {
+//       method: "PATCH",
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//         "Authorization": `Bearer ${token}`,
+//       },
+//       body: data,
+//     })
+//     const res = await req.text()
+//     console.log(typeof res)
+//     console.log('res update :>> ', res);
+//     return JSON.parse(res)
+//   } catch (error) {
+//     return {
+//       error: error.message
+//     };
+//   }
+// };
+
+
 
 const update = async (data, id, path) => {
   const token = getToken();
@@ -101,10 +129,11 @@ const update = async (data, id, path) => {
     return res.data;
   } catch (error) {
     return {
-      error: error.response.data.message
+      error: error.response.data.error
     };
   }
 };
+
 
 export default {
   create,

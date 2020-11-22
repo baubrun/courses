@@ -21,7 +21,7 @@ const create = async (req, res) => {
 
     if (emailExists) {
         return res.status(401).json({
-            message: "User already registered."
+            error: "User already registered."
         })
     }
 
@@ -39,7 +39,7 @@ const create = async (req, res) => {
         })
     } catch (error) {
         return res.status(400).json({
-            message: error.message
+            error: error.message
         })
     }
 }
@@ -51,7 +51,7 @@ const list = async (req, res) => {
         return res.status(200).json(users)
     } catch (error) {
         return res.status(400).json({
-            message: error.message
+            error: error.message
         })
     }
 }
@@ -63,7 +63,7 @@ const isInstructor = async (req, res, next) => {
     } = req.body
     if (!instructor) {
         return res.status(403).json({
-            message: "User is not an instructor."
+            error: "User is not an instructor."
         })
     }
     next()
@@ -124,13 +124,13 @@ const signIn = async (req, res) => {
 
         if (!user) {
             return res.status(401).json({
-                message: "User not found.",
+                error: "User not found.",
             });
         }
         const validPassword = await bcrypt.compare(password, user.password)
         if (!validPassword) {
             return res.status(401).json({
-                message: "Invalid Email or password.",
+                error: "Invalid Email or password.",
             });
         } else {
             const token = jwt.sign({
@@ -156,7 +156,7 @@ const signIn = async (req, res) => {
 
     } catch (error) {
         return res.status(401).json({
-            message: error.message
+            error: error.message
         });
     }
 };
@@ -202,12 +202,11 @@ const update = async (req, res) => {
         })
     } catch (error) {
         return res.status(400).json({
-            message: error.message
+            error: error.message
         })
     }
 }
 const userById = async (req, res, next, id) => {
-    // console.log('id userById Ctrl :>> ', id);
     try {
         let user = await User.findById(id)
         if (!user)
@@ -215,7 +214,6 @@ const userById = async (req, res, next, id) => {
                 error: "User not found."
             })
         req.profile = user
-        //   console.log('req.profile', req.profile)
         next()
     } catch (error) {
         return res.status(400).json({

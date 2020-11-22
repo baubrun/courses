@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import {
     domain,
     signInPath,
@@ -45,7 +45,7 @@ const signIn = async (user) => {
         return JSON.parse(res)
     } catch (error) {
         return {
-            error: error.message
+            error: error
         };
 
     }

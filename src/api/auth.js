@@ -1,18 +1,24 @@
 
+
+const isAuthorized = (profile, user) => {
+    return profile === user
+}
+
+
 const deleteToken = () => {
-  localStorage.removeItem("auth-token")
+  localStorage.removeItem("jwt")
 };
 
 
 const getToken = () => {
-  let token = JSON.parse(localStorage.getItem("auth-token"))
+  let token = JSON.parse(localStorage.getItem("jwt"))
   return token
 };
 
 
 const setToken = (jwt, cb) => {
   if (typeof window !== "undefined") {
-    localStorage.setItem("auth-token", JSON.stringify(jwt));
+    localStorage.setItem("jwt", JSON.stringify(jwt));
   }
   cb();
 };
@@ -24,5 +30,6 @@ const setToken = (jwt, cb) => {
 export {
   deleteToken,
   getToken,
+  isAuthorized,
   setToken,
 };

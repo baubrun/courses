@@ -5,29 +5,52 @@ import {
     signOutPath,
     usersPath
 } from "./utils";
-import {getToken} from "./auth"
+import {
+    getToken
+} from "./auth"
 
+
+// const read = async (id) => {
+//     const token = getToken();
+//     console.log('user-api token :>> ', token);
+//     try {
+//         const res = await axios.get(
+//             `${domain}/${usersPath}/${id}`,
+//             null, {
+//                 headers: {
+//                     'Authorization': 'Bearer ' + token
+//                 },
+//             }
+//         );
+//         return res.data;
+//     } catch (error) {
+//         return {
+//             error: error.response.data.message
+//         };
+//     }
+// };
 
 const read = async (id) => {
     const token = getToken();
-    console.log('token :>> ', token);
     try {
-      const res = await axios.get(
-        `${domain}/${usersPath}/${id}`,
-        null, {
-          headers: {
-            "x-auth-token": token,
-          },
-        }
-      );
-      return res.data;
+        let response = await fetch('/api/users/' + id, {
+            method: 'GET',
+            headers: {
+                //   'Accept': 'application/json',
+                //   'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        })
+        const body = await response.text()
+        return JSON.parse(body)
     } catch (error) {
-      return {
-        error: error.response.data.message
-      };
+        return {
+            error: error.message
+        };
     }
-  };
-  
+}
+
+
 
 const signIn = async (user) => {
     try {
@@ -56,7 +79,7 @@ const signOut = async () => {
 
 
 
-export default{
+export default {
     read,
     signIn,
     signOut,

@@ -41,7 +41,7 @@ const read = async (path) => {
       `${domain}/${path}`,
       null, {
         headers: {
-          "x-auth-token": token,
+          "Authorization": `Bearer ${token}`,
         },
       }
     );
@@ -58,7 +58,7 @@ const remove = async (id, path) => {
   try {
     const res = await axios.delete(`${domain}/${path}/${id}`, {
       headers: {
-        "x-auth-token": token,
+        "Authorization": `Bearer ${token}`,
       },
     });
     return res.data;
@@ -78,7 +78,7 @@ const update = async (data, id, path) => {
         user: data,
       }, {
         headers: {
-          "x-auth-token": token,
+          "Authorization": `Bearer ${token}`,
         },
       }
     );

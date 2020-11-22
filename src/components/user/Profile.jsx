@@ -22,6 +22,7 @@ import DeleteUser from "./DeleteUser";
 import { userState } from "../../redux/userSlice";
 
 import api from "../../api/user";
+import {isAuthorized} from "../../api/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -36,33 +37,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Profile = ({match}) => {
+const Profile = ({ match }) => {
   const classes = useStyles();
   // const [auth, setAuth] = useState(false);
   const { loggedIn, user } = useSelector(userState);
-  const [profile, setProfile] = useState({})
-  const profileId = match.params.userId
-  const auth = profileId === user._id
+  const [profile, setProfile] = useState({});
+  const [redirect, setRedirect] = useState(false);
 
-
+  const profileId = match.params.userId;
+  const auth = profileId === user._id;
 
   const getUser = async (id) => {
-    console.log("---profile")
-    const data = await api.read(id)
-    console.log('data :>> ', data);
-    if (data){
-      setProfile(data)
+    console.log("---profile");
+    const data = await api.read(id);
+    console.log("data :>> ", data);
+    if (data) {
+      if (data.error) {
+        setRedirect(true);
       }
+      setProfile(data);
     }
-
+  };
 
   useEffect(() => {
-    getUser(profileId)
-  }, [])
+    getUser(profileId);
+  }, []);
 
-
-  if (!loggedIn) {
-    return <Redirect to='/signin'/>
+  if (redirect) {
+    return <Redirect to="/signin" />;
   }
 
   return (
@@ -78,6 +80,7 @@ const Profile = ({match}) => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={profile.name} secondary={profile.email} />
+          {/* {loggedIn && isAuthorized(profileId, user._id) && ( */}
           {loggedIn && auth && (
             <ListItemSecondaryAction>
               <Link to={`/user/edit/${profileId}`}>

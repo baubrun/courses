@@ -12,7 +12,7 @@ router.route("/api/users")
 router
   .route("/api/users/:userId")
   .get(
-    // authController.reqSignIn,
+    authController.reqSignIn,
     // authController.hasAuthorization,
     userController.read
   )

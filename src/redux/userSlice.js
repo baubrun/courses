@@ -6,9 +6,14 @@ import {
 export const userSlice = createSlice({
     name: "user",
     initialState: {
-        loggedIn: false,
+        // loggedIn: false,
+        loggedIn: true,
+        // user: {},
         user: {
-            
+            instructor: true,
+            email:"bb@bb.com",
+            _id:"5fb6c60af624e64b689ec938",
+            name:"bb",
         }
     },
     reducers: {

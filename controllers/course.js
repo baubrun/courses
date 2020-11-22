@@ -90,12 +90,6 @@ const create = async (req, res, next) => {
   }
 };
 
-const photo = (req, res) => {
-  if (req.course.image.data) {
-    res.set("Content-Type", req.course.image.contentType);
-    return res.send(req.course.image.data);
-  }
-};
 
 const listByInstructor = async (req, res) => {
   try {
@@ -110,6 +104,13 @@ const listByInstructor = async (req, res) => {
     });
   }
 };
+
+
+const photo = (req, res, next) => {
+  // res.set("Content-Type", req.course.image.contentType);
+  return res.send(req.course.image);
+};
+
 
 const read = (req, res) => {
   req.course.image = undefined;

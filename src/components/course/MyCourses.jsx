@@ -64,13 +64,12 @@ const MyCourses = () => {
     const data = await api.listCourseByInstructor(user._id);
     if (data) {
       if (data.error) {
-        setCourses([])
+        setError("Error loading courses. Sorry!");
       } else {
         setCourses(data);
       }
     }
   };
-
 
   useEffect(() => {
     getCourses();
@@ -80,7 +79,15 @@ const MyCourses = () => {
     return <Redirect to="/signin" />;
   }
 
-  if (courses.length < 1) return null;
+  if (error) {
+    return (
+      <>
+        <Typography color="error" variant="h6" component="p">
+          {error}
+        </Typography>
+      </>
+    );
+  }
 
   return (
     <div>
@@ -109,7 +116,8 @@ const MyCourses = () => {
                   <ListItem button>
                     <ListItemAvatar>
                       <Avatar
-                        src={`/api/courses/photo/${course._id} `}
+                        src={require(`../../uploads/${course.image}`)}
+                        className={classes.avatar}
                         className={classes.avatar}
                       />
                     </ListItemAvatar>

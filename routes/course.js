@@ -11,8 +11,8 @@ const router = express.Router()
 
 router.route("/api/courses/by/:userId")
     .get(
-        authController.reqSignIn,
-        authController.hasAuthorization,
+        // authController.reqSignIn,
+        // authController.hasAuthorization,
         courseController.listByInstructor
     )
     .post(

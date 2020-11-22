@@ -8,20 +8,35 @@ import {
 
 
 const create = async (data, path, id = "") => {
-  let res;
+  let req;
   try {
     if (!id) {
-      res = await axios.post(`${domain}/${path}`, data);
+      req = await fetch(`${domain}/${path}`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      });
     } else {
-      res = await axios.post(`${domain}/${path}/${id}`, data);
+      req = await fetch(`${domain}/${path}/${id}`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      })
+      const res = await req.text()
+      return JSON.parse(res)
     }
-    return res.data;
   } catch (error) {
     return {
-      error: error.response.data.message
+      error: error.message
     };
   }
-};
+}
 
 const list = async (path) => {
   try {
@@ -91,7 +106,7 @@ const update = async (data, id, path) => {
   }
 };
 
-export default{
+export default {
   create,
   list,
   read,

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CompletedIcon from "@material-ui/icons/VerifiedUser";
-import DeleteCourse from "./DeleteCourse";
 import Divider from "@material-ui/core/Divider";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -26,34 +27,42 @@ import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
 
+import api from "../../api/course";
 
-import api from "../../api/course"
+import { userState } from "../../redux/userSlice";
+
+// import DeleteCourse from "./DeleteCourse";
+
 
 const useStyles = makeStyles((theme) => ({
-  root: theme.mixins.gutters({
-    maxWidth: 800,
-    margin: "auto",
-    padding: theme.spacing(3),
-    marginTop: theme.spacing(12),
-  }),
-  flex: {
+  action: {
+    margin: "10px 0px",
     display: "flex",
-    marginBottom: 20,
+    justifyContent: "flex-end",
+  },
+  category: {
+    color: "#5c5c5c",
+    fontSize: "8px",
+    padding: "3px 5px",
+    backgroundColor: "#dbdbdb",
+    borderRadius: "2px",
+    marginTop: 5,
   },
   card: {
     padding: "24px 40px 40px",
   },
-  subheading: {
-    margin: "10px",
-    color: theme.palette.openTitle,
-  },
   details: {
     margin: "16px",
   },
-  sub: {
-    display: "block",
-    margin: "3px 0px 5px 0px",
-    fontSize: "0.9em",
+  enroll: {
+    float: "right",
+  },
+  flex: {
+    display: "flex",
+    marginBottom: 20,
+  },
+  icon: {
+    verticalAlign: "sub",
   },
   media: {
     height: 190,
@@ -61,22 +70,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginLeft: "16px",
   },
-  icon: {
-    verticalAlign: "sub",
-  },
-  category: {
-    color: "#5c5c5c",
-    fontSize: "0.9em",
-    padding: "3px 5px",
-    backgroundColor: "#dbdbdb",
-    borderRadius: "0.2em",
-    marginTop: 5,
-  },
-  action: {
-    margin: "10px 0px",
-    display: "flex",
-    justifyContent: "flex-end",
-  },
+  root: theme.mixins.gutters({
+    maxWidth: 800,
+    margin: "auto",
+    padding: theme.spacing(3),
+    marginTop: theme.spacing(12),
+  }),
   statSpan: {
     margin: "7px 10px 0 10px",
     alignItems: "center",
@@ -87,118 +86,114 @@ const useStyles = makeStyles((theme) => ({
       color: "#b6ab9a",
     },
   },
-  enroll: {
-    float: "right",
+  sub: {
+    display: "block",
+    margin: "3px 0px 5px 0px",
+    fontSize: "0.9em",
+  },
+  subheading: {
+    margin: "10px",
+    color: theme.palette.openTitle,
   },
 }));
 
 const Course = ({ match }) => {
   const classes = useStyles();
+  const { loggedIn, user } = useSelector(userState);
   const [course, setCourse] = useState({ instructor: {} });
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [stats, setStats] = useState({});
   const [values, setValues] = useState({
     error: "",
     redirect: false,
-
   });
 
+  const imageUrl = course._id
+    ? `/api/courses/photo/${course._id}?${new Date().getTime()}`
+    : '/api/courses/defaultphoto'
 
   const getCourse = async () => {
-    // const data = await api.listCourseByInstructor("5fb6c60af624e64b689ec938");
-    const data = await api.read(match.params.courseId)
-    console.log('data :>> ', data);
+    const data = await api.read(match.params.courseId);
+    // console.log("data :>> ", data);
     if (data) {
-        if (data.error){
-            setValues({
-                ...values,
-                error: data.error
-            });
-        } else {
-            setCourse(data)
-        }
+      if (data.error) {
+        setValues({
+          ...values,
+          error: data.error,
+        });
+      } else {
+        setCourse(data);
+      }
     }
   };
 
-
-
-
   useEffect(() => {
-    getCourse()
-    
+    getCourse();
   }, [match.params.courseId]);
 
-
-  useEffect(() => {
-    enrollmentStats(
-      { courseId: match.params.courseId },
-      { t: jwt.token },
-      signal
-    ).then((data) => {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        setStats(data);
-      }
-    });
-  }, [match.params.courseId]);
-
-
-  const removeCourse = (course) => {
-    setValues({ ...values, redirect: true });
-  };
+  //   useEffect(() => {
+  //     enrollmentStats(
+  //       { courseId: match.params.courseId },
+  //       { t: jwt.token },
+  //       signal
+  //     ).then((data) => {
+  //       if (data.error) {
+  //         setValues({ ...values, error: data.error });
+  //       } else {
+  //         setStats(data);
+  //       }
+  //     });
+  //   }, [match.params.courseId]);
 
 
   const addLesson = (course) => {
     setCourse(course);
   };
 
+  //   const removeCourse = () => {
+  //     setValues({ ...values, redirect: true });
+  //   };
 
-  const clickPublish = () => {
-    if (course.lessons.length > 0) {
-      setOpen(true);
-    }
-  };
+  //   const clickPublish = () => {
+  //     if (course.lessons.length > 0) {
+  //       setOpen(true);
+  //     }
+  //   };
 
+  //api call
+  //   const publish = () => {
+  //     let courseData = new FormData();
+  //     courseData.append("published", true);
+  //     update(
+  //       {
+  //         courseId: match.params.courseId,
+  //       },
+  //       {
+  //         t: jwt.token,
+  //       },
+  //       courseData
+  //     ).then((data) => {
+  //       if (data && data.error) {
+  //         setValues({ ...values, error: data.error });
+  //       } else {
+  //         setCourse({ ...course, published: true });
+  //         setOpen(false);
+  //       }
+  //     });
+  //   };
 
-  const publish = () => {
-    let courseData = new FormData();
-    courseData.append("published", true);
-    update(
-      {
-        courseId: match.params.courseId,
-      },
-      {
-        t: jwt.token,
-      },
-      courseData
-    ).then((data) => {
-      if (data && data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        setCourse({ ...course, published: true });
-        setOpen(false);
-      }
-    });
-  };
-
-
-  const handleClose = () => {
-    setOpen(false);
-  };
   if (values.redirect) {
     return <Redirect to={"/teach/courses"} />;
   }
-  const imageUrl = course._id
-    ? `/api/courses/photo/${course._id}?${new Date().getTime()}`
-    : "/api/courses/defaultphoto";
   return (
-    <div className={classes.root}>
+    // <Box>course page</Box>
+
+    <Box className={classes.root}>
       <Card className={classes.card}>
         <CardHeader
           title={course.name}
           subheader={
-            <div>
+            <Box>
               <Link
                 to={"/user/" + course.instructor._id}
                 className={classes.sub}
@@ -206,72 +201,77 @@ const Course = ({ match }) => {
                 By {course.instructor.name}
               </Link>
               <span className={classes.category}>{course.category}</span>
-            </div>
+            </Box>
           }
           action={
             <>
-              {auth.isAuthenticated().user &&
-                auth.isAuthenticated().user._id == course.instructor._id && (
-                  <span className={classes.action}>
-                    <Link to={"/teach/course/edit/" + course._id}>
-                      <IconButton aria-label="Edit" color="secondary">
-                        <Edit />
-                      </IconButton>
-                    </Link>
-                    {!course.published ? (
-                      <>
-                        <Button
-                          color="secondary"
-                          variant="outlined"
-                          onClick={clickPublish}
-                        >
-                          {course.lessons.length == 0
-                            ? "Add atleast 1 lesson to publish"
-                            : "Publish"}
-                        </Button>
-                        <DeleteCourse course={course} onRemove={removeCourse} />
-                      </>
-                    ) : (
-                      <Button color="primary" variant="outlined">
-                        Published
+              {loggedIn && user._id == course.instructor._id && (
+                <span className={classes.action}>
+                  <Link to={"/teach/course/edit/" + course._id}>
+                    <IconButton color="secondary">
+                      <Edit />
+                    </IconButton>
+                  </Link>
+                  {!course.published ? (
+                    <>
+                      <Button
+                        color="secondary"
+                        variant="outlined"
+                        // onClick={clickPublish}
+                      >
+                        {course.lessons.length == 0
+                          ? "Add atleast 1 lesson to publish"
+                          : "Publish"}
                       </Button>
-                    )}
-                  </span>
-                )}
+                      {/* <DeleteCourse course={course} onRemove={removeCourse} /> */}
+                      delete course here
+                    </>
+                  ) : (
+                    <Button color="primary" variant="outlined">
+                      Published
+                    </Button>
+                  )}
+                </span>
+              )}
               {course.published && (
-                <div>
+                <Box>
                   <span className={classes.statSpan}>
-                    <PeopleIcon /> {stats.totalEnrolled} enrolled{" "}
+                    <PeopleIcon />
+                    {/* {stats.totalEnrolled} enrolled{" "} */}
                   </span>
                   <span className={classes.statSpan}>
-                    <CompletedIcon /> {stats.totalCompleted} completed{" "}
+                    <CompletedIcon />
+                    {/* {stats.totalCompleted} completed{" "} */}
                   </span>
-                </div>
+                </Box>
               )}
             </>
           }
         />
-        <div className={classes.flex}>
+
+        <Box className={classes.flex}>
           <CardMedia
             className={classes.media}
             image={imageUrl}
             title={course.name}
           />
-          <div className={classes.details}>
+          <Box className={classes.details}>
             <Typography variant="body1" className={classes.subheading}>
               {course.description}
               <br />
             </Typography>
 
             {course.published && (
-              <div className={classes.enroll}>
-                <Enroll courseId={course._id} />
-              </div>
+              <Box className={classes.enroll}>
+                {/* <Enroll courseId={course._id} /> */}
+                enroll here
+              </Box>
             )}
-          </div>
-        </div>
+          </Box>
+        </Box>
+
         <Divider />
-        <div>
+        <Box>
           <CardHeader
             title={
               <Typography variant="h6" className={classes.subheading}>
@@ -284,11 +284,15 @@ const Course = ({ match }) => {
               </Typography>
             }
             action={
-              auth.isAuthenticated().user &&
-              auth.isAuthenticated().user._id == course.instructor._id &&
+              loggedIn &&
+              user._id == course.instructor._id &&
               !course.published && (
                 <span className={classes.action}>
-                  <NewLesson courseId={course._id} addLesson={addLesson} />
+                  {/* <NewLesson 
+                  courseId={course._id} 
+                  addLesson={addLesson} 
+                  /> */}
+                  New lesson here
                 </span>
               )
             }
@@ -309,32 +313,41 @@ const Course = ({ match }) => {
                 );
               })}
           </List>
-        </div>
+        </Box>
       </Card>
+
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
-            Publishing your course will make it live to students for enrollment.{" "}
+            Publishing your course will make it live to students for enrollment.
           </Typography>
           <Typography variant="body1">
             Make sure all lessons are added and ready for publishing.
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" variant="contained">
+          <Button
+            color="primary"
+            onClick={() => setOpenDialog(false)}
+            variant="contained"
+          >
             Cancel
           </Button>
-          <Button onClick={publish} color="secondary" variant="contained">
+          <Button
+            //   onClick={publish}
+            color="secondary"
+            variant="contained"
+          >
             Publish
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 };
 

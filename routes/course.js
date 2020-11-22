@@ -28,7 +28,14 @@ router.route('/api/courses/:courseId')
 router.param('courseId', courseController.courseByID)
 
 
+// router.route("/api/courses/defaultImg")
+//     .get(courseController.defaultImg);
 
+router
+  .route("/api/courses/photo/:courseId")
+  .get(
+      courseController.photo, 
+      courseController.defaultPhoto);
 
 
 export default router

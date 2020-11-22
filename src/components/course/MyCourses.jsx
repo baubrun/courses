@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, } from "react-redux";
 
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";

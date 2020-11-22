@@ -7,8 +7,7 @@ import mongoose from "mongoose";
 // works
 const courseByID = async (req, res, next, id) => {
   try {
-    let course = await Course.findById(id)
-        .populate("instructor", "_id name");
+    let course = await Course.findById(id).populate("instructor", "_id name");
 
     if (!course)
       return res.status(400).json({
@@ -94,17 +93,29 @@ const create = async (req, res, next) => {
   }
 };
 
+const photo = (req, res, next) => {
+    if(req.course.image.data){
+      res.set("Content-Type", req.course.image.contentType)
+      return res.send(req.course.image.data)
+    }
+    next()
+  }
+
+  
+  const defaultPhoto = (req, res) => {
+    return res.sendFile(process.cwd()+defaultImage)
+  }
+  
 
 // not work
 const listByInstructor = async (req, res) => {
-//   console.log("req.profile course Ctrl:>> ", req.profile);
-//   console.log('req.params.id :>> ', req.params.id);
+  //   console.log("req.profile course Ctrl:>> ", req.profile);
+  //   console.log('req.params.id :>> ', req.params.id);
   try {
     const courses = await Course.find({
       instructor: mongoose.Types.ObjectId(req.param.id),
-    //   instructor: req.profile
-    })
-    .populate("instructor", "_id name");
+      //   instructor: req.profile
+    }).populate("instructor", "_id name");
 
     return res.status(200).json(courses);
   } catch (error) {
@@ -123,6 +134,8 @@ const read = (req, res) => {
 export default {
   create,
   courseByID,
+  defaultPhoto,
   listByInstructor,
+  photo,
   read,
 };

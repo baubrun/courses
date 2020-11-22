@@ -11,6 +11,7 @@ import EditProfile from "./user/EditProfile"
 import Menu from "./Menu"
 import NewCourse from "./course/NewCourse"
 import MyCourses from "./course/MyCourses"
+import Course from "./course/Course"
 
 
 
@@ -28,6 +29,7 @@ const Routers = () => {
             <Route path="/teach/course/new" component={NewCourse} />
             <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
             <Route path="/user/:userId" component={Profile}/>
+            <Route path="/course/:courseId" component={Course}/>
             <Route component={NotFound} />
         </Switch>
         </>

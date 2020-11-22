@@ -90,27 +90,6 @@ const remove = async (id, path) => {
 };
 
 
-// const update = async (data, id, path) => {
-//   const token = getToken();
-//   try {
-//     const req = await fetch(`${domain}/${path}/${id}`, {
-//       method: "PATCH",
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//         "Authorization": `Bearer ${token}`,
-//       },
-//       body: data,
-//     })
-//     const res = await req.text()
-//     console.log(typeof res)
-//     console.log('res update :>> ', res);
-//     return JSON.parse(res)
-//   } catch (error) {
-//     return {
-//       error: error.message
-//     };
-//   }
-// };
 
 
 

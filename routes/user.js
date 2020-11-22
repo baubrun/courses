@@ -13,7 +13,6 @@ router
   .route("/api/users/:userId")
   .get(
     authController.reqSignIn,
-    authController.hasAuthorization,
     userController.read
   )
   .patch(
@@ -22,6 +21,7 @@ router
     userController.update,
   )
   .delete(
+    authController.hasAuthorization,
     authController.hasAuthorization,
     userController.remove
   );

@@ -112,6 +112,7 @@ const remove = async (req, res, next) => {
 }
 
 const signIn = async (req, res) => {
+    console.log('req.body :>> ', req.body);
     const {
         email,
         password

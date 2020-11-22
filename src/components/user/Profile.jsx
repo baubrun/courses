@@ -48,9 +48,7 @@ const Profile = ({ match }) => {
   const auth = profileId === user._id;
 
   const getUser = async (id) => {
-    console.log("---profile");
     const data = await api.read(id);
-    console.log("data :>> ", data);
     if (data) {
       if (data.error) {
         setRedirect(true);

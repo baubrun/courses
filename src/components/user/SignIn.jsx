@@ -73,10 +73,11 @@ const SignIn = (props) => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+    
     const user = {
       email: values.email,
       password: values.password,
-    };
+    }
 
     const data = await api.signIn(user);
     if (data) {
@@ -94,8 +95,6 @@ const SignIn = (props) => {
       }
     }
   };
-
-
 
   const from = props.location.state || "/";
 

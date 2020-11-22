@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 16,
   },
   link: {
+    color: "#1b0000 !important",
     textDecoration: "none",
   },
   root: theme.mixins.gutters({
@@ -117,7 +118,6 @@ const MyCourses = () => {
                     <ListItemAvatar>
                       <Avatar
                         src={require(`../../uploads/${course.image}`)}
-                        className={classes.avatar}
                         className={classes.avatar}
                       />
                     </ListItemAvatar>

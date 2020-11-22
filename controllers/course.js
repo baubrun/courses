@@ -106,12 +106,6 @@ const listByInstructor = async (req, res) => {
 };
 
 
-const photo = (req, res, next) => {
-  // res.set("Content-Type", req.course.image.contentType);
-  return res.send(req.course.image);
-};
-
-
 const read = (req, res) => {
   req.course.image = undefined;
   return res.json(req.course);
@@ -121,6 +115,5 @@ export default {
   create,
   courseByID,
   listByInstructor,
-  photo,
   read,
 };

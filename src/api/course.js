@@ -9,27 +9,6 @@ import {
 } from "./auth";
 
 
-// const createCourse = async (data, id = "") => {
-//   const token = getToken();
-//   try {
-//     const req = await fetch(`${domain}/${coursesByPath}${id}`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//         "Authorization": `Bearer ${token}`,
-//       },
-//       body: data,
-//     })
-//     const res = await req.text()
-//     return JSON.parse(res)
-//   } catch (error) {
-//     return {
-//       error: error.message
-//     };
-
-//   }
-// };
-
 
 const createCourse = async (data, id = "") => {
   const token = getToken();
@@ -90,6 +69,8 @@ const read = async (id) => {
     };
   }
 }
+
+
 
 export default {
   createCourse,

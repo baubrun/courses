@@ -96,7 +96,6 @@ const NewCourse = () => {
     newCourse.append("name", values.name);
     newCourse.append("image", file);
     
-    // const data = await api.createCourse(newCourse, "5fb6c60af624e64b689ec938");
     const data = await api.createCourse(newCourse, user._id);
     if (data) {
       const { error, image } = data;

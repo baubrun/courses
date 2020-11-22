@@ -27,17 +27,6 @@ router.route('/api/courses/:courseId')
     .get(courseController.read)
 
 
-// router.route("/api/courses/defaultImg")
-//     .get(courseController.defaultImg);
-
-router
-    .route("/api/courses/photo/:courseId")
-    .get(
-        courseController.photo,
-    )
-
-
-
 
 router.param('userId', userController.userById)
 router.param('courseId', courseController.courseByID)

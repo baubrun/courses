@@ -4,6 +4,7 @@ import { moveFilesToApp } from "../serverUtils/index.js";
 import path from "path";
 import mongoose from "mongoose";
 
+
 // works
 const courseByID = async (req, res, next, id) => {
   try {
@@ -47,11 +48,12 @@ const create = async (req, res, next) => {
       return res.status(400).json({
         message: "Image required.",
       });
-    } else {
+    } 
+    else {
       const ext = path.extname(file.originalname);
       if (![".jpeg", ".jpg", ".png"].some((x) => x === ext)) {
         return res.status(400).json({
-          message: "Invalid image type.",
+          message: "Invalid image type."
         });
       }
     }
@@ -93,17 +95,11 @@ const create = async (req, res, next) => {
   }
 };
 
-const photo = (req, res, next) => {
+const photo = (req, res,) => {
     if(req.course.image.data){
       res.set("Content-Type", req.course.image.contentType)
       return res.send(req.course.image.data)
     }
-    next()
-  }
-
-  
-  const defaultPhoto = (req, res) => {
-    return res.sendFile(process.cwd()+defaultImage)
   }
   
 
@@ -134,7 +130,6 @@ const read = (req, res) => {
 export default {
   create,
   courseByID,
-  defaultPhoto,
   listByInstructor,
   photo,
   read,

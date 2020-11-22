@@ -21,6 +21,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import PeopleIcon from "@material-ui/icons/Group";
+import PersonIcon from '@material-ui/icons/Person';
 import Typography from "@material-ui/core/Typography";
 
 // import { enrollmentStats } from "./../enrollment/api-enrollment";
@@ -109,8 +110,8 @@ const Course = ({ match }) => {
   });
 
   const imageUrl = course._id
-    ? `/api/courses/photo/${course._id}?${new Date().getTime()}`
-    : '/api/courses/defaultphoto'
+    ? `/api/courses/photo/${course._id}`
+    : <PersonIcon />
 
   const getCourse = async () => {
     const data = await api.read(match.params.courseId);

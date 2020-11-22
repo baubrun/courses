@@ -21,6 +21,8 @@ import DeleteUser from "./DeleteUser";
 
 import { userState } from "../../redux/userSlice";
 
+import api from "../../api/user";
+
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
     maxWidth: 600,
@@ -36,12 +38,27 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = ({match}) => {
   const classes = useStyles();
-  const [auth, setAuth] = useState(false);
+  // const [auth, setAuth] = useState(false);
   const { loggedIn, user } = useSelector(userState);
+  const [profile, setProfile] = useState({})
+  const profileId = match.params.userId
+  const auth = profileId === user._id
 
-  const userId = match.params.userId
-  console.log('userId :>> ', userId);
 
+
+  const getUser = async (id) => {
+    console.log("---profile")
+    const data = await api.read(id)
+    console.log('data :>> ', data);
+    if (data){
+      setProfile(data)
+      }
+    }
+
+
+  useEffect(() => {
+    getUser(profileId)
+  }, [])
 
 
   if (!loggedIn) {
@@ -60,22 +77,22 @@ const Profile = ({match}) => {
               <Person />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={user.name} secondary={user.email} />
-          {loggedIn && (
+          <ListItemText primary={profile.name} secondary={profile.email} />
+          {loggedIn && auth && (
             <ListItemSecondaryAction>
-              <Link to={`/user/edit/${user._id}`}>
+              <Link to={`/user/edit/${profileId}`}>
                 <IconButton color="primary">
                   <Edit />
                 </IconButton>
               </Link>
-              <DeleteUser userId={user._id} />
+              <DeleteUser userId={profile._id} />
             </ListItemSecondaryAction>
           )}
         </ListItem>
         <Divider />
         <ListItem>
           <ListItemText
-            primary={"Joined: " + new Date(user.created).toDateString()}
+            primary={"Joined: " + new Date(profile.created).toDateString()}
           />
         </ListItem>
       </List>

@@ -35,7 +35,6 @@ router
   .route("/api/courses/photo/:courseId")
   .get(
       courseController.photo, 
-      courseController.defaultPhoto);
-
+)
 
 export default router

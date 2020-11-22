@@ -51,7 +51,7 @@ const list = async (req, res) => {
         return res.status(200).json(users)
     } catch (error) {
         return res.status(400).json({
-            message: error
+            message: error.message
         })
     }
 }
@@ -70,22 +70,32 @@ const isInstructor = async (req, res, next) => {
 }
 
 
-const read = async (req, res) => {
-    const token = req.header("x-auth-token")
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    try {
-        let user = await User.findById(verified._id).select("-password -__v")
-        if (user) {
-            return res.json({
-                user: user
-            })
-        }
-    } catch (error) {
-        return res.status(400).json({
-            message: error.message
-        })
-    }
+// const read = async (req, res) => {
+//     const token = req.header("x-auth-token")
+//     const verified = jwt.verify(token, process.env.JWT_SECRET);
+//     try {
+//         let user = await User.findById(verified._id).select("-password -__v")
+//         if (user) {
+//             return res.json({
+//                 user: user
+//             })
+//         }
+//     } catch (error) {
+//         return res.status(400).json({
+//             message: error.message
+//         })
+//     }
+// }
+
+//works
+const read = (req, res) => {
+        req.profile.password = undefined
+        req.profile.__v = undefined
+        console.log('req.profile :>> ', req.profile);
+        return res.json(req.profile)
+    
 }
+
 
 
 const remove = async (req, res, next) => {
@@ -125,7 +135,7 @@ const signIn = async (req, res) => {
             const token = jwt.sign({
                     _id: user.id
                 },
-                process.env.JWT_SECRET, {
+                process.env.JWT_SECRET,{
                     expiresIn: "24h"
                 }
             )
@@ -195,29 +205,29 @@ const update = async (req, res) => {
     }
 }
 const userById = async (req, res, next, id) => {
-    console.log('id userById Ctrl :>> ', id);
+    // console.log('id userById Ctrl :>> ', id);
     try {
-      let user = await User.findById(id)
-      if (!user)
+        let user = await User.findById(id)
+        if (!user)
+            return res.status(400).json({
+                error: "User not found."
+            })
+        req.profile = user
+        //   console.log('req.profile', req.profile)
+        next()
+    } catch (error) {
         return res.status(400).json({
-          error: "User not found."
+            error: "Could not retrieve user."
         })
-      req.profile = user
-      console.log('req.profile', req.profile)
-      next()
-    } catch (err) {
-      return res.status(400).json({
-        error: "Could not retrieve user."
-      })
     }
-  }
-  
+}
+
 
 export default {
     create,
-    read,
     list,
     isInstructor,
+    read,
     remove,
     signIn,
     signOut,

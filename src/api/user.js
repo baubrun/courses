@@ -6,12 +6,12 @@ import {
     usersPath
 } from "./utils";
 import {
-    getToken
+    isAuthenticated
 } from "./auth"
 
 
 const read = async (id) => {
-    const token = getToken();
+    const token = isAuthenticated();
     try {
         let req = await fetch(
             `${domain}/${usersPath}/${id}`, {

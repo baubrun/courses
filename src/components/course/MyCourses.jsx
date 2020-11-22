@@ -76,6 +76,8 @@ const MyCourses = () => {
     getCourses();
   }, []);
 
+ 
+
   if (redirect) {
     return <Redirect to="/signin" />;
   }
@@ -103,36 +105,32 @@ const MyCourses = () => {
             </Link>
           </span>
         </Typography>
-        {courses.length < 1 ? (
-          <Box>No courses.</Box>
-        ) : (
-          <List dense>
-            {courses.map((course, idx) => {
-              return (
-                <Link
-                  className={classes.link}
-                  to={"/teach/course/" + course._id}
-                  key={idx}
-                >
-                  <ListItem button>
-                    <ListItemAvatar>
-                      <Avatar
-                        src={require(`../../uploads/${course.image}`)}
-                        className={classes.avatar}
-                      />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={course.name}
-                      secondary={course.description}
-                      className={classes.listText}
+        <List dense>
+          {courses.map((course, idx) => {
+            return (
+              <Link
+                className={classes.link}
+                to={"/teach/course/" + course._id}
+                key={idx}
+              >
+                <ListItem button>
+                  <ListItemAvatar>
+                    <Avatar
+                      src={require(`../../uploads/${course.image}`)}
+                      className={classes.avatar}
                     />
-                  </ListItem>
-                  <Divider />
-                </Link>
-              );
-            })}
-          </List>
-        )}
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={course.name}
+                    secondary={course.description}
+                    className={classes.listText}
+                  />
+                </ListItem>
+                <Divider />
+              </Link>
+            );
+          })}
+        </List>
       </Paper>
     </div>
   );

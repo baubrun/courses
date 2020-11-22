@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { userState } from "../redux/userSlice";
-import {getToken} from "../api/auth"
+import {isAuthenticated} from "../api/auth"
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const { loggedIn, } = useSelector(userState);
@@ -11,7 +11,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        loggedIn  && getToken() ? (
+        loggedIn  && isAuthenticated() ? (
           <Component {...props} />
         ) : (
           <Redirect

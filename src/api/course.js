@@ -5,13 +5,13 @@ import {
   coursesPath,
 } from "./utils";
 import {
-  getToken
+  isAuthenticated
 } from "./auth";
 
 
 
 const createCourse = async (data, id = "") => {
-  const token = getToken();
+  const token = isAuthenticated();
   try {
     const res = await axios.post(`${domain}/${coursesByPath}/${id}`,
       data, {
@@ -31,7 +31,7 @@ const createCourse = async (data, id = "") => {
 
 
 const listCourseByInstructor = async (id = "") => {
-  const token = getToken();
+  const token = isAuthenticated();
   try {
     let req = await fetch(
       `${domain}/${coursesByPath}/${id}`, {
@@ -52,7 +52,7 @@ const listCourseByInstructor = async (id = "") => {
 
 
 const read = async (id) => {
-  const token = getToken();
+  const token = isAuthenticated();
   try {
     let req = await fetch(
       `${domain}/${coursesByPath}/${id}`, {

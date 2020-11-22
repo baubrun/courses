@@ -1,6 +1,3 @@
-const isAuthorized = (profile, user) => {
-  return profile === user
-}
 
 
 const deleteToken = () => {
@@ -8,7 +5,7 @@ const deleteToken = () => {
 };
 
 
-const getToken = () => {
+const isAuthenticated = () => {
   let token = JSON.parse(localStorage.getItem("jwt"))
   if (!token) {
     return false
@@ -32,7 +29,6 @@ const setToken = (jwt, cb) => {
 
 export {
   deleteToken,
-  getToken,
-  isAuthorized,
+  isAuthenticated,
   setToken,
 };

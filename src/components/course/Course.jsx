@@ -29,6 +29,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import api from "../../api/course";
+import {isAuthenticated} from "../../api/auth";
 
 import { userState } from "../../redux/userSlice";
 
@@ -109,12 +110,15 @@ const Course = ({ match }) => {
     redirect: false,
   });
 
+  const courseUrl = match.params.courseId
+
   const imageUrl = course._id
     ? `/api/courses/photo/${course._id}`
     : <PersonIcon />
 
   const getCourse = async () => {
-    const data = await api.read(match.params.courseId);
+
+    const data = await api.read(courseUrl);
     // console.log("data :>> ", data);
     if (data) {
       if (data.error) {
@@ -130,7 +134,7 @@ const Course = ({ match }) => {
 
   useEffect(() => {
     getCourse();
-  }, [match.params.courseId]);
+  }, [courseUrl]);
 
   //   useEffect(() => {
   //     enrollmentStats(
@@ -196,7 +200,8 @@ const Course = ({ match }) => {
           subheader={
             <Box>
               <Link
-                to={"/user/" + course.instructor._id}
+                // to={"/user/" + course.instructor._id}
+                to={`/user/${course.instructor._id}`}
                 className={classes.sub}
               >
                 By {course.instructor.name}
@@ -206,9 +211,9 @@ const Course = ({ match }) => {
           }
           action={
             <>
-              {loggedIn && user._id == course.instructor._id && (
+              {loggedIn && isAuthenticated() && (
                 <span className={classes.action}>
-                  <Link to={"/teach/course/edit/" + course._id}>
+                  <Link to={`/teach/course/edit/${course._id}`}>
                     <IconButton color="secondary">
                       <Edit />
                     </IconButton>
@@ -286,7 +291,7 @@ const Course = ({ match }) => {
             }
             action={
               loggedIn &&
-              user._id == course.instructor._id &&
+              isAuthenticated() &&
               !course.published && (
                 <span className={classes.action}>
                   {/* <NewLesson 

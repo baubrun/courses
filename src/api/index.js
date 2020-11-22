@@ -3,7 +3,7 @@ import {
   domain
 } from "./utils";
 import {
-  getToken
+  isAuthenticated
 } from "./auth";
 
 
@@ -50,7 +50,7 @@ const list = async (path) => {
 
 
 const read = async (path) => {
-  const token = getToken();
+  const token = isAuthenticated();
   try {
     let req = await fetch(
       `${domain}/${path}`, {
@@ -71,7 +71,7 @@ const read = async (path) => {
 
 
 const remove = async (id, path) => {
-  const token = getToken();
+  const token = isAuthenticated();
   try {
     const req = await fetch(`${domain}/${path}/${id}`, {
       method: "DELETE",
@@ -94,7 +94,7 @@ const remove = async (id, path) => {
 
 
 const update = async (data, id, path) => {
-  const token = getToken();
+  const token = isAuthenticated();
   try {
     const res = await axios.patch(
       `${domain}/${path}/${id}`, {

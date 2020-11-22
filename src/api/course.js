@@ -54,41 +54,61 @@ const createCourse = async (data, id = "") => {
 const listCourseByInstructor = async (id = "") => {
   const token = getToken();
   try {
-    const res = await axios.get(`${domain}/${coursesByPath}/${id}`, {
-      instructor: id
-    }, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      },
-    });
-    return res.data;
+    let req = await fetch(
+      `${domain}/${coursesByPath}/${id}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+    const res = await req.text()
+    return JSON.parse(res)
   } catch (error) {
     return {
-      error: error.response.data.message,
+      error: error.message
     };
   }
 };
 
+// const listCourseByInstructor = async (id = "") => {
+//   const token = getToken();
+//   try {
+//     const res = await axios.get(`${domain}/${coursesByPath}/${id}`, {
+//       instructor: id
+//     }, {
+//       headers: {
+//         "Authorization": `Bearer ${token}`,
+//       },
+//     });
+//     return res.data;
+//   } catch (error) {
+//     return {
+//       error: error.response.data.message,
+//     };
+//   }
+// };
 
 
-const read = async (id = "") => {
+
+
+const read = async (id) => {
   const token = getToken();
   try {
-    const res = await axios.get(`${domain}/${coursesPath}/${id}`,
-      null, {
+    let req = await fetch(
+      `${domain}/${coursesByPath}/${id}`, {
+        method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-    return res.data;
+          "Authorization": `Bearer ${token}`
+        }
+      })
+    const res = await req.text()
+    return JSON.parse(res)
   } catch (error) {
     return {
-      error: error.response.data.message,
+      error: error.message
     };
   }
-
-};
-
+}
 
 export default {
   createCourse,

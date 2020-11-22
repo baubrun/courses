@@ -105,12 +105,11 @@ const photo = (req, res,) => {
 
 // not work
 const listByInstructor = async (req, res) => {
-  //   console.log("req.profile course Ctrl:>> ", req.profile);
-  //   console.log('req.params.id :>> ', req.params.id);
+  console.log("------------------------------\n")
+  console.log('req.profile listByInstructor :>> ', req.profile);
   try {
     const courses = await Course.find({
-      instructor: mongoose.Types.ObjectId(req.param.id),
-      //   instructor: req.profile
+        instructor: req.profile
     }).populate("instructor", "_id name");
 
     return res.status(200).json(courses);

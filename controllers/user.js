@@ -91,7 +91,8 @@ const isInstructor = async (req, res, next) => {
 const read = (req, res) => {
         req.profile.password = undefined
         req.profile.__v = undefined
-        console.log('req.profile :>> ', req.profile);
+        console.log("------------------------------\n")
+        console.log('req.profile read user ctrl :>> ', req.profile);
         return res.json(req.profile)
     
 }
@@ -112,7 +113,6 @@ const remove = async (req, res, next) => {
 }
 
 const signIn = async (req, res) => {
-    console.log('req.body :>> ', req.body);
     const {
         email,
         password

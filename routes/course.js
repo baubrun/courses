@@ -11,8 +11,8 @@ const router = express.Router()
 
 router.route("/api/courses/by/:userId")
     .get(
-        // authController.reqSignIn,
-        // authController.hasAuthorization,
+        authController.reqSignIn,
+        authController.hasAuthorization,
         courseController.listByInstructor
     )
     .post(
@@ -25,16 +25,21 @@ router.route("/api/courses/by/:userId")
 
 router.route('/api/courses/:courseId')
     .get(courseController.read)
-router.param('courseId', courseController.courseByID)
 
 
 // router.route("/api/courses/defaultImg")
 //     .get(courseController.defaultImg);
 
 router
-  .route("/api/courses/photo/:courseId")
-  .get(
-      courseController.photo, 
-)
+    .route("/api/courses/photo/:courseId")
+    .get(
+        courseController.photo,
+    )
+
+
+
+
+router.param('userId', userController.userById)
+router.param('courseId', courseController.courseByID)
 
 export default router

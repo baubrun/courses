@@ -15,7 +15,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { create } from "../../api";
+import api from "../../api";
 import {
   domain,
   signInPath,
@@ -73,7 +73,7 @@ const SignUp = () => {
       password: values.password,
     };
 
-    const data = await create(user, usersPath)
+    const data = await api.create(user, usersPath)
     if (data && data.error) {
       setValues({ ...values, error: data.error });
     } else {

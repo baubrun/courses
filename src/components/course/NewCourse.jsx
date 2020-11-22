@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -11,9 +12,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
-import { Redirect } from "react-router-dom";
-import { createCourse } from "../../api/course";
+
 import _ from "lodash";
+
+import api from "../../api/course";
 
 // import { addCourseAction } from "../../redux/courseSlice";
 import { userState } from "../../redux/userSlice";
@@ -93,7 +95,7 @@ const NewCourse = () => {
     newCourse.append("name", values.name);
     newCourse.append("image", file);
 
-    const data = await createCourse(newCourse, "5fb6c60af624e64b689ec938");
+    const data = await api.createCourse(newCourse, "5fb6c60af624e64b689ec938");
     if (data) {
       const { error, image } = data;
       if (error) {

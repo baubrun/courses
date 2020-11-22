@@ -34,7 +34,7 @@ const signOut = async () => {
 
 
 
-export {
+export default{
     signIn,
     signOut,
 };

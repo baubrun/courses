@@ -4,6 +4,25 @@ import { moveFilesToApp } from "../serverUtils/index.js";
 import path from "path";
 import mongoose from "mongoose";
 
+const courseByID = async (req, res, next, id) => {
+  try {
+    let course = await Course.findById(id).populate("instructor", "_id name");
+    if (!course)
+      return res.status(400).json({
+        error: "Course not found.",
+      });
+    req.course = course;
+    console.log('req.course :>> ', req.course);
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      error: "Could not retrieve course.",
+    });
+  }
+};
+
+
+
 const create = async (req, res, next) => {
   const {
     files,
@@ -73,15 +92,20 @@ const create = async (req, res, next) => {
 };
 
 const listByInstructor = async (req, res) => {
-  const { instructor } = req.body;
+  //   const { instructor } = req.body;
+  //   console.log('instructor :>> ', instructor);
+  console.log("req.body :>> ", req.body);
   try {
-    const courses = Course.find({
-      instructor: instructor,
-    })
+    const courses = await Course
+      .find
+      // {
+      //   instructor: instructor._id,
+      // instructor: mongoose.Types.ObjectId(req.profile._id),
+      // }
+      ();
     // .populate("instructor", "_id name");
 
     return res.status(200).json(courses);
-
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -89,7 +113,16 @@ const listByInstructor = async (req, res) => {
   }
 };
 
+const read = (req, res) => {
+    req.profile.password = undefined
+    console.log('req.profile :>> ', req.profile);
+    return res.json(req.profile)
+  }
+  
+
 export default {
   create,
+  courseByID,
   listByInstructor,
+  read,
 };

@@ -30,21 +30,23 @@ const createCourse = async (data, id = "") => {
 const listCourseByInstructor = async (id = "") => {
   const token = getToken();
   try {
-    const res = await axios.get(`${domain}/${coursePath}/${id}`,
-      null, {
-        headers: {
-          "x-auth-token": token,
-        },
-      });
+    const res = await axios.get(`${domain}/${coursePath}/${id}`, {
+      instructor: id
+    }, {
+      headers: {
+        "x-auth-token": token,
+      },
+    });
     return res.data;
   } catch (error) {
     return {
       error: error.response.data.message,
     };
   }
+
 };
 
-export {
+export default{
   createCourse,
   listCourseByInstructor,
 };

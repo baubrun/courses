@@ -13,7 +13,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { update } from "../../api";
+import api from "../../api";
 import { userState, loadUser } from "../../redux/userSlice";
 import {editPath} from "../../api/utils"
 
@@ -93,7 +93,7 @@ const EditProfile = () => {
       password: values.password,
     };
 
-    const data = await update(newData, user._id, editPath);
+    const data = await api.update(newData, user._id, editPath);
     if (data && data.error) {
       setValues({ ...values, error: data.error });
     } else {

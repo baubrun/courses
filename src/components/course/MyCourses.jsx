@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 
 import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -15,7 +16,7 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { Redirect, Link } from "react-router-dom";
 
-import { listCourseByInstructor } from "../../api/course";
+import api from "../../api/course";
 
 import { userState } from "../../redux/userSlice";
 
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 16,
   },
   link: {
-      textDecoration: "none",
+    textDecoration: "none",
   },
   root: theme.mixins.gutters({
     maxWidth: 600,
@@ -54,38 +55,30 @@ const useStyles = makeStyles((theme) => ({
 
 const MyCourses = () => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    courses: [],
-    redirect: false,
-  });
   const { user } = useSelector(userState);
+  const [courses, setCourses] = useState([]);
+  const [redirect, setRedirect] = useState(false);
+  const [error, setError] = useState(false);
 
   const getCourses = async () => {
-    const data = await listCourseByInstructor("5fb6c60af624e64b689ec938");
-    if (data) {
-      const { error } = data;
-      if (error) {
-        setValues({ ...values, error });
-      } else {
-        setValues({
-          ...values,
-          courses: data,
-          // redirect: true,
-        });
-        // dispatch(addCourseAction(newCourse));
-      }
-    }
+    const data = await api.listCourseByInstructor("5fb6c60af624e64b689ec938");
+    // const data = await listCourseByInstructor(user._id);
+    console.log('data :>> ', data);
+    // if (data) {
+    //     setCourses(data);
+    // }
   };
 
   useEffect(() => {
     getCourses();
-  }, []);
+  }, [user]);
 
-  if (values.redirect) {
+  if (redirect) {
     return <Redirect to="/signin" />;
   }
 
   return (
+
     <div>
       <Paper className={classes.root} elevation={4}>
         <Typography type="title" className={classes.title}>
@@ -98,33 +91,41 @@ const MyCourses = () => {
             </Link>
           </span>
         </Typography>
-        <List dense>
-          {values.courses.map((course, idx) => {
-            return (
-              <Link className={classes.link} to={"/teach/course/" + course._id} key={idx}>
-                <ListItem button>
-                  <ListItemAvatar>
-                    <Avatar
-                      src={
-                        "/api/courses/photo/" +
-                        course._id +
-                        "?" +
-                        new Date().getTime()
-                      }
-                      className={classes.avatar}
+        {courses.length < 1 ? (
+          <Box>No courses.</Box>
+        ) : (
+          <List dense>
+            {courses.map((course, idx) => {
+              return (
+                <Link
+                  className={classes.link}
+                  to={"/teach/course/" + course._id}
+                  key={idx}
+                >
+                  <ListItem button>
+                    <ListItemAvatar>
+                      <Avatar
+                        src={
+                          "/api/courses/photo/" +
+                          course._id +
+                          "?" +
+                          new Date().getTime()
+                        }
+                        className={classes.avatar}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={course.name}
+                      secondary={course.description}
+                      className={classes.listText}
                     />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={course.name}
-                    secondary={course.description}
-                    className={classes.listText}
-                  />
-                </ListItem>
-                <Divider />
-              </Link>
-            );
-          })}
-        </List>
+                  </ListItem>
+                  <Divider />
+                </Link>
+              );
+            })}
+          </List>
+        )}
       </Paper>
     </div>
   );

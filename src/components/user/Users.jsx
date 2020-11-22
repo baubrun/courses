@@ -15,7 +15,7 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import Person from "@material-ui/icons/Person";
 import Box from "@material-ui/core/Box";
 
-import {list}  from "../../api";
+import api from "../../api";
 
 import {
   usersPath,
@@ -41,7 +41,7 @@ const Users = () => {
   const [error, setError] = useState("")
 
   const getUsers = async () => {
-    const data = await list(usersPath)
+    const data = await api.list(usersPath)
     if (data && data.error){
       setError(data.error)
     } else {

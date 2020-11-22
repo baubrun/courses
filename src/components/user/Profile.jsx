@@ -20,8 +20,6 @@ import Divider from "@material-ui/core/Divider";
 import DeleteUser from "./DeleteUser";
 
 import { userState } from "../../redux/userSlice";
-import { read } from "../../api/";
-import { userPath } from "../../api/utils"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({

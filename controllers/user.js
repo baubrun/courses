@@ -48,7 +48,7 @@ const create = async (req, res) => {
 const list = async (req, res) => {
     try {
         let users = await User.find().select("-password -__v")
-        return res.json(users)
+        return res.status(200).json(users)
     } catch (error) {
         return res.status(400).json({
             message: error
@@ -202,6 +202,7 @@ const userById = async (req, res, next, id) => {
           error: "User not found."
         })
       req.profile = user
+      console.log('req.profile', req.profile)
       next()
     } catch (err) {
       return res.status(400).json({

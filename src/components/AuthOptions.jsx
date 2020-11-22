@@ -6,10 +6,9 @@ import Button from "@material-ui/core/Button";
 import { makeStyles, withTheme } from "@material-ui/core/styles";
 import Library from "@material-ui/icons/LocalLibrary";
 
-import { deleteToken, getToken } from "../api/auth";
+import { deleteToken, } from "../api/auth";
 import { userState, signOutAction } from "../redux/userSlice";
 
-import { read } from "../api/auth";
 
 const useStyles = makeStyles((theme) => ({
   link: {

@@ -10,7 +10,7 @@ router.route("/api/user")
     userController.read,
   )
 
-  
+
 router.route("/api/users")
   .get(userController.list)
   .post(userController.create);
@@ -32,7 +32,7 @@ router
   );
 
 
-  router.param('userId', userController.userById)
+router.param('userId', userController.userById)
 
 
 

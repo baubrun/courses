@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { signIn } from "../../api/user";
+import api from "../../api/user";
 import { setToken } from "../../api/auth";
 import { signInAction } from "../../redux/userSlice";
 
@@ -78,7 +78,7 @@ const SignIn = (props) => {
       password: values.password,
     };
 
-    const data = await signIn(user);
+    const data = await api.signIn(user);
     if (data) {
       if (data.error) {
         setValues({ ...values, error: data.error });

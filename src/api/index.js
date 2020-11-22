@@ -90,7 +90,7 @@ const update = async (data, id, path) => {
   }
 };
 
-export {
+export default{
   create,
   list,
   read,

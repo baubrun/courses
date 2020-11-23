@@ -1,5 +1,5 @@
 import express from "express";
-import authController from "../controllers/auth.js";
+// import authController from "../controllers/auth.js";
 import courseController from "../controllers/course.js";
 import userController from "../controllers/user.js";
 import {

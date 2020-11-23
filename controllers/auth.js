@@ -1,5 +1,5 @@
-import expressJwt from "express-jwt"
-import config from "../config/index.js"
+// import expressJwt from "express-jwt"
+// import config from "../config/index.js"
 
 const hasAuthorization = (req, res, next) => {
   const authorized = req.profile && req.auth &&
@@ -13,11 +13,11 @@ const hasAuthorization = (req, res, next) => {
 };
 
 
-const reqSignIn = expressJwt({
-  algorithms:   ["HS256"],
-  secret: config.jwtSecret,
-  userProperty: "auth",
-})
+// const reqSignIn = expressJwt({
+//   algorithms:   ["HS256"],
+//   secret: config.jwtSecret,
+//   userProperty: "auth",
+// })
 
 
 

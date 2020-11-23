@@ -7,12 +7,12 @@ import helmet from "helmet"
 import userRoutes from "./routes/user.js"
 import authRoutes from "./routes/auth.js"
 import courseRoutes from "./routes/course.js"
+import config from "./config/index.js"
 
 const app = express()
-dotenv.config()
 
 
-const PORT = process.env.PORT || 5000
+const PORT = config.port
 const options = {
     dbName: "Classroom",
     useCreateIndex: true,
@@ -55,7 +55,7 @@ app.use("/", express.static("build"))
 /* =======================
 Mongoose
 =========================*/
-mongoose.connect(process.env.MONGODB_URI, options)
+mongoose.connect(config.mongoUri, options)
     .then(app.listen(PORT, () => {
         console.log("\nConnected to DB!\n")
         console.log("\nServer running on port:", PORT, "\n")

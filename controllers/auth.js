@@ -1,8 +1,5 @@
-import jwt from "jsonwebtoken";
 import expressJwt from "express-jwt"
-import dotenv from "dotenv";
-dotenv.config();
-
+import config from "../config/index.js"
 
 const hasAuthorization = (req, res, next) => {
   const authorized = req.profile && req.auth &&
@@ -18,7 +15,7 @@ const hasAuthorization = (req, res, next) => {
 
 const reqSignIn = expressJwt({
   algorithms:   ["HS256"],
-  secret: process.env.JWT_SECRET,
+  secret: config.jwtSecret,
   userProperty: "auth",
 })
 

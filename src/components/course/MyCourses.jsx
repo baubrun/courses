@@ -116,7 +116,7 @@ const MyCourses = () => {
               >
                 <ListItem button>
                   <ListItemAvatar>
-                    <img
+                    <Avatar
                       src={require(`../../uploads/${course.image}`)}
                       className={classes.avatar}
                     />

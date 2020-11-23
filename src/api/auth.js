@@ -6,7 +6,6 @@ const deleteToken = () => {
 const isAuthenticated = () => {
   let token = JSON.parse(localStorage.getItem("jwt"))
   if (token) {
-    console.log('token :>> ', token);
     return token
   } else {
     return false

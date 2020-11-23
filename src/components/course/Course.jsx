@@ -112,8 +112,8 @@ const Course = ({ match }) => {
 
   const imageUrl = course._id
     ? `/api/courses/photo/${course._id}`
-    : <PersonIcon />
-
+    : ""
+    
   const getCourse = async () => {
 
     const data = await api.read(courseUrl);
@@ -266,7 +266,6 @@ const Course = ({ match }) => {
 
             {course.published && (
               <Box className={classes.enroll}>
-                {/* <Enroll courseId={course._id} /> */}
                 enroll here
               </Box>
             )}
@@ -295,7 +294,6 @@ const Course = ({ match }) => {
                   courseId={course._id} 
                   addLesson={addLesson} 
                   />
-                  New lesson here
                 </span>
               )
             }
@@ -343,7 +341,7 @@ const Course = ({ match }) => {
           </Button>
           <Button
             //   onClick={publish}
-            color="secondary"
+            color="primary"
             variant="contained"
           >
             Publish

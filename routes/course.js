@@ -34,8 +34,8 @@ router.route("/api/courses/:courseId")
 
 router.route("/api/courses/:courseId/lesson/new")
     .put(
-        authController.reqSignIn,
-        userController.isInstructor,
+        // authController.reqSignIn,
+        // userController.isInstructor,
         courseController.newLesson,
     )
 

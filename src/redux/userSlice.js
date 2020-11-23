@@ -14,11 +14,11 @@ const devUser = {
 export const userSlice = createSlice({
     name: "user",
     initialState: {
-        // loggedIn: false,
-        // user: {},
+        loggedIn: false,
+        user: {},
 
-        loggedIn: true,
-        user: devUser
+        // loggedIn: true,
+        // user: devUser
 
     },
     reducers: {

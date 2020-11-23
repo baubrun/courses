@@ -1,7 +1,6 @@
 import express from "express"
 import mongoose from "mongoose"
 import cors from "cors"
-import dotenv from "dotenv"
 import compress from "compression"
 import helmet from "helmet"
 import userRoutes from "./routes/user.js"

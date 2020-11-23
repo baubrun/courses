@@ -29,6 +29,24 @@ const createCourse = async (data, id = "") => {
 };
 
 
+const createNewLesson = async (data, id = "") => {
+  const token = isAuthenticated();
+  try {
+    const res = await axios.post(`/api/courses/${id}/lesson/new`,
+      data, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+    return res.data;
+  } catch (error) {
+    return {
+      error: error.response.data.message,
+    };
+  }
+};
+
+
 
 const listCourseByInstructor = async (id = "") => {
   const token = isAuthenticated();
@@ -74,6 +92,7 @@ const read = async (id) => {
 
 export default {
   createCourse,
+  createNewLesson,
   listCourseByInstructor,
   read,
 };

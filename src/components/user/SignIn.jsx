@@ -116,10 +116,10 @@ const SignIn = (props) => {
               id="email"
               label="Email"
               name="email"
-              value={values.email}
               margin="normal"
               onChange={(evt) => handleChange(evt)}
               type="email"
+              value={values.email}
             ></TextField>
             <br />
             <TextField
@@ -127,10 +127,10 @@ const SignIn = (props) => {
               id="password"
               label="Password"
               name="password"
-              value={values.password}
               margin="normal"
               onChange={(evt) => handleChange(evt)}
               type="password"
+              value={values.password}
             />
             {values.error && (
               <Typography color="error" component="p">
@@ -168,3 +168,4 @@ const SignIn = (props) => {
 };
 
 export default SignIn;
+

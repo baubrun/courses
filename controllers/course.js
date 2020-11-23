@@ -90,7 +90,6 @@ const create = async (req, res, next) => {
   }
 };
 
-
 const listByInstructor = async (req, res) => {
   try {
     const courses = await Course.find({
@@ -105,6 +104,23 @@ const listByInstructor = async (req, res) => {
   }
 };
 
+const newLesson = async (req, res) => {
+  try {
+    let lesson = req.body.lesson;
+    let newLesson = await Course.findByIdAndUpdate(
+      req.course._id,
+      { $push: { lessons: lesson }, updated: Date.now() },
+      { new: true }
+    )
+      .populate("instructor", "_id name")
+      .exec();
+    return res.status(200).json(newLesson);
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message
+    });
+  }
+};
 
 const read = (req, res) => {
   req.course.image = undefined;
@@ -115,5 +131,6 @@ export default {
   create,
   courseByID,
   listByInstructor,
+  newLesson,
   read,
 };

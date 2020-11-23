@@ -56,26 +56,37 @@ const list = async (req, res) => {
     }
 }
 
-
-const isInstructor = async (req, res, next) => {
-    const {
-        instructor
-    } = req.body
-    if (!instructor) {
+const isInstructor = (req, res, next) => {
+    const isInstructor =
+        req.course &&
+        req.auth && req.course.instructor._id == req.auth._id
+    if (!isInstructor) {
         return res.status(403).json({
-            error: "User is not an instructor."
+            error: "User is not authorized."
         })
     }
     next()
 }
 
 
-//works
+// const isInstructor = async (req, res, next) => {
+//     const {
+//         instructor
+//     } = req.body
+//     if (!instructor) {
+//         return res.status(403).json({
+//             error: "User is not an instructor."
+//         })
+//     }
+//     next()
+// }
+
+
 const read = (req, res) => {
-        req.profile.password = undefined
-        req.profile.__v = undefined
-        return res.json(req.profile)
-    
+    req.profile.password = undefined
+    req.profile.__v = undefined
+    return res.json(req.profile)
+
 }
 
 

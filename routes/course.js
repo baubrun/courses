@@ -25,11 +25,11 @@ router.route("/api/courses/by/:userId")
 
 router.route("/api/courses/:courseId")
     .get(courseController.read)
-    // .put(
+    .put(
     //     // authController.reqSignIn,
     //     // userController.isInstructor,
-    //     courseController.update,
-    // )
+        courseController.update,
+    )
 
 
 router.route("/api/courses/:courseId/lesson/new")

@@ -24,7 +24,6 @@ import PeopleIcon from "@material-ui/icons/Group";
 import PersonIcon from '@material-ui/icons/Person';
 import Typography from "@material-ui/core/Typography";
 
-// import { enrollmentStats } from "./../enrollment/api-enrollment";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -33,8 +32,7 @@ import {isAuthenticated} from "../../api/auth";
 
 import { userState } from "../../redux/userSlice";
 
-// import DeleteCourse from "./DeleteCourse";
-
+import NewLesson from "./NewLesson"
 
 const useStyles = makeStyles((theme) => ({
   action: {
@@ -200,7 +198,6 @@ const Course = ({ match }) => {
           subheader={
             <Box>
               <Link
-                // to={"/user/" + course.instructor._id}
                 to={`/user/${course.instructor._id}`}
                 className={classes.sub}
               >
@@ -225,7 +222,7 @@ const Course = ({ match }) => {
                         variant="outlined"
                         // onClick={clickPublish}
                       >
-                        {course.lessons.length == 0
+                        {course.lesson && course.lessons.length == 0
                           ? "Add atleast 1 lesson to publish"
                           : "Publish"}
                       </Button>
@@ -294,10 +291,10 @@ const Course = ({ match }) => {
               isAuthenticated() &&
               !course.published && (
                 <span className={classes.action}>
-                  {/* <NewLesson 
+                  <NewLesson 
                   courseId={course._id} 
                   addLesson={addLesson} 
-                  /> */}
+                  />
                   New lesson here
                 </span>
               )
@@ -305,12 +302,12 @@ const Course = ({ match }) => {
           />
           <List>
             {course.lessons &&
-              course.lessons.map((lesson, index) => {
+              course.lessons.map((lesson, idx) => {
                 return (
-                  <span key={index}>
+                  <span key={idx}>
                     <ListItem>
                       <ListItemAvatar>
-                        <Avatar>{index + 1}</Avatar>
+                        <Avatar>{idx + 1}</Avatar>
                       </ListItemAvatar>
                       <ListItemText primary={lesson.title} />
                     </ListItem>

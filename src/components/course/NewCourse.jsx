@@ -85,18 +85,8 @@ const NewCourse = () => {
     });
   };
 
-
-  const handleSubmit = async (evt) => {
-    evt.preventDefault()
-    // evt.stopPropagation()
-    const newCourse = new FormData();
-    newCourse.append("category", values.category);
-    newCourse.append("description", values.description);
-    newCourse.append("instructor", user._id) // on server if false not auth
-    newCourse.append("name", values.name);
-    newCourse.append("image", file);
-    
-    const data = await api.createCourse(newCourse, user._id);
+  const fetchData = async (newData, id) => {
+    const data = await api.createCourse(newData, id);
     if (data) {
       const { error, image } = data;
       if (error) {
@@ -110,6 +100,37 @@ const NewCourse = () => {
         // dispatch(addCourseAction(newCourse));
       }
     }
+
+  }
+
+
+  // const handleSubmit = async (evt) => {
+  const handleSubmit = (evt) => {
+    evt.preventDefault()
+
+    const newCourse = new FormData();
+    newCourse.append("category", values.category);
+    newCourse.append("description", values.description);
+    newCourse.append("instructor", user._id) // on server if false not auth
+    newCourse.append("name", values.name);
+    newCourse.append("image", file);
+    
+    fetchData(newCourse, user._id)
+
+    // const data = await api.createCourse(newCourse, user._id);
+    // if (data) {
+    //   const { error, image } = data;
+    //   if (error) {
+    //     setValues({ ...values, error });
+    //   } else {
+    //     setValues({
+    //       ...values,
+    //       image,
+    //       redirect: true,
+    //     });
+    //     // dispatch(addCourseAction(newCourse));
+    //   }
+    // }
   };
 
   if (values.redirect) {

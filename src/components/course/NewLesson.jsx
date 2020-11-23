@@ -65,14 +65,14 @@ const NewLesson = (props) => {
       <Button
         aria-label="Add Lesson"
         color="primary"
-        onClick={() => setOpenDialog()}
+        onClick={() => setOpenDialog(true)}
         variant="contained"
       >
         <Add /> &nbsp; New Lesson
       </Button>
       <Dialog
         aria-labelledby="form-dialog-title"
-        open={() => setOpenDialog(true)}
+        open={openDialog}
         onClose={() => setOpenDialog(false)}
       >
         <div className={classes.form}>

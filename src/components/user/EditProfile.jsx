@@ -15,7 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import api from "../../api";
 import { userState, loadUser } from "../../redux/userSlice";
-import {usersPath} from "../../api/utils"
+import { usersPath } from "../../api/utils";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -83,19 +83,8 @@ const EditProfile = () => {
     });
   };
 
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
-
-    const newData = {
-      instructor: values.instructor,
-      email: values.email,
-      _id: user._id,
-      name: values.name,
-      password: values.password,
-    };
-
+  const fetchData = async (newData) => {
     const data = await api.update(newData, user._id, usersPath);
-    console.log('data :>> ', data);
     if (data && data.error) {
       setValues({ ...values, error: data.error });
     } else {
@@ -106,11 +95,43 @@ const EditProfile = () => {
         });
         dispatch(
           loadUser({
-            ...data.user
+            ...data.user,
           })
         );
       }
     }
+  };
+
+  // const handleSubmit = async (evt) => {
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
+    const newData = {
+      instructor: values.instructor,
+      email: values.email,
+      _id: user._id,
+      name: values.name,
+      password: values.password,
+    };
+
+    fetchData(newData);
+
+    // const data = await api.update(newData, user._id, usersPath);
+    // if (data && data.error) {
+    //   setValues({ ...values, error: data.error });
+    // } else {
+    //   if (data && data.user) {
+    //     setValues({
+    //       ...values,
+    //       redirect: true,
+    //     });
+    //     dispatch(
+    //       loadUser({
+    //         ...data.user
+    //       })
+    //     );
+    //   }
+    // }
   };
 
   if (values.redirect) {

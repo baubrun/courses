@@ -6,18 +6,16 @@ import Button from "@material-ui/core/Button";
 import { makeStyles, withTheme } from "@material-ui/core/styles";
 import Library from "@material-ui/icons/LocalLibrary";
 
-import { deleteToken, } from "../api/auth";
+import { deleteToken } from "../api/auth";
 import { userState, signOutAction } from "../redux/userSlice";
 
-
 const useStyles = makeStyles((theme) => ({
+  button: {
+    color: "white",
+  },
   link: {
     color: "white",
     textDecoration: "none",
-    // textTransform: "uppercase",
-  },
-  button: {
-    color: "white",
   },
 }));
 
@@ -26,7 +24,6 @@ const AuthOptions = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { loggedIn, user } = useSelector(userState);
-  // const user = useSelector(userState);
 
   const redirect = (path) => {
     history.push(path);
@@ -47,7 +44,7 @@ const AuthOptions = () => {
       {loggedIn && (
         <>
           {user.instructor && (
-            <Link to="/teach/courses">
+            <Link className={classes.link} to="/teach/courses">
               <Button className={classes.button}>
                 <Library /> Teach
               </Button>

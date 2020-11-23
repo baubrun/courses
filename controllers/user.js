@@ -7,6 +7,9 @@ import {
 } from "../serverUtils/index.js"
 import jwt from "jsonwebtoken";
 dotenv.config()
+import {valid_OId} from "./helper.js"
+
+
 
 const create = async (req, res) => {
     const {
@@ -59,7 +62,8 @@ const list = async (req, res) => {
 const isInstructor = (req, res, next) => {
     const isInstructor =
         req.course &&
-        req.auth && req.course.instructor._id == req.auth._id
+        req.auth &&
+        req.course.instructor._id == req.auth._id
     if (!isInstructor) {
         return res.status(403).json({
             error: "User is not authorized."
@@ -199,8 +203,10 @@ const update = async (req, res) => {
     }
 }
 const userById = async (req, res, next, id) => {
+    const _id = valid_OId(id)
     try {
         let user = await User.findById(id)
+        // let user = await User.findById(_id)
         if (!user)
             return res.status(400).json({
                 error: "User not found."

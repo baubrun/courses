@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
+import Loading from "../Loading";
 
+import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
@@ -60,12 +62,13 @@ const MyCourses = () => {
   const [courses, setCourses] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getCourses = async () => {
     const data = await api.listCourseByInstructor(user._id);
     if (data) {
       if (data.error) {
-        setError("Error loading courses. Sorry!");
+        setError(data.error);
       } else {
         setCourses(data);
       }
@@ -75,8 +78,6 @@ const MyCourses = () => {
   useEffect(() => {
     getCourses();
   }, []);
-
- 
 
   if (redirect) {
     return <Redirect to="/signin" />;
@@ -93,7 +94,7 @@ const MyCourses = () => {
   }
 
   return (
-    <div>
+    <>
       <Paper className={classes.root} elevation={4}>
         <Typography type="title" className={classes.title}>
           Your Courses
@@ -106,7 +107,7 @@ const MyCourses = () => {
           </span>
         </Typography>
         <List dense>
-          {courses.map((course, idx) => {
+          {courses && courses.map((course, idx) => {
             return (
               <Link
                 className={classes.link}
@@ -115,7 +116,7 @@ const MyCourses = () => {
               >
                 <ListItem button>
                   <ListItemAvatar>
-                    <Avatar
+                    <img
                       src={require(`../../uploads/${course.image}`)}
                       className={classes.avatar}
                     />
@@ -132,7 +133,7 @@ const MyCourses = () => {
           })}
         </List>
       </Paper>
-    </div>
+    </>
   );
 };
 

@@ -22,7 +22,6 @@ import DeleteUser from "./DeleteUser";
 import { userState } from "../../redux/userSlice";
 
 import api from "../../api/user";
-import {isAuthorized} from "../../api/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({

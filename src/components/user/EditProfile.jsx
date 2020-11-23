@@ -65,7 +65,7 @@ const EditProfile = () => {
         name: user.name,
       });
     }
-  }, [user]);
+  }, [user, values]);
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
@@ -13,7 +13,6 @@ import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
-import _ from "lodash";
 
 import api from "../../api/course";
 
@@ -64,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
 
 const NewCourse = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const history = useHistory();
   const { user } = useSelector(userState);
   const [file, setFile] = useState({});

@@ -21,7 +21,6 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import PeopleIcon from "@material-ui/icons/Group";
-import PersonIcon from '@material-ui/icons/Person';
 import Typography from "@material-ui/core/Typography";
 
 
@@ -102,7 +101,6 @@ const Course = ({ match }) => {
   const { loggedIn, user } = useSelector(userState);
   const [course, setCourse] = useState({ instructor: {} });
   const [openDialog, setOpenDialog] = useState(false);
-  const [stats, setStats] = useState({});
   const [values, setValues] = useState({
     error: "",
     redirect: false,
@@ -176,7 +174,7 @@ const Course = ({ match }) => {
                         color="secondary"
                         variant="outlined"
                       >
-                        {course.lesson && course.lessons.length == 0
+                        {course.lesson && course.lessons.length === 0
                           ? "Add atleast 1 lesson to publish"
                           : "Publish"}
                       </Button>

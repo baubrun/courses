@@ -15,7 +15,6 @@ import api from "../../api/user";
 import { setToken } from "../../api/auth";
 import { signInAction } from "../../redux/userSlice";
 
-import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   card: {

@@ -6,7 +6,6 @@ import NotFound from "../views/NotFound"
 import SignUp from "./user/SignUp"
 import SignIn from "./user/SignIn"
 import Profile from "./user/Profile"
-import PrivateRoute from "../components/PrivateRoute"
 import EditProfile from "./user/EditProfile"
 import Menu from "./Menu"
 import NewCourse from "./course/NewCourse"
@@ -27,13 +26,10 @@ const Routers = () => {
             <Route path="/signIn" component={SignIn}/>
 
             <Route path="/user/edit/:userId" component={EditProfile} />
-            {/* <PrivateRoute path="/user/edit/:userId" component={EditProfile} /> */}
             <Route path="/user/:userId" component={Profile}/>
-            {/* <PrivateRoute path="/teach/courses" component={MyCourses}/> */}
             <Route path="/teach/courses" component={MyCourses}/>
             <Route path="/course/:courseId" component={Course}/>
             <Route path="/teach/course/new" component={NewCourse} />
-            {/* <PrivateRoute path="/teach/course/new" component={NewCourse} /> */}
             <Route path="/teach/course/:courseId" component={Course}/>
 
             <Route component={NotFound} />

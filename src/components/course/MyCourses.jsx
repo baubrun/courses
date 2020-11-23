@@ -58,7 +58,6 @@ const MyCourses = () => {
   const [courses, setCourses] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const getCourses = async () => {
     const data = await api.listCourseByInstructor(user._id);

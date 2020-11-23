@@ -17,9 +17,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 import api from "../../api";
 import {
-  domain,
-  signInPath,
-  signOutPath,
   usersPath,
 } from "../../api/utils"
 

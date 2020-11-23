@@ -2,7 +2,6 @@ import axios from "axios";
 import {
   domain,
   coursesByPath,
-  coursesPath,
 } from "./utils";
 import {
   isAuthenticated

@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = ({ match }) => {
   const classes = useStyles();
-  // const [auth, setAuth] = useState(false);
   const { loggedIn, user } = useSelector(userState);
   const [profile, setProfile] = useState({});
   const [redirect, setRedirect] = useState(false);
@@ -78,7 +77,6 @@ const Profile = ({ match }) => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={profile.name} secondary={profile.email} />
-          {/* {loggedIn && isAuthorized(profileId, user._id) && ( */}
           {loggedIn && auth && (
             <ListItemSecondaryAction>
               <Link to={`/user/edit/${profileId}`}>

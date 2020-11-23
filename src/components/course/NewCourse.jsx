@@ -97,40 +97,25 @@ const NewCourse = () => {
           image,
           redirect: true,
         });
-        // dispatch(addCourseAction(newCourse));
       }
     }
 
   }
 
 
-  // const handleSubmit = async (evt) => {
   const handleSubmit = (evt) => {
     evt.preventDefault()
 
     const newCourse = new FormData();
     newCourse.append("category", values.category);
     newCourse.append("description", values.description);
-    newCourse.append("instructor", user._id) // on server if false not auth
+    newCourse.append("instructor", user._id) 
     newCourse.append("name", values.name);
     newCourse.append("image", file);
     
     fetchData(newCourse, user._id)
 
-    // const data = await api.createCourse(newCourse, user._id);
-    // if (data) {
-    //   const { error, image } = data;
-    //   if (error) {
-    //     setValues({ ...values, error });
-    //   } else {
-    //     setValues({
-    //       ...values,
-    //       image,
-    //       redirect: true,
-    //     });
-    //     // dispatch(addCourseAction(newCourse));
-    //   }
-    // }
+
   };
 
   if (values.redirect) {
@@ -150,7 +135,6 @@ const NewCourse = () => {
             className={classes.input}
             id="icon-button-file"
             name="image"
-            // onChange={(evt) => handleChange(evt)}
             onChange={(evt) => setFile(evt.target.files[0])}
             type="file"
           />
@@ -164,13 +148,6 @@ const NewCourse = () => {
             {values.image ? values.image : ""}
           </span>
 
-          {/* {values.image && (
-            <img
-              className={classes.image}
-              src={require("../../uploads/" + values.image)}
-              alt={""}
-            />
-          )} */}
 
           <br />
           <TextField

@@ -113,7 +113,7 @@ const Course = ({ match }) => {
   const imageUrl = course._id
     ? `/api/courses/photo/${course._id}`
     : ""
-    
+
   const getCourse = async () => {
 
     const data = await api.read(courseUrl);
@@ -134,62 +134,17 @@ const Course = ({ match }) => {
     getCourse();
   }, [courseUrl]);
 
-  //   useEffect(() => {
-  //     enrollmentStats(
-  //       { courseId: match.params.courseId },
-  //       { t: jwt.token },
-  //       signal
-  //     ).then((data) => {
-  //       if (data.error) {
-  //         setValues({ ...values, error: data.error });
-  //       } else {
-  //         setStats(data);
-  //       }
-  //     });
-  //   }, [match.params.courseId]);
-
 
   const addLesson = (course) => {
     setCourse(course);
   };
 
-  //   const removeCourse = () => {
-  //     setValues({ ...values, redirect: true });
-  //   };
 
-  //   const clickPublish = () => {
-  //     if (course.lessons.length > 0) {
-  //       setOpen(true);
-  //     }
-  //   };
-
-  //api call
-  //   const publish = () => {
-  //     let courseData = new FormData();
-  //     courseData.append("published", true);
-  //     update(
-  //       {
-  //         courseId: match.params.courseId,
-  //       },
-  //       {
-  //         t: jwt.token,
-  //       },
-  //       courseData
-  //     ).then((data) => {
-  //       if (data && data.error) {
-  //         setValues({ ...values, error: data.error });
-  //       } else {
-  //         setCourse({ ...course, published: true });
-  //         setOpen(false);
-  //       }
-  //     });
-  //   };
 
   if (values.redirect) {
     return <Redirect to={"/teach/courses"} />;
   }
   return (
-    // <Box>course page</Box>
 
     <Box className={classes.root}>
       <Card className={classes.card}>
@@ -220,13 +175,11 @@ const Course = ({ match }) => {
                       <Button
                         color="secondary"
                         variant="outlined"
-                        // onClick={clickPublish}
                       >
                         {course.lesson && course.lessons.length == 0
                           ? "Add atleast 1 lesson to publish"
                           : "Publish"}
                       </Button>
-                      {/* <DeleteCourse course={course} onRemove={removeCourse} /> */}
                       delete course here
                     </>
                   ) : (
@@ -240,11 +193,11 @@ const Course = ({ match }) => {
                 <Box>
                   <span className={classes.statSpan}>
                     <PeopleIcon />
-                    {/* {stats.totalEnrolled} enrolled{" "} */}
+                   enroll stats here
                   </span>
                   <span className={classes.statSpan}>
                     <CompletedIcon />
-                    {/* {stats.totalCompleted} completed{" "} */}
+                   completed info here
                   </span>
                 </Box>
               )}
@@ -325,10 +278,10 @@ const Course = ({ match }) => {
         <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
-            Publishing your course will make it live to students for enrollment.
+           Publish msg here
           </Typography>
           <Typography variant="body1">
-            Make sure all lessons are added and ready for publishing.
+            note here
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -340,7 +293,6 @@ const Course = ({ match }) => {
             Cancel
           </Button>
           <Button
-            //   onClick={publish}
             color="primary"
             variant="contained"
           >

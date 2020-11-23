@@ -29,16 +29,7 @@ const DeleteUser = (props) => {
     }
 
     const deleteAccount = () => { 
-        // remove({
-        //   userId: props.userId
-        // }, {t: jwt.token}).then((data) => {
-        //   if (data && data.error) {
-        //     console.log(data.error)
-        //   } else {
-        //     clearJWT(() => console.log('deleted'))
-        //     setRedirect(true)
-        //   }
-        // })
+     
       }
     
       if (redirect) {

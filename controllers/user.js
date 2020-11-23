@@ -73,18 +73,6 @@ const isInstructor = (req, res, next) => {
 }
 
 
-// const isInstructor = async (req, res, next) => {
-//     const {
-//         instructor
-//     } = req.body
-//     if (!instructor) {
-//         return res.status(403).json({
-//             error: "User is not an instructor."
-//         })
-//     }
-//     next()
-// }
-
 
 const read = (req, res) => {
     req.profile.password = undefined

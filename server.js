@@ -50,7 +50,7 @@ app.use((error, req, res, next) => {
 app.use("/", userRoutes)
 app.use("/", authRoutes)
 app.use("/", courseRoutes)
-
+app.use("/", express.static("build"))
 
 /* =======================
 Mongoose

@@ -5,6 +5,12 @@ import userRoutes from "./routes/user.js"
 import authRoutes from "./routes/auth.js"
 import courseRoutes from "./routes/course.js"
 import config from "./config/index.js"
+import {
+    expressCspHeader,
+    NONCE,
+    INLINE,
+    SELF
+} from 'express-csp-header'
 
 const app = express()
 
@@ -48,6 +54,21 @@ app.use("/", userRoutes)
 app.use("/", authRoutes)
 app.use("/", courseRoutes)
 app.use("/", express.static("build"))
+app.use(expressCspHeader({
+    directives: {
+        'default-src': [SELF],
+        'script-src': [SELF, NONCE],
+        'style-src': [SELF, 'https://fonts.googleapis.com',],
+        'img-src': ['data:', SELF],
+        'connect-src': [SELF],
+        'frame-src': [SELF],
+        'media-src': [SELF],
+        'font-src': [SELF, 'https://fonts.gstatic.com', 'https://fonts.googleapis.com'],
+        'object-src': [SELF]
+
+    }
+}))
+
 
 /* =======================
 Mongoose

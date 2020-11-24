@@ -20,6 +20,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-csp-header": "^4.0.0",
     "express-jwt": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
@@ -36,8 +37,9 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "server": "node server.js",
     "eject": "react-scripts eject",
     "dev": "concurrently \"yarn run server\" \"yarn run start\""

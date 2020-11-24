@@ -57,9 +57,9 @@ app.use("/", express.static("build"))
 app.use(expressCspHeader({
     directives: {
         'default-src': [SELF],
-        'script-src': [SELF, NONCE],
-        'style-src': [SELF, 'https://fonts.googleapis.com',],
-        'img-src': ['data:', SELF],
+        'script-src': [SELF, NONCE,],
+        'style-src': [SELF, 'https://fonts.googleapis.com', INLINE],
+        'img-src': ['*'],
         'font-src': [SELF, 'https://fonts.gstatic.com', 'https://fonts.googleapis.com'],
 
     }

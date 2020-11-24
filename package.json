@@ -37,10 +37,9 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "server": "node server.js",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "server": "nodemon server.js",
     "eject": "react-scripts eject",
     "dev": "concurrently \"yarn run server\" \"yarn run start\""
   },

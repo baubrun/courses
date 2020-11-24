@@ -60,11 +60,7 @@ app.use(expressCspHeader({
         'script-src': [SELF, NONCE],
         'style-src': [SELF, 'https://fonts.googleapis.com',],
         'img-src': ['data:', SELF],
-        'connect-src': [SELF],
-        'frame-src': [SELF],
-        'media-src': [SELF],
         'font-src': [SELF, 'https://fonts.gstatic.com', 'https://fonts.googleapis.com'],
-        'object-src': [SELF]
 
     }
 }))

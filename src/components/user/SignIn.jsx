@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
+import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -10,7 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { readUser, userState } from "../../redux/userSlice";
+import { signIn, userState } from "../../redux/userSlice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -64,6 +65,7 @@ const SignIn = (props) => {
     redirect: false,
   });
 
+
   useEffect(() => {
     if (user) {
       setValues({
@@ -80,10 +82,10 @@ const SignIn = (props) => {
     }
   }, [error]);
 
+
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
   };
-
 
 
   const handleChange = (evt) => {
@@ -94,6 +96,7 @@ const SignIn = (props) => {
     });
   };
 
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
     
@@ -102,7 +105,7 @@ const SignIn = (props) => {
       password: values.password,
     }
 
-    dispatch(readUser(userData))
+    dispatch(signIn(userData))
   };
 
 
@@ -157,6 +160,7 @@ const SignIn = (props) => {
               className={classes.submit}
               color="primary"
               variant="contained"
+              type="submit"
             >
               submit
             </Button>

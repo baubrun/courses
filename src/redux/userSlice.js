@@ -1,9 +1,9 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authAPI from "../api/auth";
+import {domain} from "../api/utils"
 
-
-const createUser = createAsyncThunk("/api/users", async (data) => {
+export const createUser = createAsyncThunk("/api/users", async (data) => {
   try {
     const res = await axios.post(`${domain}/api/users`, data);
     return res.data;
@@ -15,7 +15,7 @@ const createUser = createAsyncThunk("/api/users", async (data) => {
 });
 
 
-const readUser = createAsyncThunk("/readUser", async (data) => {
+export const readUser = createAsyncThunk("/readUser", async (data) => {
   try {
     const res = await axios.post(
         `${domain}/api/users/${data.userId}`, data);
@@ -28,7 +28,7 @@ const readUser = createAsyncThunk("/readUser", async (data) => {
 });
 
 
-const signIn = createAsyncThunk("/signin", async (data) => {
+export const signIn = createAsyncThunk("/signin", async (data) => {
   try {
     const res = await axios.post(
         `${domain}api/auth/signin`)
@@ -40,8 +40,8 @@ const signIn = createAsyncThunk("/signin", async (data) => {
   }
 });
 
-const deleteUser = createAsyncThunk("/deleteUser", async (data) => {
-  const token = isAuthenticated();
+export const deleteUser = createAsyncThunk("/deleteUser", async (data) => {
+  const token = authAPI.isAuthenticated();
   try {
     const res = await axios.delete(`${domain}/${data.id}`, {
       headers: {
@@ -56,7 +56,7 @@ const deleteUser = createAsyncThunk("/deleteUser", async (data) => {
   }
 });
 
-const listUsers = createAsyncThunk("/listUsers", async () => {
+export const listUsers = createAsyncThunk("/listUsers", async () => {
   try {
     const res = await axios.get(`${domain}/users`);
     return res.data;
@@ -68,8 +68,8 @@ const listUsers = createAsyncThunk("/listUsers", async () => {
 });
 
 
-const updateUser = createAsyncThunk("/updateUser", async (data) => {
-  const token = isAuthenticated();
+export const updateUser = createAsyncThunk("/updateUser", async (data) => {
+  const token = authAPI.isAuthenticated();
   try {
     const res = await axios.patch(
       `${domain}/api/users/${data.id}`,

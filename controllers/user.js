@@ -2,13 +2,12 @@ import User from "../models/user.js"
 import _ from "lodash"
 import bcrypt from "bcryptjs"
 import dotenv from "dotenv"
-import {
-    SALT
-} from "../serverUtils/index.js"
 import jwt from "jsonwebtoken";
 dotenv.config()
 import {valid_OId} from "./helper.js"
 
+
+const SALT = 10
 
 
 const create = async (req, res) => {
@@ -51,7 +50,7 @@ const create = async (req, res) => {
 const list = async (req, res) => {
     try {
         let users = await User.find().select("-password -__v")
-        return res.status(200).json(users)
+        return res.status(200).json({users: users})
     } catch (error) {
         return res.status(400).json({
             error: error.message
@@ -91,7 +90,7 @@ const remove = async (req, res, next) => {
         return res.json(deletedUser)
     } catch (error) {
         return res.status(400).json({
-            message: error.message
+            error: error.message
         })
     }
 }

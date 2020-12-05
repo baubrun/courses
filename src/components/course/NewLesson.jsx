@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Add from "@material-ui/icons/AddBox";
@@ -9,7 +10,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
-import api from "../../api/course";
+import { createNewLesson } from "../../redux/courseSlice";
+
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -19,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NewLesson = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
     error: "",
@@ -35,7 +38,7 @@ const NewLesson = (props) => {
     });
   };
 
-  const handleSubmit = async (evt) => {
+  const handleSubmit = (evt) => {
     evt.preventDefault();
     const lesson = {
       title: values.title,
@@ -43,25 +46,17 @@ const NewLesson = (props) => {
       resource_url: values.resource_url,
     };
 
-    const data = await api.createNewLesson(lesson, props.courseId);
-    if (data) {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        props.addLesson(data);
-        setValues({
-          ...values,
-          content: "",
-          resource_url: "",
-          title: "",
-        });
-        setOpenDialog(false);
-      }
+    const data = {
+      lesson,
+      id: props.courseId
     }
+
+    dispatch(createNewLesson(data))
+
   };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <Button
         aria-label="Add Lesson"
         color="primary"
@@ -121,16 +116,16 @@ const NewLesson = (props) => {
               Cancel
             </Button>
             <Button
-              onClick={(evt) => handleSubmit(evt)}
               color="primary"
               variant="contained"
+              type="submit"
             >
               Add
             </Button>
           </DialogActions>
         </div>
       </Dialog>
-    </div>
+    </form>
   );
 };
 

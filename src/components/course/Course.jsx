@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -22,16 +22,15 @@ import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import PeopleIcon from "@material-ui/icons/Group";
 import Typography from "@material-ui/core/Typography";
-
-
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "../../api/course";
-import {isAuthenticated} from "../../api/auth";
-
+import authAPI from "../../api/auth";
 import { userState } from "../../redux/userSlice";
+import { courseState } from "../../redux/courseSlice";
 
 import NewLesson from "./NewLesson"
+import _ from "lodash"
+
 
 const useStyles = makeStyles((theme) => ({
   action: {
@@ -98,8 +97,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Course = ({ match }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { loggedIn, user } = useSelector(userState);
-  const [course, setCourse] = useState({ instructor: {} });
+  const {course} = useSelector(courseState);
+  const [courseData, setCourseData] = useState({ instructor: {} });
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
     error: "",
@@ -112,31 +113,17 @@ const Course = ({ match }) => {
     ? `/api/courses/photo/${course._id}`
     : ""
 
-  const getCourse = async () => {
-
-    const data = await api.read(courseUrl);
-    // console.log("data :>> ", data);
-    if (data) {
-      if (data.error) {
-        setValues({
-          ...values,
-          error: data.error,
-        });
-      } else {
-        setCourse(data);
-      }
-    }
-  };
 
   useEffect(() => {
-    getCourse();
+    if (courseUrl){
+      setCourseData(courseUrl)
+    }
   }, [courseUrl]);
 
 
   const addLesson = (course) => {
-    setCourse(course);
+    setCourseData(course);
   };
-
 
 
   if (values.redirect) {
@@ -155,34 +142,36 @@ const Course = ({ match }) => {
     <Box className={classes.root}>
       <Card className={classes.card}>
         <CardHeader
-          title={course.name}
+          title={courseData.name}
           subheader={
             <Box>
               <Link
-                to={`/user/${course.instructor._id}`}
+                to={`/user/${courseData.instructor._id}`}
                 className={classes.sub}
               >
-                By {course.instructor.name}
+                By {courseData.instructor.name}
               </Link>
-              <span className={classes.category}>{course.category}</span>
+              <span className={classes.category}>{courseData.category}</span>
             </Box>
           }
           action={
             <>
-              {loggedIn && isAuthenticated() && (
+              {loggedIn 
+              && authAPI.isAuthorized(user._id, course.instructor._id) 
+              && (
                 <span className={classes.action}>
-                  <Link to={`/teach/course/edit/${course._id}`}>
+                  <Link to={`/teach/course/edit/${courseData._id}`}>
                     <IconButton color="secondary">
                       <Edit />
                     </IconButton>
                   </Link>
-                  {!course.published ? (
+                  {!courseData.published ? (
                     <>
                       <Button
                         color="secondary"
                         variant="outlined"
                       >
-                        {course.lesson && course.lessons.length === 0
+                        {courseData.lesson && courseData.lessons.length === 0
                           ? "Add atleast 1 lesson to publish"
                           : "Publish"}
                       </Button>
@@ -195,7 +184,7 @@ const Course = ({ match }) => {
                   )}
                 </span>
               )}
-              {course.published && (
+              {courseData.published && (
                 <Box>
                   <span className={classes.statSpan}>
                     <PeopleIcon />
@@ -215,15 +204,15 @@ const Course = ({ match }) => {
           <CardMedia
             className={classes.media}
             image={imageUrl}
-            title={course.name}
+            title={courseData.name}
           />
           <Box className={classes.details}>
             <Typography variant="body1" className={classes.subheading}>
-              {course.description}
+              {courseData.description}
               <br />
             </Typography>
 
-            {course.published && (
+            {courseData.published && (
               <Box className={classes.enroll}>
                 enroll here
               </Box>
@@ -241,16 +230,16 @@ const Course = ({ match }) => {
             }
             subheader={
               <Typography variant="body1" className={classes.subheading}>
-                {course.lessons && course.lessons.length} lessons
+                {courseData.lessons && courseData.lessons.length} lessons
               </Typography>
             }
             action={
               loggedIn &&
-              isAuthenticated() &&
-              !course.published && (
+              authAPI.isAuthenticated(user._id, courseData._id) &&
+              !courseData.published && (
                 <span className={classes.action}>
                   <NewLesson 
-                  courseId={course._id} 
+                  courseId={courseData._id} 
                   addLesson={addLesson} 
                   />
                 </span>
@@ -258,8 +247,8 @@ const Course = ({ match }) => {
             }
           />
           <List>
-            {course.lessons &&
-              course.lessons.map((lesson, idx) => {
+            {courseData.lessons &&
+              courseData.lessons.map((lesson, idx) => {
                 return (
                   <span key={idx}>
                     <ListItem>

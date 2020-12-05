@@ -14,7 +14,8 @@ import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
 
-import { userState, createCourse  } from "../../redux/userSlice";
+import { userState  } from "../../redux/userSlice";
+import { createCourse  } from "../../redux/courseSlice";
 
 const IMG_DIM = 200;
 
@@ -81,23 +82,6 @@ const NewCourse = () => {
     });
   };
 
-  const fetchData = async (newData, id) => {
-    const data = await api.createCourse(newData, id);
-    if (data) {
-      const { error, image } = data;
-      if (error) {
-        setValues({ ...values, error });
-      } else {
-        setValues({
-          ...values,
-          image,
-          redirect: true,
-        });
-      }
-    }
-
-  }
-
 
   const handleSubmit = (evt) => {
     evt.preventDefault()
@@ -109,10 +93,11 @@ const NewCourse = () => {
       name: values.name,
       image: file,
     }
-    const form = [newCourse, user._id]
-    dispatch(createCourse(form))
-
-
+    const data = {
+      data: newCourse,
+      id: user._id
+    }
+    dispatch(createCourse(data))
   };
 
   if (values.redirect) {

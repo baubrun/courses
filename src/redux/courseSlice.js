@@ -1,17 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {domain} from "../../utils"
+import {domain} from "../api/utils"
 import axios from "axios";
-import authAPI from "./auth";
+import authAPI from "../api/auth";
 
 const coursesByPath = "api/courses/by";
 
 
-const createCourse = async (data) => {
-  const token = isAuthenticated();
+export const createCourse = async (data) => {
+  const token = authAPI.isAuthenticated();
   try {
     const res = await axios.post(
-        `${domain}/${coursesByPath}/${id}`, 
-    data, {
+        `${domain}/${coursesByPath}/${data.id}`, 
+    data.data, 
+    {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -24,12 +25,13 @@ const createCourse = async (data) => {
   }
 };
 
-const createNewLesson = async (data) => {
+
+export const createNewLesson = async (data) => {
   const token = authAPI.isAuthenticated();
   try {
     const res = await axios.post(
         `/api/courses/${data.id}/lesson/new`, 
-    data, {
+    data.lesson, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -43,7 +45,7 @@ const createNewLesson = async (data) => {
 };
 
 
-const listCourseByInstructor = async (id) => {
+export const listCourseByInstructor = async (id) => {
   const token = authAPI.isAuthenticated();
   try {
     let res = await axios.get(`${domain}/${coursesByPath}/${id}`, {
@@ -59,7 +61,7 @@ const listCourseByInstructor = async (id) => {
   }
 };
 
-const readCourse = async (id) => {
+export const readCourse = async (id) => {
   const token = authAPI.isAuthenticated();
   try {
     let res = await axios.get(`${domain}/${coursesByPath}/${id}`, {

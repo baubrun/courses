@@ -27,7 +27,7 @@ const setToken = (jwt, cb) => {
 
 
 
-export {
+export default {
   deleteToken,
   isAuthenticated,
   isAuthorized,

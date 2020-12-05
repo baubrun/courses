@@ -62,8 +62,8 @@ const Users = () => {
 
 
 
-  if (errorMsg) {
-    return <Box>{errorMsg}</Box>
+  if (values.errorMsg) {
+    return <Box>{values.errorMsg}</Box>
   }
 
 
@@ -73,7 +73,7 @@ const Users = () => {
         All Users
       </Typography>
       <List dense>
-        {courseUsers.map((user, idx) => {
+        {values.courseUsers.map((user, idx) => {
           return (
             <Link to={"/user/" + user._id} key={idx}>
               <ListItem button>

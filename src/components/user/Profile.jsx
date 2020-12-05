@@ -21,7 +21,7 @@ import DeleteUser from "./DeleteUser";
 
 import { userState } from "../../redux/userSlice";
 
-import api from "../../api/auth";
+import authAPI from "../../api/auth";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -44,7 +44,7 @@ const Profile = ({ match }) => {
   const { user, error } = useSelector(userState);
   const [values, setValues] = useState({
     profile: {},
-    redirect,
+    redirect: false,
     errorMsg: "",
     redirect: false,
   })
@@ -70,7 +70,7 @@ const Profile = ({ match }) => {
   }, [user]);
 
 
-  if (redirect) {
+  if (values.redirect) {
     return <Redirect to="/signin" />;
   }
 
@@ -86,22 +86,22 @@ const Profile = ({ match }) => {
               <Person />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={profile.name} secondary={profile.email} />
-          {api.isAuthorized(profile._id, paramId) && (
+          <ListItemText primary={values.profile.name} secondary={values.profile.email} />
+          {authAPI.isAuthorized(values.profile._id, paramId) && (
               <ListItemSecondaryAction>
-                <Link href={`/user/edit/${profile._id}`}>
+                <Link href={`/user/edit/${values.profile._id}`}>
                   <IconButton color="primary">
                     <Edit />
                   </IconButton>
                 </Link>
-                <DeleteUser userId={profile._id} />
+                <DeleteUser userId={values.profile._id} />
               </ListItemSecondaryAction>
             )}
         </ListItem>
         <Divider />
         <ListItem>
           <ListItemText
-            primary={"Joined: " + new Date(profile.created).toDateString()}
+            primary={"Joined: " + new Date(values.profile.created).toDateString()}
           />
         </ListItem>
       </List>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
@@ -14,9 +14,9 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { Redirect, Link } from "react-router-dom";
 
-import api from "../../api/course";
-
 import { userState } from "../../redux/userSlice";
+import { courseState } from "../../redux/courseSlice";
+import { listCourseByInstructor } from "../../redux/courseSlice";
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -52,37 +52,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyCourses = () => {
+const MyCourses = (props) => {
   const classes = useStyles();
-  const { user } = useSelector(userState);
-  const [courses, setCourses] = useState([]);
-  const [redirect, setRedirect] = useState(false);
-  const [error, setError] = useState(false);
-
-  const getCourses = async () => {
-    const data = await api.listCourseByInstructor(user._id);
-    if (data) {
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setCourses(data);
-      }
-    }
-  };
+  const dispatch = useDispatch(listCourseByInstructor);
+  const { courses } = useSelector(courseState);
+  const [values, setValues] = useState({
+    myCourses: [],
+    redirect: false,
+  });
 
   useEffect(() => {
-    getCourses();
+    dispatch(listCourseByInstructor(props.match.params.userId));
   }, []);
 
-  if (redirect) {
+
+  useEffect(() => {
+    if (courses){
+      setValues({...values, myCourses: courses})
+    }
+  }, [courses]);
+
+
+
+  useEffect(() => {
+    setValues({
+      ...values,
+      myCourses: courses,
+    });
+  });
+
+
+  if (values.redirect) {
     return <Redirect to="/signin" />;
   }
 
-  if (error) {
+  if (values.errorMsg) {
     return (
       <>
         <Typography color="error" variant="h6" component="p">
-          {error}
+          {values.errorMsg}
         </Typography>
       </>
     );
@@ -102,8 +110,8 @@ const MyCourses = () => {
           </span>
         </Typography>
         <List dense>
-          {courses &&
-            courses.map((course, idx) => {
+          {values.myCourses &&
+            values.myCourses.map((course, idx) => {
               return (
                 <Link
                   className={classes.link}

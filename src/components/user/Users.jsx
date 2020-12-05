@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -15,7 +16,7 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import Person from "@material-ui/icons/Person";
 import Box from "@material-ui/core/Box";
 
-import api from "../../api";
+import { userState, listUsers } from "../../redux/userSlice";
 
 
 
@@ -32,30 +33,39 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Users = () => {
-  const classes = useStyles();
+  const classes = useStyles();  
+  const dispatch = useDispatch();
+  const { users, error } = useSelector(userState);
   const [values, setValues] = useState({
-    users: [],
+    courseUsers: [],
     errorMsg: "",
   })
 
 
-  const getUsers = async () => {
-    const data = await api.list(usersPath)
-    if (data && data.error){
-      setError(data.error)
-    } else {
-      setUsers(data);
-    }
-  }
+  useEffect(() => {
+    dispatch(listUsers())
+  }, [])
 
 
   useEffect(() => {
-    getUsers()
-  }, [])
+   if (users) {
+     setValues({...values, courseUsers: users})
+   }
+  }, [users])
 
-  if (error) {
-    return <Box>{error}</Box>
+
+  useEffect(() => {
+   if (error) {
+     setValues({...values, errorMsg: error})
+   }
+  }, [error])
+
+
+
+  if (errorMsg) {
+    return <Box>{errorMsg}</Box>
   }
+
 
   return (
     <Paper className={classes.root} elevation={4}>
@@ -63,7 +73,7 @@ const Users = () => {
         All Users
       </Typography>
       <List dense>
-        {users.map((user, idx) => {
+        {courseUsers.map((user, idx) => {
           return (
             <Link to={"/user/" + user._id} key={idx}>
               <ListItem button>

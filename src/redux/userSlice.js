@@ -46,7 +46,7 @@ export const userSlice = createSlice({
     error: "",
   },
   reducers: {
-    signOutAction: (state) => {
+    signOut: (state) => {
       state.loggedIn = false;
       state.user = {};
     },
@@ -82,6 +82,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { signInAction, signOutAction, loadUser } = userSlice.actions;
+export const { signInAction, signOut, loadUser } = userSlice.actions;
 export const userState = (state) => state.user;
 export default userSlice.reducer;

@@ -7,7 +7,7 @@ import { makeStyles,  } from "@material-ui/core/styles";
 import Library from "@material-ui/icons/LocalLibrary";
 
 import { deleteToken } from "../api/auth";
-import { userState, signOutAction } from "../redux/userSlice";
+import { userState, signOut } from "../redux/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -30,7 +30,7 @@ const AuthOptions = () => {
   };
 
   const logOut = () => {
-    dispatch(signOutAction());
+    dispatch(signOut());
     deleteToken();
   };
 

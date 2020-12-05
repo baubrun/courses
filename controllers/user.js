@@ -123,7 +123,7 @@ const signIn = async (req, res) => {
                 process.env.JWT_SECRET,
             )
 
-            return res.json({
+            return res.status(200).json({
                 token,
                 user: {
                     created: user.created,
@@ -140,14 +140,6 @@ const signIn = async (req, res) => {
             error: error.message
         });
     }
-};
-
-
-
-const signOut = async (req, res) => {
-    return res.status(200).json({
-        message: "Signed out."
-    })
 };
 
 
@@ -172,7 +164,7 @@ const update = async (req, res) => {
             omitUndefined: true,
         })
 
-        return res.json({
+        return res.status(200).json({
             user: {
                 created: updatedUser.created,
                 instructor: updatedUser.instructor,

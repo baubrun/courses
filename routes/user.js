@@ -22,7 +22,6 @@ router
   )
   .delete(
     // authController.hasAuthorization,
-    // authController.hasAuthorization,
     userController.remove
   );
 

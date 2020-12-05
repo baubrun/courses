@@ -3,11 +3,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { domain } from "../Utils";
 
 
-export const register = createAsyncThunk(
-    "/register", 
+export const createUser = createAsyncThunk(
+    "/api/users", 
 async (data) => {
   try {
-    const res = await axios.post(`${domain}/register`, data);
+    const res = await axios.post(`${domain}/api/users`, data);
     return res.data;
   } catch (error) {
     return {
@@ -17,11 +17,12 @@ async (data) => {
 });
 
 
+
 export const updateUser = async (data, id, path) => {
     const token = isAuthenticated();
     try {
       const res = await axios.patch(
-        `${domain}/${path}/${id}`, {
+        `${domain}/api/users/${id}`, {
           user: data,
         }, {
           headers: {
@@ -45,20 +46,13 @@ export const userSlice = createSlice({
     error: "",
   },
   reducers: {
-    loadUser: (state, action) => {
-      state.user = action.payload;
-    },
-    signInAction: (state, action) => {
-      state.loggedIn = true;
-      state.user = action.payload;
-    },
     signOutAction: (state) => {
       state.loggedIn = false;
       state.user = {};
     },
   },
   extraReducers: {
-    [register.fulfilled]: (state, action) => {
+    [createUser.fulfilled]: (state, action) => {
       const { error, user } = action.payload;
       if (error) {
         state.error = error;
@@ -68,7 +62,7 @@ export const userSlice = createSlice({
         state.error = "";
       }
     },
-    [register.rejected]: (state, action) => {
+    [createUser.rejected]: (state, action) => {
       state.error = action.payload.error;
     },
 

@@ -28,7 +28,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.protectedTitle,
   },
   error: {
+    backgroundColor: "#ff3333",
+    color: "white",
+    cursor: "pointer",
     verticalAlign: "middle",
+    padding: "10px",
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -92,7 +96,6 @@ const EditProfile = () => {
   };
 
  
-
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
@@ -187,7 +190,6 @@ const EditProfile = () => {
         <Button
           className={classes.submit}
           color="primary"
-          onClick={(evt) => handleSubmit(evt)}
           variant="contained"
           type="submit"
         >

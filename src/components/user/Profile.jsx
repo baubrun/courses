@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = ({ match }) => {
   const classes = useStyles();
-  const { loggedIn, user, error } = useSelector(userState);
+  const { user, error } = useSelector(userState);
   const [values, setValues] = useState({
     profile: {},
     redirect,
@@ -58,7 +58,6 @@ const Profile = ({ match }) => {
       setValues({ ...values, redirect: true});
     }
   }, [error]);
-
 
 
   useEffect(() => {

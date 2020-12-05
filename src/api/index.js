@@ -7,46 +7,6 @@ import {
 } from "./auth";
 
 
-const create = async (data, path, id = "") => {
-  let req;
-  const headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json"
-  }
-  try {
-    if (!id) {
-      req = await fetch(`${domain}/${path}`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers,
-      });
-    } else {
-      req = await fetch(`${domain}/${path}/${id}`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers,
-      })
-      const res = await req.text()
-      return JSON.parse(res)
-    }
-  } catch (error) {
-    return {
-      error: error.message
-    };
-  }
-}
-
-const list = async (path) => {
-  try {
-    const req = await fetch(`${domain}/${path}`);
-    const res = await req.text()
-    return JSON.parse(res)
-  } catch (error) {
-    return {
-      error: error.message
-    };
-  }
-};
 
 
 const read = async (path) => {

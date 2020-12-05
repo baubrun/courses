@@ -17,10 +17,6 @@ import Box from "@material-ui/core/Box";
 
 import api from "../../api";
 
-import {
-  usersPath,
-} from "../../api/utils"
-
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,8 +33,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Users = () => {
   const classes = useStyles();
-  const [users, setUsers] = useState([]);
-  const [error, setError] = useState("")
+  const [values, setValues] = useState({
+    users: [],
+    errorMsg: "",
+  })
+
 
   const getUsers = async () => {
     const data = await api.list(usersPath)

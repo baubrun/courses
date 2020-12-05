@@ -102,30 +102,31 @@ const MyCourses = () => {
           </span>
         </Typography>
         <List dense>
-          {courses && courses.map((course, idx) => {
-            return (
-              <Link
-                className={classes.link}
-                to={"/teach/course/" + course._id}
-                key={idx}
-              >
-                <ListItem button>
-                  <ListItemAvatar>
-                    <Avatar
-                      src={require(`../../uploads/${course.image}`)}
-                      className={classes.avatar}
+          {courses &&
+            courses.map((course, idx) => {
+              return (
+                <Link
+                  className={classes.link}
+                  to={"/teach/course/" + course._id}
+                  key={idx}
+                >
+                  <ListItem button>
+                    <ListItemAvatar>
+                      <Avatar
+                        src={`${process.env.PUBLIC_URL}/images/${course.image}`}
+                        className={classes.avatar}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={course.name}
+                      secondary={course.description}
+                      className={classes.listText}
                     />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={course.name}
-                    secondary={course.description}
-                    className={classes.listText}
-                  />
-                </ListItem>
-                <Divider />
-              </Link>
-            );
-          })}
+                  </ListItem>
+                  <Divider />
+                </Link>
+              );
+            })}
         </List>
       </Paper>
     </>

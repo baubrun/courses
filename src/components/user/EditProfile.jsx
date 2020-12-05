@@ -13,9 +13,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "../../api";
-import { userState, loadUser } from "../../redux/userSlice";
-import { usersPath } from "../../api/utils";
+import { userState, updateUser } from "../../redux/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -46,15 +44,21 @@ const useStyles = makeStyles((theme) => ({
 const EditProfile = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { user } = useSelector(userState);
+  const { user, error } = useSelector(userState);
   const [values, setValues] = useState({
     instructor: false,
-    error: "",
+    errorMsg: "",
     email: "",
     name: "",
     password: "",
     redirect: false,
   });
+
+  useEffect(() => {
+    if (error) {
+      setValues({ ...values, errorMsg: error });
+    }
+  }, [error]);
 
   useEffect(() => {
     if (user) {
@@ -66,6 +70,10 @@ const EditProfile = () => {
       });
     }
   }, [user, values]);
+
+  const closeErrors = () => {
+    setValues({ ...values, errorMsg: "" });
+  };
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -83,26 +91,8 @@ const EditProfile = () => {
     });
   };
 
-  const fetchData = async (newData) => {
-    const data = await api.update(newData, user._id, usersPath);
-    if (data && data.error) {
-      setValues({ ...values, error: data.error });
-    } else {
-      if (data && data.user) {
-        setValues({
-          ...values,
-          redirect: true,
-        });
-        dispatch(
-          loadUser({
-            ...data.user,
-          })
-        );
-      }
-    }
-  };
+ 
 
-  // const handleSubmit = async (evt) => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
@@ -114,25 +104,10 @@ const EditProfile = () => {
       password: values.password,
     };
 
-    fetchData(newData);
+    dispatch(updateUser(newData))
+  }
 
-    // const data = await api.update(newData, user._id, usersPath);
-    // if (data && data.error) {
-    //   setValues({ ...values, error: data.error });
-    // } else {
-    //   if (data && data.user) {
-    //     setValues({
-    //       ...values,
-    //       redirect: true,
-    //     });
-    //     dispatch(
-    //       loadUser({
-    //         ...data.user
-    //       })
-    //     );
-    //   }
-    // }
-  };
+
 
   if (values.redirect) {
     return <Redirect to={`/user/${user._id}`} />;
@@ -141,9 +116,21 @@ const EditProfile = () => {
   return (
     <Card className={classes.card}>
       <CardContent>
+        <form onSubmit={handleSubmit}>
         <Typography className={classes.title} variant="h6">
           Edit Profile
         </Typography>
+
+        {values.errorMsg && (
+               <Box 
+               onClick={() => closeErrors()}
+               >
+                 <Typography className={classes.error} component="p">
+                   {values.errorMsg}
+                 </Typography>
+               </Box>
+          )}
+
         <TextField
           className={classes.textField}
           id="email"
@@ -194,14 +181,7 @@ const EditProfile = () => {
           label={values.instructor ? "Yes" : "No"}
         />
         <br />
-        {values.error && (
-          <Typography color="error" component="p">
-            <Icon className={classes.error} color="error">
-              error
-            </Icon>
-            {values.error}
-          </Typography>
-        )}
+        </form>
       </CardContent>
       <CardActions>
         <Button
@@ -209,6 +189,7 @@ const EditProfile = () => {
           color="primary"
           onClick={(evt) => handleSubmit(evt)}
           variant="contained"
+          type="submit"
         >
           submit
         </Button>

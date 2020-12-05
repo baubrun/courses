@@ -121,9 +121,6 @@ const signIn = async (req, res) => {
                     _id: user.id
                 },
                 process.env.JWT_SECRET,
-                // {
-                //     expiresIn: "24h"
-                // }
             )
 
             return res.json({

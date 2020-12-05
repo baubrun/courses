@@ -4,7 +4,6 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import classroomImg from "../images/classroom.jpg";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -35,7 +34,7 @@ const Home = () => {
 
         <CardMedia
           className={classes.media}
-          image={classroomImg}
+          image={`${process.env.PUBLIC_URL}/images/classroom.jpg`}
           title="classroom"
         />
 

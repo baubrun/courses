@@ -142,6 +142,14 @@ const Course = ({ match }) => {
   if (values.redirect) {
     return <Redirect to={"/teach/courses"} />;
   }
+
+
+  if (_.isEmpty(course)){
+    return null
+  }
+
+
+
   return (
 
     <Box className={classes.root}>

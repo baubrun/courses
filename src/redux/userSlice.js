@@ -28,10 +28,10 @@ export const readUser = createAsyncThunk("/readUser", async (data) => {
 });
 
 
-export const signIn = createAsyncThunk("/signin", async (data) => {
+export const signIn = createAsyncThunk("/signIn", async (data) => {
   try {
     const res = await axios.post(
-        `${domain}api/auth/signin`)
+        `${domain}/auth/signin`)
     return res.data;
   } catch (error) {
     return {
@@ -179,6 +179,7 @@ export const userSlice = createSlice({
       }
     },
     [signIn.rejected]: (state, action) => {
+      console.log('action.payload :>>', action)
       state.loading = false;
       state.error = action.payload.error;
     },

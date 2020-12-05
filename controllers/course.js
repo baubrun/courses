@@ -1,6 +1,5 @@
 import Course from "../models/course.js";
 import onFinished from "on-finished";
-import { moveFilesToApp } from "../serverUtils/index.js";
 import path from "path";
 import {valid_OId} from "./helper.js"
 
@@ -75,16 +74,6 @@ const create = async (req, res, next) => {
       published: course.published,
     });
 
-    onFinished(res, (error) => {
-      if (error) {
-        return res.status(400).json({
-          message: error.message,
-        });
-      } else {
-        moveFilesToApp();
-      }
-      return;
-    });
   } catch (error) {
     return res.status(400).json({
       message: error.message,

@@ -7,7 +7,7 @@ import SignUp from "./user/SignUp"
 import SignIn from "./user/SignIn"
 import Profile from "./user/Profile"
 import EditProfile from "./user/EditProfile"
-import Menu from "./Menu"
+import NavBar from "./NavBar"
 import NewCourse from "./course/NewCourse"
 import MyCourses from "./course/MyCourses"
 import Course from "./course/Course"
@@ -18,7 +18,7 @@ const Routers = () => {
 
     return (
         <>
-        <Menu />
+        <NavBar />
         <Switch>
             <Route exact path="/" component={Home}/>
             <Route  path="/users" component={Users}/>

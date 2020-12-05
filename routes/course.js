@@ -2,9 +2,10 @@ import express from "express";
 // import authController from "../controllers/auth.js";
 import courseController from "../controllers/course.js";
 import userController from "../controllers/user.js";
-import {
-    upload
-} from "../serverUtils/index.js"
+import mul from "../lib/multer.js"
+import multer from "multer"
+const upload = multer ({storage: mul.storage})
+
 
 const router = express.Router()
 

@@ -73,7 +73,7 @@ const SignIn = (props) => {
         redirect: true
       });
     }
-  }, [user, values]);
+  }, [user]);
 
 
   useEffect(() => {
@@ -110,16 +110,17 @@ const SignIn = (props) => {
 
 
 
-  if (values.redirect) {
-    return <Redirect to="/" />;
-  }
+  // if (values.redirect) {
+  //   return <Redirect to="/" />;
+  // }
 
   return (
     <>
       
         <Card className={classes.card}>
+        <form onSubmit={handleSubmit}>
           <CardContent>
-          <form onSubmit={handleSubmit}>
+         
             <Typography className={classes.title} variant="h6">
               Sign In
             </Typography>
@@ -143,7 +144,6 @@ const SignIn = (props) => {
               type="password"
               value={values.password}
             />
-            </form>
 
         {values.errorMsg && (
                <Box 
@@ -176,6 +176,7 @@ const SignIn = (props) => {
               </Link>
             </span>
           </Typography>
+          </form>
 
         </Card>
     </>

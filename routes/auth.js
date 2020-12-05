@@ -9,9 +9,6 @@ router.route("/auth/signIn")
     userController.signIn)
 
   
-router.route("/auth/signOut")
-  .get(userController.signOut)
-
 
 
 export default router

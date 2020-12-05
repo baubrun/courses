@@ -204,7 +204,6 @@ export default {
     read,
     remove,
     signIn,
-    signOut,
     update,
     userById,
 }

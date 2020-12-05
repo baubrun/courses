@@ -7,10 +7,10 @@ import HomeIcon from "@material-ui/icons/Home";
 import { Link,  } from "react-router-dom";
 
 
-import AuthOptions from "./AuthOptions";
+import NavbarOptions from "./NavbarOptions";
 
 
-const Menu = () => {
+const NavBar = () => {
 
   return (
     <AppBar position="static">
@@ -23,10 +23,10 @@ const Menu = () => {
             <HomeIcon />
           </IconButton>
         </Link>
-        <AuthOptions />
+        <NavbarOptions />
       </Toolbar>
     </AppBar>
   );
 };
 
-export default Menu;
+export default NavBar;

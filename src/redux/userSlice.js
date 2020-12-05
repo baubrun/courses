@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { domain } from "../Utils";
+import api from "../api/auth"
 
 
 export const createUser = createAsyncThunk(
@@ -16,7 +17,17 @@ async (data) => {
   }
 });
 
-
+export const readUser = createAsyncThunk("/register", async (data) => {
+    try {
+      const res = await axios.post(`${domain}/api/users`, data)
+      return res.data;
+    } catch (error) {
+      return {
+        error: error.response.data.error
+      };
+    }
+  });
+  
 
 export const updateUser = async (data, id, path) => {
     const token = isAuthenticated();
@@ -38,6 +49,7 @@ export const updateUser = async (data, id, path) => {
     }
   };
   
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -49,6 +61,7 @@ export const userSlice = createSlice({
     signOut: (state) => {
       state.loggedIn = false;
       state.user = {};
+      api.deleteToken()
     },
   },
   extraReducers: {
@@ -66,22 +79,25 @@ export const userSlice = createSlice({
       state.error = action.payload.error;
     },
 
-    [logIn.rejected]: (state, action) => {
+
+    [readUser.rejected]: (state, action) => {
       state.error = action.payload.error;
     },
-    [logIn.fulfilled]: (state, action) => {
-      const { error, user } = action.payload;
+    [readUser.fulfilled]: (state, action) => {
+      const { error, user, token } = action.payload;
       if (error) {
         state.error = error;
       } else {
         state.loggedIn = true;
         state.user = user;
         state.error = "";
+        api.setToken(token)
       }
     },
   },
 });
 
-export const { signInAction, signOut, loadUser } = userSlice.actions;
+
+export const { signOut } = userSlice.actions;
 export const userState = (state) => state.user;
 export default userSlice.reducer;

@@ -11,9 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
-import api from "../../api/user";
-import { setToken } from "../../api/auth";
-import { signInAction } from "../../redux/userSlice";
+import { readUser, userState } from "../../redux/userSlice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +23,11 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(2),
   },
   error: {
+    backgroundColor: "#ff3333",
+    color: "white",
+    cursor: "pointer",
     verticalAlign: "middle",
+    padding: "10px",
   },
   title: {
     marginTop: theme.spacing(2),
@@ -52,15 +54,38 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn = (props) => {
   const classes = useStyles();
+  const { user, error } = useSelector(userState);
   const dispatch = useDispatch();
   const [values, setValues] = useState({
     created: "",
     email: "",
-    error: "",
+    errorMsg: "",
     name: "",
     password: "",
     redirect: false,
   });
+
+  useEffect(() => {
+    if (user) {
+      setValues({
+        ...values,
+        redirect: true
+      });
+    }
+  }, [user, values]);
+
+
+  useEffect(() => {
+    if (error) {
+      setValues({ ...values, errorMsg: error });
+    }
+  }, [error]);
+
+  const closeErrors = () => {
+    setValues({ ...values, errorMsg: "" });
+  };
+
+
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -70,43 +95,29 @@ const SignIn = (props) => {
     });
   };
 
-  const handleSubmit = async (evt) => {
+  const handleSubmit = (evt) => {
     evt.preventDefault();
     
-    const user = {
+    const userData = {
       email: values.email,
       password: values.password,
     }
 
-    const data = await api.signIn(user);
-    if (data) {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        setToken(data.token, () => {
-          dispatch(
-            signInAction({
-              ...data.user,
-            })
-          );
-          setValues({ redirect: true });
-        });
-      }
-    }
+    dispatch(readUser(userData))
   };
 
-  const from = props.location.state || "/";
 
-  const { redirect } = values;
-  if (redirect) {
-    return <Redirect to={from} />;
+
+  if (values.redirect) {
+    return <Redirect to="/" />;
   }
 
   return (
     <>
-      <form>
+      
         <Card className={classes.card}>
           <CardContent>
+          <form onSubmit={handleSubmit}>
             <Typography className={classes.title} variant="h6">
               Sign In
             </Typography>
@@ -120,7 +131,6 @@ const SignIn = (props) => {
               type="email"
               value={values.email}
             ></TextField>
-            <br />
             <TextField
               className={classes.textField}
               id="password"
@@ -131,24 +141,27 @@ const SignIn = (props) => {
               type="password"
               value={values.password}
             />
-            {values.error && (
-              <Typography color="error" component="p">
-                <Icon className={classes.error} color="error">
-                  error
-                </Icon>
-                {values.error}
-              </Typography>
-            )}
+            </form>
+
+        {values.errorMsg && (
+               <Box 
+               onClick={() => closeErrors()}
+               >
+                 <Typography className={classes.error} component="p">
+                   {values.errorMsg}
+                 </Typography>
+               </Box>
+          )}
           </CardContent>
           <CardActions>
             <Button
               className={classes.submit}
               color="primary"
-              onClick={(evt) => handleSubmit(evt)}
               variant="contained"
             >
               submit
             </Button>
+
           </CardActions>
           <br />
 
@@ -160,8 +173,8 @@ const SignIn = (props) => {
               </Link>
             </span>
           </Typography>
+
         </Card>
-      </form>
     </>
   );
 };

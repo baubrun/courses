@@ -14,10 +14,7 @@ import Icon from "@material-ui/core/Icon";
 import { makeStyles } from "@material-ui/core/styles";
 
 
-import api from "../../api/course";
-
-// import { addCourseAction } from "../../redux/courseSlice";
-import { userState } from "../../redux/userSlice";
+import { userState, createCourse  } from "../../redux/userSlice";
 
 const IMG_DIM = 200;
 
@@ -63,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NewCourse = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const history = useHistory();
   const { user } = useSelector(userState);
   const [file, setFile] = useState({});
@@ -104,14 +102,15 @@ const NewCourse = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault()
 
-    const newCourse = new FormData();
-    newCourse.append("category", values.category);
-    newCourse.append("description", values.description);
-    newCourse.append("instructor", user._id) 
-    newCourse.append("name", values.name);
-    newCourse.append("image", file);
-    
-    fetchData(newCourse, user._id)
+    const newCourse = {
+      category: values.category,
+      description: values.description,
+      instructor: user._id ,
+      name: values.name,
+      image: file,
+    }
+    const form = [newCourse, user._id]
+    dispatch(createCourse(form))
 
 
   };

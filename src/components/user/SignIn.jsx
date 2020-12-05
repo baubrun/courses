@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Redirect, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";

@@ -22,7 +22,20 @@ const readUser = createAsyncThunk("/readUser", async (data) => {
     return res.data;
   } catch (error) {
     return {
-      error: error.response.data.error,
+      error: error.response.data.error
+    };
+  }
+});
+
+
+const signIn = createAsyncThunk("/signin", async (data) => {
+  try {
+    const res = await axios.post(
+        `${domain}api/auth/signin`)
+    return res.data;
+  } catch (error) {
+    return {
+      error: error.response.data.error
     };
   }
 });
@@ -38,7 +51,7 @@ const deleteUser = createAsyncThunk("/deleteUser", async (data) => {
     return res.data;
   } catch (error) {
     return {
-      error: error.response.data.error,
+      error: error.response.data.error
     };
   }
 });
@@ -49,7 +62,7 @@ const listUsers = createAsyncThunk("/listUsers", async () => {
     return res.data;
   } catch (error) {
     return {
-      error: error.response.data.error,
+      error: error.response.data.error
     };
   }
 });
@@ -72,7 +85,7 @@ const updateUser = createAsyncThunk("/updateUser", async (data) => {
     return res.data;
   } catch (error) {
     return {
-      error: error.response.data.error,
+      error: error.response.data.error
     };
   }
 });
@@ -151,19 +164,21 @@ export const userSlice = createSlice({
     },
 
 
-    [readUser.pending]: (state) => {
+
+    [signIn.pending]: (state) => {
       state.loading = true;
     },
-    [readUser.fulfilled]: (state, action) => {
+    [signIn.fulfilled]: (state, action) => {
       state.loading = false;
-      const { error, user } = action.payload;
+      const { error, user, token } = action.payload;
       if (error) {
         state.error = error;
       } else {
         state.user = user;
+        authAPI.setToken(token)
       }
     },
-    [readUser.rejected]: (state, action) => {
+    [signIn.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.error;
     },

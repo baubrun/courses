@@ -12,6 +12,9 @@ const isAuthenticated = () => {
   }
 };
 
+const isAuthorized = (id, resource) => {
+  return id === resource
+}
 
 const setToken = (jwt, cb) => {
   if (typeof window !== "undefined") {
@@ -27,5 +30,6 @@ const setToken = (jwt, cb) => {
 export {
   deleteToken,
   isAuthenticated,
+  isAuthorized,
   setToken,
 };

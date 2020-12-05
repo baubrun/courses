@@ -21,9 +21,10 @@ import DeleteUser from "./DeleteUser";
 
 import { userState } from "../../redux/userSlice";
 
-import api from "../../api/user";
+import api from "../../api/auth";
 
 const useStyles = makeStyles((theme) => ({
+
   root: theme.mixins.gutters({
     maxWidth: 600,
     margin: "auto",
@@ -36,28 +37,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const Profile = ({ match }) => {
   const classes = useStyles();
-  const { loggedIn, user } = useSelector(userState);
-  const [profile, setProfile] = useState({});
-  const [redirect, setRedirect] = useState(false);
+  const { loggedIn, user, error } = useSelector(userState);
+  const [values, setValues] = useState({
+    profile: {},
+    redirect,
+    errorMsg: "",
+    redirect: false,
+  })
 
-  const profileId = match.params.userId;
-  const auth = profileId === user._id;
 
-  const getUser = async (id) => {
-    const data = await api.read(id);
-    if (data) {
-      if (data.error) {
-        setRedirect(true);
-      }
-      setProfile(data);
-    }
-  };
+  const paramId = match.params.userId;
+
 
   useEffect(() => {
-    getUser(profileId);
-  }, []);
+    if (error) {
+      setValues({ ...values, redirect: true});
+    }
+  }, [error]);
+
+
+
+  useEffect(() => {
+    if (user) {
+      setValues({
+        ...values,
+        profile: user
+      });
+    }
+  }, [user]);
+
 
   if (redirect) {
     return <Redirect to="/signin" />;
@@ -76,16 +88,16 @@ const Profile = ({ match }) => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={profile.name} secondary={profile.email} />
-          {loggedIn && auth && (
-            <ListItemSecondaryAction>
-              <Link to={`/user/edit/${profileId}`}>
-                <IconButton color="primary">
-                  <Edit />
-                </IconButton>
-              </Link>
-              <DeleteUser userId={profile._id} />
-            </ListItemSecondaryAction>
-          )}
+          {api.isAuthorized(profile._id, paramId) && (
+              <ListItemSecondaryAction>
+                <Link href={`/user/edit/${profile._id}`}>
+                  <IconButton color="primary">
+                    <Edit />
+                  </IconButton>
+                </Link>
+                <DeleteUser userId={profile._id} />
+              </ListItemSecondaryAction>
+            )}
         </ListItem>
         <Divider />
         <ListItem>

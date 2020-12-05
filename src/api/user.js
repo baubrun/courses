@@ -1,74 +1,103 @@
-// import axios from "axios";
-import {
-    domain,
-    signInPath,
-    signOutPath,
-    usersPath
-} from "./utils";
+import axios from "axios";
+
 import {
     isAuthenticated
 } from "./auth"
 
 
-const read = async (id) => {
-    const token = isAuthenticated();
-    try {
-        let req = await fetch(
-            `${domain}/${usersPath}/${id}`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-        const res = await req.text()
-        return JSON.parse(res)
-    } catch (error) {
+ const createUser = createAsyncThunk(
+    "/api/users", 
+async (data) => {
+  try {
+    const res = await axios.post(`${domain}/api/users`, data);
+    return res.data;
+  } catch (error) {
+    return {
+      error: error.response.data.error
+    };
+  }
+});
+
+
+const deleteUser = createAsyncThunk(
+    "/deleteUser", 
+    async (data) => {
+      const token = isAuthenticated();
+      try {
+        const res = await axios.delete(`${domain}/${data.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return res.data;
+      } catch (error) {
         return {
-            error: error.message
+          error: error.response.data.error
         };
-    }
-}
+      }
+    });
+
+    
+ const listUsers = createAsyncThunk(
+    "/listUsers", 
+async () => {
+  try {
+    const res = await axios.get(`${domain}/users`);
+    return res.data;
+  } catch (error) {
+    return {
+      error: error.response.data.error
+    };
+  }
+});
+
+
+ const deleteUser = createAsyncThunk(
+    "/cre", 
+    async (data) => {
+  try {
+    const res = await axios.post(`${domain}/api/users`, data);
+    return res.data;
+  } catch (error) {
+    return {
+      error: error.response.data.error,
+    };
+  }
+});
+
+
+ const updateUser = createAsyncThunk(
+    "/updateUser", 
+async (data) => {
+  const token = isAuthenticated();
+  try {
+    const res = await axios.patch(
+      `${domain}/api/users/${data.id}`,
+      {
+        user: data.data,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    return {
+      error: error.response.data.error
+    };
+  }
+});
 
 
 
-const signIn = async (user) => {
-    try {
-        const req = await fetch(`${domain}/${signInPath}`, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(user)
-        })
-        const res = await req.text()
-        return JSON.parse(res)
-    } catch (error) {
-        return {
-            error: error
-        };
 
-    }
-};
-
-
-const signOut = async () => {
-    try {
-        const req = await fetch(`${domain}/${signOutPath}`);
-        const res = await req.text()
-        return JSON.parse(res)
-    } catch (error) {
-        return {
-            error: error.message
-        };
-    }
-};
-
-
-
-
-export default {
-    read,
-    signIn,
-    signOut,
+ export default {
+    createUser,
+    deleteUser,
+    listUsers,
+    readUser,
+    updateUser,
+    
 };

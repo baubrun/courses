@@ -26,7 +26,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import authAPI from "../../api/auth";
 import { userState } from "../../redux/userSlice";
-import { courseState } from "../../redux/courseSlice";
+import { courseState, readCourse } from "../../redux/courseSlice";
 
 import NewLesson from "./NewLesson"
 import _ from "lodash"
@@ -113,12 +113,18 @@ const Course = ({ match }) => {
     ? `/api/courses/photo/${course._id}`
     : ""
 
+useEffect(() => {
+ if (courseUrl){
+   dispatch(readCourse(courseUrl))
+ }
+}, [courseUrl])
 
-  useEffect(() => {
-    if (courseUrl){
-      setCourseData(courseUrl)
-    }
-  }, [courseUrl]);
+
+// useEffect(() => {
+//     if (courseUrl){
+//       setCourseData(courseUrl)
+//     }
+//   }, [courseUrl]);
 
 
   const addLesson = (course) => {

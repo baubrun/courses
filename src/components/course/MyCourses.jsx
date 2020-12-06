@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyCourses = ({match}) => {
+const MyCourses = () => {
   const classes = useStyles();
   const dispatch = useDispatch(listCourseByInstructor);
   const { courses } = useSelector(courseState);

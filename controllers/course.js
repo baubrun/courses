@@ -81,7 +81,6 @@ const create = async (req, res, next) => {
 };
 
 const listByInstructor = async (req, res) => {
-  console.log('req.params.userId', req.params.userId)
   try {
     const courses = await Course.find({
       instructor: req.params.userId,

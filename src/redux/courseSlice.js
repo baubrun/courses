@@ -51,7 +51,7 @@ async (id) => {
   const token = authAPI.isAuthenticated();
   try {
     let res = await axios.get(
-      `${domain}/${coursesByPath}/${id}`,
+      `${domain}/api/courses/by/${id}`,
      {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -66,10 +66,12 @@ async (id) => {
 })
 
 
-export const readCourse = async (id) => {
+export const readCourse = createAsyncThunk(
+"/readCourse",
+async (courseId) => {
   const token = authAPI.isAuthenticated();
   try {
-    let res = await axios.get(`${domain}/${coursesByPath}/${id}`, {
+    let res = await axios.get(`${domain}/api/courses/${courseId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -80,7 +82,7 @@ export const readCourse = async (id) => {
         error: error.response.data.error
     };
   }
-};
+})
 
 
 const courseSlice = createSlice({

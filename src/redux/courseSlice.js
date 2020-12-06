@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {domain} from "../api/utils"
 import axios from "axios";
 import authAPI from "../api/auth";
@@ -45,10 +45,14 @@ export const createNewLesson = async (data) => {
 };
 
 
-export const listCourseByInstructor = async (id) => {
+export const listCourseByInstructor = createAsyncThunk(
+  "/listCourseByInstructor",
+async (id) => {
   const token = authAPI.isAuthenticated();
   try {
-    let res = await axios.get(`${domain}/${coursesByPath}/${id}`, {
+    let res = await axios.get(
+      `${domain}/${coursesByPath}/${id}`,
+     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -59,7 +63,8 @@ export const listCourseByInstructor = async (id) => {
         error: error.response.data.error
     };
   }
-};
+})
+
 
 export const readCourse = async (id) => {
   const token = authAPI.isAuthenticated();
@@ -83,10 +88,28 @@ const courseSlice = createSlice({
   initialState: {
     course: {},
     courses: [],
+    loading: false,
+    error: "",
   },
   reducers: { },
   extraReducers: {
 
+    [listCourseByInstructor.pending]: (state) => {
+      state.loading = true;
+    },
+    [listCourseByInstructor.fulfilled]: (state, action) => {
+        state.loading = false;
+      const { error, courses } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.courses = courses;
+      }
+    },
+    [listCourseByInstructor.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
   }
 });
 

@@ -15,8 +15,8 @@ import Divider from "@material-ui/core/Divider";
 import { Redirect, Link } from "react-router-dom";
 
 import { userState } from "../../redux/userSlice";
-import { courseState } from "../../redux/courseSlice";
-import { listCourseByInstructor } from "../../redux/courseSlice";
+import { courseState, listCourseByInstructor } from "../../redux/courseSlice";
+
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -52,17 +52,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyCourses = (props) => {
+const MyCourses = ({match}) => {
   const classes = useStyles();
   const dispatch = useDispatch(listCourseByInstructor);
   const { courses } = useSelector(courseState);
+  const { user } = useSelector(userState);
   const [values, setValues] = useState({
     myCourses: [],
     redirect: false,
   });
 
   useEffect(() => {
-    dispatch(listCourseByInstructor(props.match.params.userId));
+    dispatch(listCourseByInstructor(user._id));
   }, []);
 
 
@@ -72,14 +73,6 @@ const MyCourses = (props) => {
     }
   }, [courses]);
 
-
-
-  useEffect(() => {
-    setValues({
-      ...values,
-      myCourses: courses,
-    });
-  });
 
 
   if (values.redirect) {

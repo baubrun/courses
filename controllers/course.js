@@ -1,5 +1,4 @@
 import Course from "../models/course.js";
-import onFinished from "on-finished";
 import path from "path";
 import {valid_OId} from "./helper.js"
 
@@ -82,15 +81,16 @@ const create = async (req, res, next) => {
 };
 
 const listByInstructor = async (req, res) => {
+  console.log('req.params.userId', req.params.userId)
   try {
     const courses = await Course.find({
-      instructor: req.profile._id,
+      instructor: req.params.userId,
     }).populate("instructor", "_id name");
 
-    return res.status(200).json(courses);
+    return res.status(200).json({courses: courses});
   } catch (error) {
     return res.status(400).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };

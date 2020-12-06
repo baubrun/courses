@@ -50,7 +50,6 @@ const Profile = ({ match }) => {
 
   const getProfile = async () => {
     const data = await userAPI.readUser(paramId);
-    console.log('data :>> ', data);
     if (data && data.error) {
       setValues({
         ...values,

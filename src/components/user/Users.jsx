@@ -16,9 +16,9 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import Person from "@material-ui/icons/Person";
 import Box from "@material-ui/core/Box";
 
-import { userState, listUsers } from "../../redux/userSlice";
-
-
+import { userState,
+   listUsers 
+  } from "../../redux/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -31,41 +31,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const Users = () => {
-  const classes = useStyles();  
+  const classes = useStyles();
   const dispatch = useDispatch();
   const { users, error } = useSelector(userState);
   const [values, setValues] = useState({
     courseUsers: [],
     errorMsg: "",
-  })
+  });
+
+  useEffect(() => {
+    dispatch(listUsers());
+  }, []);
 
 
   useEffect(() => {
-    dispatch(listUsers())
-  }, [])
+    if (error) {
+      setValues({ ...values, errorMsg: error });
+    } else {
+      setValues({ ...values, courseUsers: users });
+    }
+  }, [error, users]);
 
-
-  useEffect(() => {
-   if (users) {
-     setValues({...values, courseUsers: users})
-   }
-  }, [users])
-
-
-  useEffect(() => {
-   if (error) {
-     setValues({...values, errorMsg: error})
-   }
-  }, [error])
-
-
+  
 
   if (values.errorMsg) {
-    return <Box>{values.errorMsg}</Box>
+    return <Box>{values.errorMsg}</Box>;
   }
-
 
   return (
     <Paper className={classes.root} elevation={4}>
@@ -77,7 +69,6 @@ const Users = () => {
           return (
             <Link to={`/user/${user._id}`} key={idx}>
               <ListItem button>
-                  
                 <ListItemAvatar>
                   <Avatar>
                     <Person />

@@ -13,7 +13,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { clearError, signIn, userState } from "../../redux/userSlice";
 
-
 const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 600,
@@ -65,17 +64,14 @@ const SignIn = (props) => {
     redirect: false,
   });
 
-
   useEffect(() => {
     if (loggedIn) {
-      console.log('loggedIn :>> ', loggedIn);
       setValues({
         ...values,
-        redirect: true
+        redirect: true,
       });
     }
   }, [loggedIn]);
-
 
   useEffect(() => {
     if (error) {
@@ -83,12 +79,10 @@ const SignIn = (props) => {
     }
   }, [error]);
 
-
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
-    dispatch(clearError())
+    dispatch(clearError());
   };
-
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -98,29 +92,26 @@ const SignIn = (props) => {
     });
   };
 
-
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    
+
     const userData = {
       email: values.email,
       password: values.password,
-    }
+    };
 
-    dispatch(signIn(userData))
+    dispatch(signIn(userData));
   };
 
-  if (values.redirect){
-    return <Redirect to="/" />
+  if (values.redirect) {
+    return <Redirect to="/" />;
   }
 
   return (
     <>
-      
-        <Card className={classes.card}>
+      <Card className={classes.card}>
         <form onSubmit={handleSubmit}>
           <CardContent>
-         
             <Typography className={classes.title} variant="h6">
               Sign In
             </Typography>
@@ -145,15 +136,13 @@ const SignIn = (props) => {
               value={values.password}
             />
 
-        {values.errorMsg && (
-               <Box 
-               onClick={() => closeErrors()}
-               >
-                 <Typography className={classes.error} component="p">
-                   {values.errorMsg}
-                 </Typography>
-               </Box>
-          )}
+            {values.errorMsg && (
+              <Box onClick={() => closeErrors()}>
+                <Typography className={classes.error} component="p">
+                  {values.errorMsg}
+                </Typography>
+              </Box>
+            )}
           </CardContent>
           <CardActions>
             <Button
@@ -164,24 +153,21 @@ const SignIn = (props) => {
             >
               submit
             </Button>
-
           </CardActions>
           <br />
 
           <Typography variant="body2" component="p">
             Not registered? &nbsp;
             <span>
-              <Link className={classes.signUp} to="/SignUp">
+              <Link className={classes.signUp} to="/signUp">
                 Sign Up
               </Link>
             </span>
           </Typography>
-          </form>
-
-        </Card>
+        </form>
+      </Card>
     </>
   );
 };
 
 export default SignIn;
-

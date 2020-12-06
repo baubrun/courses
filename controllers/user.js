@@ -73,13 +73,26 @@ const isInstructor = (req, res, next) => {
 
 
 
-const read = (req, res) => {
-    req.profile.password = undefined
-    req.profile.__v = undefined
-    return res.json(req.profile)
+// const read = (req, res) => {
+//     req.profile.password = undefined
+//     req.profile.__v = undefined
+//     return res.json(req.profile)
 
-}
+// }
 
+const read = async (req, res) => {
+    const id = req.params.userId
+    try {
+      let user = await User.findById(id)
+      .select("-password -__v -updated")
+      return res.status(200).json({user: user})
+    } catch (error) {
+      return res.status(400).json({
+        error: error.message
+      })
+    }
+  }
+  
 
 
 const remove = async (req, res, next) => {

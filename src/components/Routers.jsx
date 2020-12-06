@@ -20,17 +20,21 @@ const Routers = () => {
         <>
         <NavBar />
         <Switch>
-            <Route exact path="/" component={Home}/>
-            <PrivateRoute  path="/users" component={Users}/>
-            <Route path="/signUp" component={SignUp}/>
-            <Route path="/signIn" component={SignIn}/>
+            <Route exact={true} path="/" component={Home}/>
+            <Route  path="/users" component={Users}/>
 
-            <Route path="/user/edit/:userId" component={EditProfile} />
+            <Route  path="/signUp" component={SignUp}/>
+            <Route  path="/signIn" component={SignIn}/>
+
+            <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
             <Route path="/user/:userId" component={Profile}/>
-            <Route path="/teach/courses" component={MyCourses}/>
+
             <Route path="/course/:courseId" component={Course}/>
+            <Route path="/teach/courses" component={MyCourses}/>
+
             <Route path="/teach/course/new" component={NewCourse} />
             <Route path="/teach/course/:courseId" component={Course}/>
+
 
             <Route component={NotFound} />
         </Switch>

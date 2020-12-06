@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Link, Redirect } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -19,12 +19,12 @@ import Person from "@material-ui/icons/Person";
 import Divider from "@material-ui/core/Divider";
 import DeleteUser from "./DeleteUser";
 
-import { userState } from "../../redux/userSlice";
+import { userState, readUser } from "../../redux/userSlice";
 
 import authAPI from "../../api/auth";
+import { set } from "mongoose";
 
 const useStyles = makeStyles((theme) => ({
-
   root: theme.mixins.gutters({
     maxWidth: 600,
     margin: "auto",
@@ -37,46 +37,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const Profile = ({ match }) => {
   const classes = useStyles();
-  const { users, error } = useSelector(userState);
+  const dispatch = useDispatch();
+  const { user, users, error, loggedIn } = useSelector(userState);
   const [values, setValues] = useState({
     profile: {},
     redirect: false,
     errorMsg: "",
     redirect: false,
-  })
-
+  });
 
   const paramId = match.params.userId;
+  console.log('paramId :>> ', paramId);
+
+  const getProfile = () =>{
+    const found = users.find(u => u._id === paramId)
+    console.log('found :>> ', found);
+    setValues({ ...values, profile: found });
+  }
 
 
   useEffect(() => {
     if (error) {
-      setValues({ ...values, redirect: true});
+      setValues({ ...values, redirect: true });
+    } else {
+      if (users){
+        getProfile()
+      }
     }
-  }, [error]);
+  }, [error, users]);
 
-
-  const getUser = (userId) => {
-    const found = users.find(u => u._id === userId)
-    return found
-  }
-
-  useEffect(() => {
-    if (paramId) {
-      setValues({
-        ...values,
-        profile: getUser(paramId)
-      });
-    }
-  }, [paramId]);
-
-
-  if (values.redirect) {
-    return <Redirect to="/signIn" />;
+  if (!loggedIn) {
+    return <Redirect to="/signIn" />
   }
 
   return (
@@ -91,22 +84,28 @@ const Profile = ({ match }) => {
               <Person />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={values.profile.name} secondary={values.profile.email} />
-          {authAPI.isAuthorized(values.profile._id, paramId) && (
-              <ListItemSecondaryAction>
-                <Link href={`/user/edit/${values.profile._id}`}>
-                  <IconButton color="primary">
-                    <Edit />
-                  </IconButton>
-                </Link>
-                <DeleteUser userId={values.profile._id} />
-              </ListItemSecondaryAction>
-            )}
+          <ListItemText
+            primary={values.profile.name}
+            secondary={values.profile.email}
+          />
+
+          {authAPI.isAuthorized(values.profile._id, user._id) && (
+            <ListItemSecondaryAction>
+              <Link to={`/user/edit/${values.profile._id}`}>
+                <IconButton color="primary">
+                  <Edit />
+                </IconButton>
+              </Link>
+              <DeleteUser userId={values.profile._id} />
+            </ListItemSecondaryAction>
+          )}
         </ListItem>
         <Divider />
         <ListItem>
           <ListItemText
-            primary={"Joined: " + new Date(values.profile.created).toDateString()}
+            primary={
+              "Joined: " + new Date(values.profile.created).toDateString()
+            }
           />
         </ListItem>
       </List>

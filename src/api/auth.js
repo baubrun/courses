@@ -13,6 +13,7 @@ const isAuthenticated = () => {
 };
 
 const isAuthorized = (id, resource) => {
+  // console.log('isAuthorized :>> ', id === resource);
   return id === resource
 }
 

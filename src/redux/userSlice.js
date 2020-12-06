@@ -15,18 +15,6 @@ export const createUser = createAsyncThunk("/api/users", async (data) => {
 });
 
 
-export const readUser = createAsyncThunk("/readUser", async (data) => {
-  try {
-    const res = await axios.post(
-        `${domain}/api/users/${data.userId}`, data);
-    return res.data;
-  } catch (error) {
-    return {
-      error: error.response.data.error
-    };
-  }
-});
-
 
 export const signIn = createAsyncThunk(
   "/signIn", 
@@ -61,9 +49,27 @@ async (data) => {
   }
 });
 
-export const listUsers = createAsyncThunk("/listUsers", async () => {
+export const listUsers = createAsyncThunk(
+  "/listUsers", 
+async () => {
   try {
     const res = await axios.get(`${domain}/api/users`);
+    return res.data;
+  } catch (error) {
+    return {
+      error: error.response.data.error
+    };
+  }
+});
+
+
+
+export const readUser = createAsyncThunk(
+  "/readUser", 
+async (userId) => {
+  try {
+    const res = await axios.get(
+        `${domain}/api/users/${userId}`);
     return res.data;
   } catch (error) {
     return {
@@ -120,38 +126,38 @@ export const userSlice = createSlice({
         state.loading = true
         state.error = action.payload.error;
       },
-    [createUser.fulfilled]: (state, action) => {
-        state.loading = false
-      const { error, user } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.loggedIn = true;
-        state.user = user;
-      }
-    },
-    [createUser.rejected]: (state, action) => {
-        state.loading = false
-      state.error = action.payload.error;
-    },
+    // [createUser.fulfilled]: (state, action) => {
+    //     state.loading = false
+    //   const { error, user } = action.payload;
+    //   if (error) {
+    //     state.error = error;
+    //   } else {
+    //     state.loggedIn = true;
+    //     state.user = user;
+    //   }
+    // },
+    // [createUser.rejected]: (state, action) => {
+    //     state.loading = false
+    //   state.error = action.payload.error;
+    // },
 
 
-    [deleteUser.pending]: (state) => {
-      state.loading = true;
-    },
-    [deleteUser.fulfilled]: (state, action) => {
-      state.loading = false;
-      const { error, users } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.users = users
-      }
-    },
-    [deleteUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
-    },
+    // [deleteUser.pending]: (state) => {
+    //   state.loading = true;
+    // },
+    // [deleteUser.fulfilled]: (state, action) => {
+    //   state.loading = false;
+    //   const { error, users } = action.payload;
+    //   if (error) {
+    //     state.error = error;
+    //   } else {
+    //     state.users = users
+    //   }
+    // },
+    // [deleteUser.rejected]: (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload.error;
+    // },
 
 
     [listUsers.pending]: (state) => {
@@ -170,6 +176,24 @@ export const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload.error;
     },
+
+
+    // [readUser.pending]: (state) => {
+    //   state.loading = true;
+    // },
+    // [readUser.fulfilled]: (state, action) => {
+    //     state.loading = false;
+    //   const { error, user } = action.payload;
+    //   if (error) {
+    //     state.error = error;
+    //   } else {
+    //     state.user = user
+    //   }
+    // },
+    // [readUser.rejected]: (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload.error;
+    // },
 
 
 
@@ -193,22 +217,24 @@ export const userSlice = createSlice({
     },
 
 
-    [updateUser.pending]: (state) => {
-      state.loading = true;
-    },
-    [updateUser.fulfilled]: (state, action) => {
-      state.loading = false;
-      const { error, user } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.user = user;
-      }
-    },
-    [updateUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
-    },
+    // [updateUser.pending]: (state) => {
+    //   state.loading = true;
+    // },
+    // [updateUser.fulfilled]: (state, action) => {
+    //   state.loading = false;
+    //   const { error, user } = action.payload;
+    //   if (error) {
+    //     state.error = error;
+    //   } else {
+    //     state.user = user;
+    //   }
+    // },
+    // [updateUser.rejected]: (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload.error;
+    // },
+
+
   },
 });
 

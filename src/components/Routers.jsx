@@ -12,7 +12,7 @@ import NewCourse from "./course/NewCourse"
 import MyCourses from "./course/MyCourses"
 import Course from "./course/Course"
 
-
+import PrivateRoute from "./PrivateRoute"
 
 const Routers = () => {
 
@@ -21,7 +21,7 @@ const Routers = () => {
         <NavBar />
         <Switch>
             <Route exact path="/" component={Home}/>
-            <Route  path="/users" component={Users}/>
+            <PrivateRoute  path="/users" component={Users}/>
             <Route path="/signUp" component={SignUp}/>
             <Route path="/signIn" component={SignIn}/>
 

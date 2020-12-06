@@ -75,7 +75,7 @@ const Users = () => {
       <List dense>
         {values.courseUsers.map((user, idx) => {
           return (
-            <Link to={"/user/" + user._id} key={idx}>
+            <Link to={`/user/${user._id}`} key={idx}>
               <ListItem button>
                   
                 <ListItemAvatar>

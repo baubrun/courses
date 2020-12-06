@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = ({ match }) => {
   const classes = useStyles();
-  const { user, error } = useSelector(userState);
+  const { users, error } = useSelector(userState);
   const [values, setValues] = useState({
     profile: {},
     redirect: false,
@@ -60,18 +60,23 @@ const Profile = ({ match }) => {
   }, [error]);
 
 
+  const getUser = (userId) => {
+    const found = users.find(u => u._id === userId)
+    return found
+  }
+
   useEffect(() => {
-    if (user) {
+    if (paramId) {
       setValues({
         ...values,
-        profile: user
+        profile: getUser(paramId)
       });
     }
-  }, [user]);
+  }, [paramId]);
 
 
   if (values.redirect) {
-    return <Redirect to="/signin" />;
+    return <Redirect to="/signIn" />;
   }
 
   return (

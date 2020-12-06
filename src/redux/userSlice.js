@@ -64,20 +64,6 @@ async () => {
 
 
 
-export const readUser = createAsyncThunk(
-  "/readUser", 
-async (userId) => {
-  try {
-    const res = await axios.get(
-        `${domain}/api/users/${userId}`);
-    return res.data;
-  } catch (error) {
-    return {
-      error: error.response.data.error
-    };
-  }
-});
-
 
 export const updateUser = createAsyncThunk("/updateUser", async (data) => {
   const token = authAPI.isAuthenticated();
@@ -176,25 +162,6 @@ export const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload.error;
     },
-
-
-    // [readUser.pending]: (state) => {
-    //   state.loading = true;
-    // },
-    // [readUser.fulfilled]: (state, action) => {
-    //     state.loading = false;
-    //   const { error, user } = action.payload;
-    //   if (error) {
-    //     state.error = error;
-    //   } else {
-    //     state.user = user
-    //   }
-    // },
-    // [readUser.rejected]: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload.error;
-    // },
-
 
 
     [signIn.pending]: (state) => {

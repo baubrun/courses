@@ -19,10 +19,10 @@ import Person from "@material-ui/icons/Person";
 import Divider from "@material-ui/core/Divider";
 import DeleteUser from "./DeleteUser";
 
-import { userState, readUser } from "../../redux/userSlice";
+import { userState } from "../../redux/userSlice";
 
 import authAPI from "../../api/auth";
-import { set } from "mongoose";
+import userAPI from "../../api/user";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -39,36 +39,35 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = ({ match }) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const { user, users, error, loggedIn } = useSelector(userState);
+  const { user } = useSelector(userState);
   const [values, setValues] = useState({
     profile: {},
     redirect: false,
-    errorMsg: "",
     redirect: false,
   });
 
   const paramId = match.params.userId;
-  console.log('paramId :>> ', paramId);
 
-  const getProfile = () =>{
-    const found = users.find(u => u._id === paramId)
-    console.log('found :>> ', found);
-    setValues({ ...values, profile: found });
-  }
+  const getProfile = async () => {
+    const data = await userAPI.readUser(paramId);
+    console.log('data :>> ', data);
+    if (data && data.error) {
+      setValues({
+        ...values,
+        redirect: true
+      });
+    } else {
+      setValues({ ...values, profile: data.user });
+    }
+  };
 
 
   useEffect(() => {
-    if (error) {
-      setValues({ ...values, redirect: true });
-    } else {
-      if (users){
-        getProfile()
-      }
-    }
-  }, [error, users]);
+    getProfile();
+  }, []);
 
-  if (!loggedIn) {
+
+  if (values.redirect ) {
     return <Redirect to="/signIn" />
   }
 

@@ -1,10 +1,5 @@
 import User from "../models/user.js"
 import _ from "lodash"
-import bcrypt from "bcryptjs"
-import dotenv from "dotenv"
-import jwt from "jsonwebtoken";
-dotenv.config()
-import {valid_OId} from "./helper.js"
 
 
 const SALT = 10
@@ -73,12 +68,12 @@ const isInstructor = (req, res, next) => {
 
 
 
-// const read = (req, res) => {
-//     req.profile.password = undefined
-//     req.profile.__v = undefined
-//     return res.json(req.profile)
+const read = (req, res) => {
+    req.profile.password = undefined
+    req.profile.__v = undefined
+    return res.json(req.profile)
 
-// }
+}
 
 const read = async (req, res) => {
     const id = req.params.userId
@@ -108,51 +103,6 @@ const remove = async (req, res, next) => {
     }
 }
 
-const signIn = async (req, res) => {
-    const {
-        email,
-        password
-    } = req.body
-    try {
-        let user = await User.findOne({
-            email: email,
-        });
-
-        if (!user) {
-            return res.status(401).json({
-                error: "User not found.",
-            });
-        }
-        const validPassword = await bcrypt.compare(password, user.password)
-        if (!validPassword) {
-            return res.status(401).json({
-                error: "Invalid Email or password.",
-            });
-        } else {
-            const token = jwt.sign({
-                    _id: user.id
-                },
-                process.env.JWT_SECRET,
-            )
-
-            return res.status(200).json({
-                token,
-                user: {
-                    created: user.created,
-                    instructor: user.instructor,
-                    email: user.email,
-                    _id: user._id,
-                    name: user.name,
-                }
-            });
-        }
-
-    } catch (error) {
-        return res.status(401).json({
-            error: error.message
-        });
-    }
-};
 
 
 const update = async (req, res) => {
@@ -191,11 +141,11 @@ const update = async (req, res) => {
         })
     }
 }
+
+
 const userById = async (req, res, next, id) => {
-    const _id = valid_OId(id)
     try {
         let user = await User.findById(id)
-        // let user = await User.findById(_id)
         if (!user)
             return res.status(400).json({
                 error: "User not found."
@@ -216,7 +166,6 @@ export default {
     isInstructor,
     read,
     remove,
-    signIn,
     update,
     userById,
 }

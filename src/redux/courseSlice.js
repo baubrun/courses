@@ -3,15 +3,14 @@ import {domain} from "../api/utils"
 import axios from "axios";
 import authAPI from "../api/auth";
 
-const coursesByPath = "api/courses/by";
 
 
-export const createCourse = async (data) => {
+export const createCourse = async (course) => {
   const token = authAPI.isAuthenticated();
   try {
     const res = await axios.post(
-        `${domain}/${coursesByPath}/${data.id}`, 
-    data.data, 
+        `${domain}/api/courses/by/${course.id}`, 
+    course.data, 
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -26,12 +25,12 @@ export const createCourse = async (data) => {
 };
 
 
-export const createNewLesson = async (data) => {
+export const createNewLesson = async (course) => {
   const token = authAPI.isAuthenticated();
   try {
     const res = await axios.post(
-        `/api/courses/${data.id}/lesson/new`, 
-    data.lesson, {
+        `/api/courses/${course.id}/lesson/new`, 
+    course.lesson, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -47,11 +46,11 @@ export const createNewLesson = async (data) => {
 
 export const listCourseByInstructor = createAsyncThunk(
   "/listCourseByInstructor",
-async (id) => {
+async (userId) => {
   const token = authAPI.isAuthenticated();
   try {
     let res = await axios.get(
-      `${domain}/api/courses/by/${id}`,
+      `${domain}/api/courses/by/${userId}`,
      {
       headers: {
         Authorization: `Bearer ${token}`,

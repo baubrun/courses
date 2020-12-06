@@ -137,9 +137,9 @@ useEffect(() => {
   }
 
 
-  if (_.isEmpty(course)){
-    return null
-  }
+  // if (_.isEmpty(course)){
+  //   return null
+  // }
 
 
 
@@ -209,7 +209,7 @@ useEffect(() => {
         <Box className={classes.flex}>
           <CardMedia
             className={classes.media}
-            image={imageUrl}
+            image={`${process.env.PUBLIC_URL}/images/${courseData.image}`}
             title={courseData.name}
           />
           <Box className={classes.details}>

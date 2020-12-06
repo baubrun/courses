@@ -3,7 +3,7 @@ import path from "path";
 import {valid_OId} from "./helper.js"
 
 
-const courseByID = async (req, res, next, id) => {
+const courseByID = async (req, res, id) => {
   try {
     let course = await Course.findById(id).populate("instructor", "_id name");
 
@@ -11,9 +11,9 @@ const courseByID = async (req, res, next, id) => {
       return res.status(400).json({
         error: "Course not found.",
       });
-    req.course = course;
+      return res.status(200).json({course: course});
 
-    next();
+
   } catch (error) {
     return res.status(400).json({
       error: error.message,

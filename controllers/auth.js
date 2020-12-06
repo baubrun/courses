@@ -1,5 +1,7 @@
 import expressJwt from "express-jwt"
 import config from "../config/index.js"
+import bcrypt from "bcryptjs"
+
 
 const hasAuthorization = (req, res, next) => {
   const authorized = req.profile && req.auth &&
@@ -13,16 +15,61 @@ const hasAuthorization = (req, res, next) => {
 };
 
 
-const reqSignIn = expressJwt({
+const requireSignIn = expressJwt({
   algorithms:   ["HS256"],
   secret: config.jwtSecret,
   userProperty: "auth",
 })
 
 
+const signIn = async (req, res) => {
+  const {
+      email,
+      password
+  } = req.body
+  try {
+      let user = await User.findOne({
+          email: email,
+      });
+
+      if (!user) {
+          return res.status(401).json({
+              error: "User not found.",
+          });
+      }
+      const validPassword = await bcrypt.compare(password, user.password)
+      if (!validPassword) {
+          return res.status(401).json({
+              error: "Invalid Email or password.",
+          });
+      } else {
+          const token = jwt.sign({
+                  _id: user.id
+              },
+              process.env.JWT_SECRET,
+          )
+
+          return res.status(200).json({
+              token,
+              user: {
+                  instructor: user.instructor,
+                  name: user.name,
+                  email: user.email,
+                  _id: user._id,
+              }
+          });
+      }
+  } catch (error) {
+      return res.status(401).json({
+          error: error.message
+      });
+  }
+};
+
 
 
 export default{
   hasAuthorization,
-  reqSignIn,
+  requireSignIn,
+  signIn,
 };

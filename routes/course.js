@@ -12,7 +12,7 @@ const router = express.Router()
 
 router.route("/api/courses/by/:userId")
     .get(
-        // authController.reqSignIn,
+        // authController.requireSignIn,
         // authController.hasAuthorization,
         courseController.listByInstructor
     )
@@ -27,7 +27,7 @@ router.route("/api/courses/by/:userId")
 router.route("/api/courses/:courseId")
     .get(courseController.read)
     // .put(
-    // //     // authController.reqSignIn,
+    // //     // authController.requireSignIn,
     // //     // userController.isInstructor,
     //     courseController.update,
     // )
@@ -35,7 +35,7 @@ router.route("/api/courses/:courseId")
 
 router.route("/api/courses/:courseId/lesson/new")
     .put(
-        // authController.reqSignIn,
+        // authController.requireSignIn,
         // userController.isInstructor,
         courseController.newLesson,
     )

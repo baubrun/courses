@@ -12,11 +12,11 @@ router.route("/api/users")
 router
   .route("/api/users/:userId")
   .get(
-    // authController.reqSignIn,
+    authController.requireSignIn,
     userController.read
   )
   .patch(
-    // authController.reqSignIn,
+    // authController.requireSignIn,
     // authController.hasAuthorization,
     userController.update,
   )

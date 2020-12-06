@@ -63,7 +63,7 @@ async (data) => {
 
 export const listUsers = createAsyncThunk("/listUsers", async () => {
   try {
-    const res = await axios.get(`${domain}/users`);
+    const res = await axios.get(`${domain}/api/users`);
     return res.data;
   } catch (error) {
     return {
@@ -179,7 +179,6 @@ export const userSlice = createSlice({
     [signIn.fulfilled]: (state, action) => {
       state.loading = false;
       const { error, user, token } = action.payload;
-      console.log('action.payload :>> ', action.payload);
       if (error) {
         state.error = error;
       } else {
@@ -189,7 +188,6 @@ export const userSlice = createSlice({
       }
     },
     [signIn.rejected]: (state, action) => {
-      console.log('action.payload :>>', action)
       state.loading = false;
       state.error = action.payload.error;
     },

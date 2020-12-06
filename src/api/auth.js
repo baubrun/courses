@@ -16,11 +16,10 @@ const isAuthorized = (id, resource) => {
   return id === resource
 }
 
-const setToken = (jwt, cb) => {
+const setToken = (jwt) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("jwt", JSON.stringify(jwt));
   }
-  cb();
 };
 
 

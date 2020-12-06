@@ -11,7 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { signIn, userState } from "../../redux/userSlice";
+import { clearError, signIn, userState } from "../../redux/userSlice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn = (props) => {
   const classes = useStyles();
-  const { user, error } = useSelector(userState);
+  const { loggedIn, error } = useSelector(userState);
   const dispatch = useDispatch();
   const [values, setValues] = useState({
     created: "",
@@ -67,13 +67,14 @@ const SignIn = (props) => {
 
 
   useEffect(() => {
-    if (user) {
+    if (loggedIn) {
+      console.log('loggedIn :>> ', loggedIn);
       setValues({
         ...values,
         redirect: true
       });
     }
-  }, [user]);
+  }, [loggedIn]);
 
 
   useEffect(() => {
@@ -85,6 +86,7 @@ const SignIn = (props) => {
 
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
+    dispatch(clearError())
   };
 
 
@@ -108,11 +110,9 @@ const SignIn = (props) => {
     dispatch(signIn(userData))
   };
 
-
-
-  // if (values.redirect) {
-  //   return <Redirect to="/" />;
-  // }
+  if (values.redirect){
+    return <Redirect to="/" />
+  }
 
   return (
     <>

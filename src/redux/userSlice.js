@@ -28,10 +28,12 @@ export const readUser = createAsyncThunk("/readUser", async (data) => {
 });
 
 
-export const signIn = createAsyncThunk("/signIn", async (data) => {
+export const signIn = createAsyncThunk(
+  "/signIn", 
+async (data) => {
   try {
     const res = await axios.post(
-        `${domain}/auth/signin`)
+        `${domain}/auth/signIn`, data)
     return res.data;
   } catch (error) {
     return {
@@ -40,10 +42,13 @@ export const signIn = createAsyncThunk("/signIn", async (data) => {
   }
 });
 
-export const deleteUser = createAsyncThunk("/deleteUser", async (data) => {
+export const deleteUser = createAsyncThunk(
+  "/deleteUser", 
+async (data) => {
   const token = authAPI.isAuthenticated();
   try {
-    const res = await axios.delete(`${domain}/${data.id}`, {
+    const res = await axios.delete(`${domain}/${data.id}`,
+     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -100,6 +105,9 @@ export const userSlice = createSlice({
     loading: false,
   },
   reducers: {
+    clearError: (state) =>{
+      state.error = ""
+    },
     signOut: (state) => {
       state.loggedIn = false;
       state.user = {};
@@ -171,10 +179,12 @@ export const userSlice = createSlice({
     [signIn.fulfilled]: (state, action) => {
       state.loading = false;
       const { error, user, token } = action.payload;
+      console.log('action.payload :>> ', action.payload);
       if (error) {
         state.error = error;
       } else {
         state.user = user;
+        state.loggedIn = true
         authAPI.setToken(token)
       }
     },
@@ -204,6 +214,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { signOut } = userSlice.actions;
+export const { signOut, clearError } = userSlice.actions;
 export const userState = (state) => state.user;
 export default userSlice.reducer;

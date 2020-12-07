@@ -29,6 +29,7 @@ import { userState } from "../../redux/userSlice";
 import { courseState, readCourse } from "../../redux/courseSlice";
 
 import NewLesson from "./NewLesson"
+import DeleteCourse from "./DeleteCourse"
 import _ from "lodash"
 
 
@@ -128,10 +129,15 @@ useEffect(() => {
     setCourseData(course);
   };
 
+  const removeCourse = (course) => {
+    setValues({...values, redirect: true})
+  }
 
   if (values.redirect) {
     return <Redirect to={"/teach/courses"} />;
   }
+
+  
 
 
   if (_.isEmpty(courseData)){
@@ -179,7 +185,7 @@ useEffect(() => {
                           ? "Add atleast 1 lesson to publish"
                           : "Publish"}
                       </Button>
-                      delete course here
+                      <DeleteCourse course={courseData} onRemove={removeCourse}/>
                     </>
                   ) : (
                     <Button color="primary" variant="outlined">
@@ -239,7 +245,7 @@ useEffect(() => {
             }
             action={
               loggedIn &&
-              authAPI.isAuthenticated(user._id, courseData._id) &&
+              authAPI.isAuthenticated() &&
               !courseData.published && (
                 <span className={classes.action}>
                   <NewLesson 

@@ -26,20 +26,6 @@ export const createUser = createAsyncThunk(
 
 
 
-export const signIn = createAsyncThunk(
-  "/signIn",
-  async (data) => {
-    try {
-      const res = await axios.post(
-        `${domain}/auth/signIn`, data)
-      return res.data;
-    } catch (error) {
-      return {
-        error: error.response.data.error
-      };
-    }
-  });
-
 
 export const deleteUser = createAsyncThunk(
   "/deleteUser",
@@ -74,6 +60,21 @@ export const listUsers = createAsyncThunk(
 
 
 
+  export const signIn = createAsyncThunk(
+    "/signIn",
+    async (data) => {
+      try {
+        const res = await axios.post(
+          `${domain}/auth/signIn`, data)
+        return res.data;
+      } catch (error) {
+        return {
+          error: error.response.data.error
+        };
+      }
+    });
+  
+  
 
 export const updateUser = createAsyncThunk("/updateUser", async (data) => {
   const token = authAPI.isAuthenticated();

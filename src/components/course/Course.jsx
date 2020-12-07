@@ -108,12 +108,17 @@ const Course = ({ match }) => {
     redirect: false,
   });
 
-  const courseUrl = match.params.courseId
 
 
 useEffect(() => {
-   dispatch(readCourse(courseUrl))
-}, [courseUrl])
+   dispatch(readCourse( match.params.courseId))
+}, [])
+
+useEffect(() => {
+  if (course){
+    setCourseData(course)
+  }
+}, [course])
 
 
   const addLesson = (course) => {
@@ -240,8 +245,8 @@ useEffect(() => {
             }
           />
           <List>
-            {course.lessons &&
-              course.lessons.map((lesson, idx) => {
+            {courseData.lessons &&
+              courseData.lessons.map((lesson, idx) => {
                 return (
                   <span key={idx}>
                     <ListItem>

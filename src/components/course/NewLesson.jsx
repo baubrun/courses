@@ -69,6 +69,7 @@ const NewLesson = (props) => {
         content: "",
         resource_url: "",
       });
+      setOpenDialog(false)
     }
   };
 

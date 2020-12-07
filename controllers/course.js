@@ -91,7 +91,6 @@ const listByInstructor = async (req, res) => {
 const newLesson = async (req, res) => {
   try {
     let lesson = req.body;
-    console.log('lesson :>>', lesson)
     let newLesson = await Course.findByIdAndUpdate(
       req.course._id,
       { $push: { lessons: lesson }, updated: Date.now() },

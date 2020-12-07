@@ -112,9 +112,7 @@ const Course = ({ match }) => {
 
 
 useEffect(() => {
- if (courseUrl){
    dispatch(readCourse(courseUrl))
- }
 }, [courseUrl])
 
 
@@ -242,7 +240,7 @@ useEffect(() => {
             }
           />
           <List>
-            {course.lessons.length > 0 &&
+            {course.lessons &&
               course.lessons.map((lesson, idx) => {
                 return (
                   <span key={idx}>

@@ -61,7 +61,8 @@ const NewLesson = (props) => {
     if (data && data.error) {
       setValues({ ...values, errorMsg: data.error });
     } else {
-      props.addLesson(data);
+      console.log('data  createNewLesson :>> ', data.newLesson );
+      props.addLesson(data.newLesson);
       setValues({
         ...values,
         title: "",

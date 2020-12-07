@@ -74,12 +74,12 @@ const create = async (req, res) => {
   }
 };
 
+
 const listByInstructor = async (req, res) => {
   try {
     const courses = await Course.find({
       instructor: req.profile._id,
     }).populate("instructor", "_id name");
-
     return res.status(200).json({courses: courses});
   } catch (error) {
     return res.status(400).json({
@@ -90,7 +90,8 @@ const listByInstructor = async (req, res) => {
 
 const newLesson = async (req, res) => {
   try {
-    let lesson = req.body.lesson;
+    let lesson = req.body;
+    console.log('lesson :>>', lesson)
     let newLesson = await Course.findByIdAndUpdate(
       req.course._id,
       { $push: { lessons: lesson }, updated: Date.now() },

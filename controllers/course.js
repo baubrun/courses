@@ -3,6 +3,7 @@ import path from "path";
 import {valid_OId} from "./helper.js"
 
 
+
 const courseByID = async (req, res, next) => {
     const id = req.params.courseId
   try {
@@ -21,7 +22,7 @@ const courseByID = async (req, res, next) => {
   }
 };
 
-const create = async (req, res, next) => {
+const create = async (req, res) => {
   const {
     files,
     body: { name, description, category, instructor, published },
@@ -64,7 +65,7 @@ const create = async (req, res, next) => {
 
     await course.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       name: course.name,
       image: file.originalname,
       instructor: course.instructor,

@@ -173,7 +173,7 @@ useEffect(() => {
                     <>
                       <Button
                         color="secondary"
-                        variant="outlined"
+                        variant="contained"
                       >
                         {courseData.lesson && courseData.lessons.length === 0
                           ? "Add atleast 1 lesson to publish"

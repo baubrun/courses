@@ -1,5 +1,5 @@
 import express from "express";
-// import authController from "../controllers/auth.js";
+import authController from "../controllers/auth.js";
 import courseController from "../controllers/course.js";
 import userController from "../controllers/user.js";
 import mul from "../lib/multer.js"
@@ -12,14 +12,14 @@ const router = express.Router()
 
 router.route("/api/courses/by/:userId")
     .get(
-        // authController.requireSignIn,
-        // authController.hasAuthorization,
+        authController.requireSignIn,
+        authController.hasAuthorization,
         courseController.listByInstructor
     )
     .post(
         upload.any(),
-        // authController.hasAuthorization,
-        // userController.isInstructor,
+        authController.hasAuthorization,
+        userController.isInstructor,
         courseController.create,
     )
 

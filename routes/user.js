@@ -1,6 +1,6 @@
 import express from "express";
 import userController from "../controllers/user.js";
-// import authController from "../controllers/auth.js";
+import authController from "../controllers/auth.js";
 
 const router = express.Router();
 
@@ -16,19 +16,19 @@ router
     userController.read
   )
   .patch(
-    // authController.requireSignIn,
-    // authController.hasAuthorization,
+    authController.requireSignIn,
+    authController.hasAuthorization,
     userController.update,
   )
   .delete(
-    // authController.hasAuthorization,
+    authController.hasAuthorization,
     userController.remove
   );
 
 
 
 
-router.param('userId', userController.userById)
+router.param("userId", userController.userById)
 
 
 export default router;

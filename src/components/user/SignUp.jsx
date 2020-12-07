@@ -102,8 +102,9 @@ const SignUp = () => {
   return (
     <>
       <Card className={classes.card}>
+      <form onSubmit={handleSubmit}>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          
             <Typography className={classes.title} variant="h6">
               Sign Up
             </Typography>
@@ -144,7 +145,7 @@ const SignUp = () => {
               onChange={(evt) => handleChange(evt)}
               type="password"
             />
-          </form>
+          
         </CardContent>
         <CardActions>
           <Button
@@ -155,7 +156,9 @@ const SignUp = () => {
           >
             Submit
           </Button>
+         
         </CardActions>
+        </form>
       </Card>
       <Dialog open={values.open} disableBackdropClick={true}>
         <DialogTitle>New Account</DialogTitle>

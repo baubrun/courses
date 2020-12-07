@@ -1,66 +1,76 @@
 import axios from "axios";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk
+} from "@reduxjs/toolkit";
 import authAPI from "../api/auth";
-import {domain} from "../api/utils"
+import {
+  domain
+} from "../api/utils"
 
-export const createUser = createAsyncThunk("/api/users", async (data) => {
-  try {
-    const res = await axios.post(`${domain}/api/users`, data);
-    return res.data;
-  } catch (error) {
-    return {
-      error: error.response.data.error,
-    };
-  }
-});
+
+
+
+export const createUser = createAsyncThunk(
+  "/api/users",
+  async (data) => {
+    try {
+      const res = await axios.post(`${domain}/api/users`, data);
+      return res.data;
+    } catch (error) {
+      return {
+        error: error.response.data.error
+      };
+    }
+  });
 
 
 
 export const signIn = createAsyncThunk(
-  "/signIn", 
-async (data) => {
-  try {
-    const res = await axios.post(
+  "/signIn",
+  async (data) => {
+    try {
+      const res = await axios.post(
         `${domain}/auth/signIn`, data)
-    return res.data;
-  } catch (error) {
-    return {
-      error: error.response.data.error
-    };
-  }
-});
+      return res.data;
+    } catch (error) {
+      return {
+        error: error.response.data.error
+      };
+    }
+  });
+
 
 export const deleteUser = createAsyncThunk(
-  "/deleteUser", 
-async (data) => {
-  const token = authAPI.isAuthenticated();
-  try {
-    const res = await axios.delete(`${domain}/${data.id}`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data;
-  } catch (error) {
-    return {
-      error: error.response.data.error
-    };
-  }
-});
+  "/deleteUser",
+  async (data) => {
+    const token = authAPI.isAuthenticated();
+    try {
+      const res = await axios.delete(`${domain}/${data.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return {
+        error: error.response.data.error
+      };
+    }
+  });
 
 export const listUsers = createAsyncThunk(
-  "/listUsers", 
-async () => {
-  try {
-    const res = await axios.get(`${domain}/api/users`);
-    return res.data;
-  } catch (error) {
-    return {
-      error: error.response.data.error
-    };
-  }
-});
+  "/listUsers",
+  async () => {
+    try {
+      const res = await axios.get(`${domain}/api/users`);
+      return res.data;
+    } catch (error) {
+      return {
+        error: error.response.data.error
+      };
+    }
+  });
 
 
 
@@ -69,11 +79,9 @@ export const updateUser = createAsyncThunk("/updateUser", async (data) => {
   const token = authAPI.isAuthenticated();
   try {
     const res = await axios.patch(
-      `${domain}/api/users/${data.id}`,
-      {
+      `${domain}/api/users/${data.id}`, {
         user: data.data,
-      },
-      {
+      }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,7 +105,7 @@ export const userSlice = createSlice({
     loading: false,
   },
   reducers: {
-    clearError: (state) =>{
+    clearError: (state) => {
       state.error = ""
     },
     signOut: (state) => {
@@ -109,23 +117,26 @@ export const userSlice = createSlice({
   extraReducers: {
 
     [createUser.pending]: (state, action) => {
-        state.loading = true
-        state.error = action.payload.error;
-      },
-    // [createUser.fulfilled]: (state, action) => {
-    //     state.loading = false
-    //   const { error, user } = action.payload;
-    //   if (error) {
-    //     state.error = error;
-    //   } else {
-    //     state.loggedIn = true;
-    //     state.user = user;
-    //   }
-    // },
-    // [createUser.rejected]: (state, action) => {
-    //     state.loading = false
-    //   state.error = action.payload.error;
-    // },
+      state.loading = true
+    },
+    [createUser.fulfilled]: (state, action) => {
+      state.loading = false
+      const {
+        error,
+        success
+      } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        if (success) {
+          state.loggedIn = true;
+        }
+      }
+    },
+    [createUser.rejected]: (state, action) => {
+      state.loading = false
+      state.error = action.payload.error;
+    },
 
 
     // [deleteUser.pending]: (state) => {
@@ -150,8 +161,11 @@ export const userSlice = createSlice({
       state.loading = true;
     },
     [listUsers.fulfilled]: (state, action) => {
-        state.loading = false;
-      const { error, users } = action.payload;
+      state.loading = false;
+      const {
+        error,
+        users
+      } = action.payload;
       if (error) {
         state.error = error;
       } else {
@@ -169,7 +183,11 @@ export const userSlice = createSlice({
     },
     [signIn.fulfilled]: (state, action) => {
       state.loading = false;
-      const { error, user, token } = action.payload;
+      const {
+        error,
+        user,
+        token
+      } = action.payload;
       if (error) {
         state.error = error;
       } else {
@@ -205,6 +223,9 @@ export const userSlice = createSlice({
   },
 });
 
-export const { signOut, clearError } = userSlice.actions;
+export const {
+  signOut,
+  clearError
+} = userSlice.actions;
 export const userState = (state) => state.user;
 export default userSlice.reducer;

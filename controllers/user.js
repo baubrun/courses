@@ -1,5 +1,6 @@
 import User from "../models/user.js"
 import _ from "lodash"
+import bcrypt from "bcryptjs"
 
 
 const SALT = 10
@@ -32,7 +33,7 @@ const create = async (req, res) => {
     try {
         await user.save()
         return res.status(200).json({
-            message: "Successfully registered."
+            success: true
         })
     } catch (error) {
         return res.status(400).json({
@@ -45,7 +46,9 @@ const create = async (req, res) => {
 const list = async (req, res) => {
     try {
         let users = await User.find().select("-password -__v")
-        return res.status(200).json({users: users})
+        return res.status(200).json({
+            users: users
+        })
     } catch (error) {
         return res.status(400).json({
             error: error.message
@@ -53,11 +56,9 @@ const list = async (req, res) => {
     }
 }
 
+
 const isInstructor = (req, res, next) => {
-    const isInstructor =
-        req.course &&
-        req.auth &&
-        req.course.instructor._id == req.auth._id
+    const isInstructor = req.profile && req.profile.isInstructor
     if (!isInstructor) {
         return res.status(403).json({
             error: "User is not authorized."
@@ -71,23 +72,9 @@ const isInstructor = (req, res, next) => {
 const read = (req, res) => {
     req.profile.password = undefined
     req.profile.__v = undefined
-    return res.json(req.profile)
-
+    return res.status(200).json(req.profile)
 }
 
-const read = async (req, res) => {
-    const id = req.params.userId
-    try {
-      let user = await User.findById(id)
-      .select("-password -__v -updated")
-      return res.status(200).json({user: user})
-    } catch (error) {
-      return res.status(400).json({
-        error: error.message
-      })
-    }
-  }
-  
 
 
 const remove = async (req, res, next) => {
@@ -95,7 +82,7 @@ const remove = async (req, res, next) => {
         const user = req.profile
         let deletedUser = await user.remove()
         deletedUser.password = undefined
-        return res.json(deletedUser)
+        return res.status(200).json(deletedUser)
     } catch (error) {
         return res.status(400).json({
             error: error.message

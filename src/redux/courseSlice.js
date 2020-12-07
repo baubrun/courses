@@ -111,6 +111,24 @@ const courseSlice = createSlice({
       state.loading = false;
       state.error = action.payload.error;
     },
+
+
+    [readCourse.pending]: (state) => {
+      state.loading = true;
+    },
+    [readCourse.fulfilled]: (state, action) => {
+        state.loading = false;
+      const { error, course } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.course = course;
+      }
+    },
+    [readCourse.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
   }
 });
 

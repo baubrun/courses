@@ -100,7 +100,7 @@ const Course = ({ match }) => {
   const dispatch = useDispatch();
   const { loggedIn, user } = useSelector(userState);
   const {course} = useSelector(courseState);
-  const [courseData, setCourseData] = useState({ instructor: {} });
+  const [courseData, setCourseData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
     error: "",
@@ -109,9 +109,6 @@ const Course = ({ match }) => {
 
   const courseUrl = match.params.courseId
 
-  const imageUrl = course._id
-    ? `/api/courses/photo/${course._id}`
-    : ""
 
 useEffect(() => {
  if (courseUrl){
@@ -120,11 +117,11 @@ useEffect(() => {
 }, [courseUrl])
 
 
-// useEffect(() => {
-//     if (courseUrl){
-//       setCourseData(courseUrl)
-//     }
-//   }, [courseUrl]);
+useEffect(() => {
+    if (course){
+      setCourseData(course)
+    }
+  }, [course]);
 
 
   const addLesson = (course) => {
@@ -137,9 +134,9 @@ useEffect(() => {
   }
 
 
-  // if (_.isEmpty(course)){
-  //   return null
-  // }
+  if (_.isEmpty(courseData)){
+    return null
+  }
 
 
 
@@ -162,9 +159,10 @@ useEffect(() => {
           }
           action={
             <>
-              {loggedIn 
-              && authAPI.isAuthorized(user._id, course.instructor._id) 
-              && (
+              { 
+              authAPI.isAuthenticated()
+              && user._id == courseData.instructor._id &&
+              (
                 <span className={classes.action}>
                   <Link to={`/teach/course/edit/${courseData._id}`}>
                     <IconButton color="secondary">

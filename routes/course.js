@@ -42,14 +42,6 @@ router.route("/api/courses/:courseId/lesson/new")
 
 
 
-
-
-
-
-
-
-
-
 router.param("userId", userController.userById)
 router.param("courseId", courseController.courseByID)
 

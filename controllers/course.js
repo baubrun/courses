@@ -3,20 +3,20 @@ import path from "path";
 import {valid_OId} from "./helper.js"
 
 
-const courseByID = async (req, res, id) => {
+const courseByID = async (req, res, next) => {
+    const id = req.params.courseId
   try {
-    let course = await Course.findById(id).populate("instructor", "_id name");
+    let course = await Course.findById(valid_OId(id)).populate("instructor", "_id name");
 
     if (!course)
       return res.status(400).json({
         error: "Course not found.",
       });
-      return res.status(200).json({course: course});
-
-
+      req.course = course
+      next()
   } catch (error) {
-    return res.status(400).json({
-      error: error.message,
+    return res.status(500).json({
+      error: error.message
     });
   }
 };
@@ -113,8 +113,7 @@ const newLesson = async (req, res) => {
 };
 
 const read = (req, res) => {
-  req.course.image = undefined;
-  return res.json(req.course);
+  return res.status(200).json({course: req.course});
 };
 
 export default {

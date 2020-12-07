@@ -1,6 +1,8 @@
 import expressJwt from "express-jwt"
 import config from "../config/index.js"
 import bcrypt from "bcryptjs"
+import User from "../models/user.js"
+import jwt from "jsonwebtoken"
 
 
 const hasAuthorization = (req, res, next) => {
@@ -29,14 +31,14 @@ const signIn = async (req, res) => {
   } = req.body
   try {
       let user = await User.findOne({
-          email: email,
+          email: email
       });
 
       if (!user) {
           return res.status(401).json({
               error: "User not found.",
           });
-      }
+     }
       const validPassword = await bcrypt.compare(password, user.password)
       if (!validPassword) {
           return res.status(401).json({
@@ -60,7 +62,7 @@ const signIn = async (req, res) => {
           });
       }
   } catch (error) {
-      return res.status(401).json({
+      return res.status(500).json({
           error: error.message
       });
   }

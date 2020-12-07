@@ -3,16 +3,24 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Add from "@material-ui/icons/AddBox";
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
-import courseAPI from "../../api/course"
-
+import courseAPI from "../../api/course";
 
 const useStyles = makeStyles((theme) => ({
+  error: {
+    backgroundColor: "#ff3333",
+    color: "white",
+    cursor: "pointer",
+    verticalAlign: "middle",
+    padding: "10px",
+  },
   form: {
     minWidth: 500,
   },
@@ -22,11 +30,16 @@ const NewLesson = (props) => {
   const classes = useStyles();
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
-    error: "",
+    errorMsg: "",
     content: "",
     resource_url: "",
     title: "",
   });
+
+  const closeErrors = () => {
+    setValues({ ...values, errorMsg: "" });
+  };
+
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -36,7 +49,6 @@ const NewLesson = (props) => {
     });
   };
 
-
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     const lesson = {
@@ -45,25 +57,22 @@ const NewLesson = (props) => {
       resource_url: values.resource_url,
     };
 
-    const data = await courseAPI.createNewLesson(lesson, props.courseId)
-    if (data && data.error){
-      setValues({...values, error: data.error})
+    const data = await courseAPI.createNewLesson(lesson, props.courseId);
+    if (data && data.error) {
+      setValues({ ...values, errorMsg: data.error });
     } else {
-      props.addLesson(data)
+      props.addLesson(data);
       setValues({
-        ...values, 
+        ...values,
         title: "",
         content: "",
-        resource_url: ""
-      
-      })
+        resource_url: "",
+      });
     }
-    }
-    
-    
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       <Button
         aria-label="Add Lesson"
         color="primary"
@@ -77,8 +86,10 @@ const NewLesson = (props) => {
         open={openDialog}
         onClose={() => setOpenDialog(false)}
       >
-        <div className={classes.form}>
+        <form className={classes.form} onSubmit={handleSubmit}>
+
           <DialogTitle id="form-dialog-title">Add New Lesson</DialogTitle>
+
           <DialogContent>
             <TextField
               fullWidth
@@ -89,7 +100,6 @@ const NewLesson = (props) => {
               value={values.title}
               onChange={(evt) => handleChange(evt)}
             />
-            <br />
             <TextField
               fullWidth
               label="Content"
@@ -101,7 +111,6 @@ const NewLesson = (props) => {
               type="text"
               value={values.content}
             />
-            <br />
             <TextField
               fullWidth
               label="Resource link"
@@ -111,9 +120,16 @@ const NewLesson = (props) => {
               type="text"
               value={values.resource_url}
             />
-            <br />
           </DialogContent>
-
+          {values.errorMsg && (
+               <Box 
+               onClick={() => closeErrors()}
+               >
+                 <Typography className={classes.error} component="p">
+                   {values.errorMsg}
+                 </Typography>
+               </Box>
+          )}
           <DialogActions>
             <Button
               onClick={() => setOpenDialog(false)}
@@ -122,17 +138,18 @@ const NewLesson = (props) => {
             >
               Cancel
             </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              type="submit"
+            <Button 
+            color="primary" 
+            variant="contained" 
+            type="submit"
             >
               Add
             </Button>
+
           </DialogActions>
-        </div>
+        </form>
       </Dialog>
-    </form>
+      </>
   );
 };
 

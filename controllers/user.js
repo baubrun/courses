@@ -58,7 +58,7 @@ const list = async (req, res) => {
 
 
 const isInstructor = (req, res, next) => {
-    const isInstructor = req.profile && req.profile.isInstructor
+    const isInstructor = req.course.instructor._id == req.auth._id
     if (!isInstructor) {
         return res.status(403).json({
             error: "User is not authorized."

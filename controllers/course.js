@@ -56,23 +56,16 @@ const create = async (req, res) => {
     const course = new Course({
       name: name,
       image: file.filename,
-      // instructor: mongoose.Types.ObjectId(instructor),
-      instructor: valid_OId(instructor),
+      // instructor: valid_OId(instructor),
+      instructor: req.profile,
       description: description,
       category: category,
       published: published,
     });
 
-    await course.save();
+    const newCourse = await course.save();
 
-    return res.status(200).json({
-      name: course.name,
-      image: file.originalname,
-      instructor: course.instructor,
-      description: course.description,
-      category: course.category,
-      published: course.published,
-    });
+    return res.status(200).json(newCourse);
 
   } catch (error) {
     return res.status(400).json({
@@ -84,7 +77,7 @@ const create = async (req, res) => {
 const listByInstructor = async (req, res) => {
   try {
     const courses = await Course.find({
-      instructor: req.params.userId,
+      instructor: req.profile._id,
     }).populate("instructor", "_id name");
 
     return res.status(200).json({courses: courses});

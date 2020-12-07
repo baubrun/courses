@@ -5,7 +5,7 @@ import authAPI from "../api/auth"
 const createNewLesson = async (lesson, id) => {
     const token = authAPI.isAuthenticated();
     try {
-        const res = await axios.post(
+        const res = await axios.put(
             `/api/courses/${id}/lesson/new`,
             lesson, {
                 headers: {

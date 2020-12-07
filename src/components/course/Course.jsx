@@ -118,13 +118,6 @@ useEffect(() => {
 }, [courseUrl])
 
 
-useEffect(() => {
-    if (course){
-      setCourseData(course)
-    }
-  }, [course]);
-
-
   const addLesson = (course) => {
     setCourseData(course);
   };
@@ -137,55 +130,48 @@ useEffect(() => {
     return <Redirect to={"/teach/courses"} />;
   }
 
-  
-
-
-  if (_.isEmpty(courseData)){
-    return null
-  }
-
-
+  if (_.isEmpty(course)) return null
 
   return (
 
     <Box className={classes.root}>
       <Card className={classes.card}>
         <CardHeader
-          title={courseData.name}
+          title={course.name}
           subheader={
             <Box>
               <Link
-                to={`/user/${courseData.instructor._id}`}
+                to={`/user/${course.instructor._id}`}
                 className={classes.sub}
               >
-                By {courseData.instructor.name}
+                By {course.instructor.name}
               </Link>
-              <span className={classes.category}>{courseData.category}</span>
+              <span className={classes.category}>{course.category}</span>
             </Box>
           }
           action={
             <>
               { 
               authAPI.isAuthenticated()
-              && user._id == courseData.instructor._id &&
+              && user._id == course.instructor._id &&
               (
                 <span className={classes.action}>
-                  <Link to={`/teach/course/edit/${courseData._id}`}>
+                  <Link to={`/teach/course/edit/${course._id}`}>
                     <IconButton color="secondary">
                       <Edit />
                     </IconButton>
                   </Link>
-                  {!courseData.published ? (
+                  {!course.published ? (
                     <>
                       <Button
                         color="secondary"
                         variant="contained"
                       >
-                        {courseData.lesson && courseData.lessons.length === 0
+                        {course.lesson && courseData.lessons.length === 0
                           ? "Add atleast 1 lesson to publish"
                           : "Publish"}
                       </Button>
-                      <DeleteCourse course={courseData} onRemove={removeCourse}/>
+                      <DeleteCourse course={course} onRemove={removeCourse}/>
                     </>
                   ) : (
                     <Button color="primary" variant="outlined">
@@ -194,7 +180,7 @@ useEffect(() => {
                   )}
                 </span>
               )}
-              {courseData.published && (
+              {course.published && (
                 <Box>
                   <span className={classes.statSpan}>
                     <PeopleIcon />
@@ -213,16 +199,15 @@ useEffect(() => {
         <Box className={classes.flex}>
           <CardMedia
             className={classes.media}
-            image={`${process.env.PUBLIC_URL}/images/${courseData.image}`}
-            title={courseData.name}
+            image={`${process.env.PUBLIC_URL}/images/${course.image}`}
+            title={course.name}
           />
           <Box className={classes.details}>
             <Typography variant="body1" className={classes.subheading}>
-              {courseData.description}
-              <br />
+              {course.description}
             </Typography>
 
-            {courseData.published && (
+            {course.published && (
               <Box className={classes.enroll}>
                 enroll here
               </Box>
@@ -240,16 +225,16 @@ useEffect(() => {
             }
             subheader={
               <Typography variant="body1" className={classes.subheading}>
-                {courseData.lessons && courseData.lessons.length} lessons
+                {course.lessons && course.lessons.length} lessons
               </Typography>
             }
             action={
               loggedIn &&
               authAPI.isAuthenticated() &&
-              !courseData.published && (
+              !course.published && (
                 <span className={classes.action}>
                   <NewLesson 
-                  courseId={courseData._id} 
+                  courseId={course._id} 
                   addLesson={addLesson} 
                   />
                 </span>
@@ -257,8 +242,8 @@ useEffect(() => {
             }
           />
           <List>
-            {courseData.lessons &&
-              courseData.lessons.map((lesson, idx) => {
+            {course.lessons.length > 0 &&
+              course.lessons.map((lesson, idx) => {
                 return (
                   <span key={idx}>
                     <ListItem>

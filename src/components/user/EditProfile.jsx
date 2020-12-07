@@ -111,7 +111,6 @@ const EditProfile = () => {
   }
 
 
-
   if (values.redirect) {
     return <Redirect to={`/user/${user._id}`} />;
   }
@@ -144,7 +143,6 @@ const EditProfile = () => {
           type="email"
           value={values.email || ""}
         ></TextField>
-        <br />
         <TextField
           className={classes.textField}
           id="name"
@@ -155,7 +153,6 @@ const EditProfile = () => {
           type="name"
           value={values.name || ""}
         />
-        <br />
         <TextField
           className={classes.textField}
           id="password"
@@ -183,7 +180,6 @@ const EditProfile = () => {
           }
           label={values.instructor ? "Yes" : "No"}
         />
-        <br />
         </form>
       </CardContent>
       <CardActions>

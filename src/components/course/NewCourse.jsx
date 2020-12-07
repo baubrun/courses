@@ -32,7 +32,11 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(2),
   },
   error: {
+    backgroundColor: "#ff3333",
+    color: "white",
+    cursor: "pointer",
     verticalAlign: "middle",
+    padding: "10px",
   },
   filename: {
     marginLeft: "10px",
@@ -111,7 +115,6 @@ const NewCourse = () => {
           <Typography variant="h6" className={classes.title}>
             New Course
           </Typography>
-          <br />
           <input
             accept="image/*"
             className={classes.input}
@@ -131,7 +134,6 @@ const NewCourse = () => {
           </span>
 
 
-          <br />
           <TextField
             className={classes.textField}
             id="name"
@@ -141,7 +143,6 @@ const NewCourse = () => {
             onChange={(evt) => handleChange(evt)}
             value={values.name}
           />
-          <br />
           <TextField
             className={classes.textField}
             id="multiline-flexible"
@@ -153,7 +154,6 @@ const NewCourse = () => {
             rows="2"
             value={values.description}
           />
-          <br />
           <TextField
             className={classes.textField}
             id="category"
@@ -163,7 +163,6 @@ const NewCourse = () => {
             onChange={(evt) => handleChange(evt)}
             value={values.category}
           />
-          <br />
           {values.error && (
             <Typography component="p" color="error">
               <Icon color="error" className={classes.error}>

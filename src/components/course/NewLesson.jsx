@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Add from "@material-ui/icons/AddBox";
@@ -10,7 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
-import { createNewLesson } from "../../redux/courseSlice";
+import courseAPI from "../../api/course"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 const NewLesson = (props) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
     error: "",
@@ -38,7 +36,8 @@ const NewLesson = (props) => {
     });
   };
 
-  const handleSubmit = (evt) => {
+
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
     const lesson = {
       title: values.title,
@@ -46,14 +45,22 @@ const NewLesson = (props) => {
       resource_url: values.resource_url,
     };
 
-    const data = {
-      lesson,
-      id: props.courseId
+    const data = await courseAPI.createNewLesson(lesson, props.courseId)
+    if (data && data.error){
+      setValues({...values, error: data.error})
+    } else {
+      props.addLesson(data)
+      setValues({
+        ...values, 
+        title: "",
+        content: "",
+        resource_url: ""
+      
+      })
     }
-
-    dispatch(createNewLesson(data))
-
-  };
+    }
+    
+    
 
   return (
     <form onSubmit={handleSubmit}>

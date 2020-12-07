@@ -4,44 +4,25 @@ import axios from "axios";
 import authAPI from "../api/auth";
 
 
-
-export const createCourse = async (course) => {
+export const createCourse = createAsyncThunk(
+  "/createCourse",
+async (data) => {
   const token = authAPI.isAuthenticated();
   try {
-    const res = await axios.post(
-        `${domain}/api/courses/by/${course.id}`, 
-    course.data, 
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data;
+      const res = await axios.post(
+          `by/${data.id}`,
+          data.lesson, {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+          });
+      return res.data;
   } catch (error) {
-    return {
-        error: error.response.data.error
-    };
+      return {
+          error: error.response.data.error
+      };
   }
-};
-
-
-export const createNewLesson = async (course) => {
-  const token = authAPI.isAuthenticated();
-  try {
-    const res = await axios.post(
-        `/api/courses/${course.id}/lesson/new`, 
-    course.lesson, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data;
-  } catch (error) {
-    return {
-        error: error.response.data.error
-    };
-  }
-};
+})
 
 
 export const listCourseByInstructor = createAsyncThunk(
@@ -94,6 +75,26 @@ const courseSlice = createSlice({
   },
   reducers: { },
   extraReducers: {
+
+
+    [createCourse.pending]: (state) => {
+      state.loading = true;
+    },
+    [createCourse.fulfilled]: (state, action) => {
+        state.loading = false;
+      const { error, courses } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.courses = courses;
+      }
+    },
+    [createCourse.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
+
+
 
     [listCourseByInstructor.pending]: (state) => {
       state.loading = true;

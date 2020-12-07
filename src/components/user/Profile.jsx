@@ -56,7 +56,6 @@ const Profile = ({ match }) => {
         redirect: true
       });
     } else {
-      console.log('data profile :>> ', data);
       setValues({ ...values, profile: data });
     }
   };

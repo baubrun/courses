@@ -105,7 +105,7 @@ const newLesson = async (req, res) => {
     )
       .populate("instructor", "_id name")
       .exec();
-    return res.status(200).json(newLesson);
+    return res.status(200).json({newLesson: newLesson});
   } catch (error) {
     return res.status(400).json({
       error: error.message

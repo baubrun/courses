@@ -22,13 +22,13 @@ const useStyles = makeStyles((theme) => ({
   addButton: {
     float: "right",
   },
-  leftIcon: {
-    marginRight: "8px",
-  },
   avatar: {
     borderRadius: 0,
     width: 65,
     height: 40,
+  },
+  leftIcon: {
+    marginRight: "8px",
   },
   listText: {
     marginLeft: 16,

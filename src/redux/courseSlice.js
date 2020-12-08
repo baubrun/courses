@@ -90,11 +90,11 @@ const courseSlice = createSlice({
     },
     [createCourse.fulfilled]: (state, action) => {
         state.loading = false;
-      const { error, courses } = action.payload;
+      const { error, course } = action.payload;
       if (error) {
         state.error = error;
       } else {
-        state.courses = courses;
+        state.courses = [...state.courses, course]
       }
     },
     [createCourse.rejected]: (state, action) => {

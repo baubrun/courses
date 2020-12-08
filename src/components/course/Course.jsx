@@ -59,15 +59,14 @@ const useStyles = makeStyles((theme) => ({
   flex: {
     display: "flex",
     marginBottom: 20,
+    marginBottom: 20,
   },
   icon: {
     verticalAlign: "sub",
   },
   media: {
-    height: 190,
-    display: "inline-block",
-    width: "100%",
-    marginLeft: "16px",
+    height: 300,
+    width: 300,
   },
   root: theme.mixins.gutters({
     maxWidth: 800,

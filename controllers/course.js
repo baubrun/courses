@@ -126,7 +126,7 @@ const remove = async (req, res) => {
   try {
     let course = req.course
     await course.remove()
-    return res.status(200)
+    return res.status(200).json({success: true})
   } catch (error) {
     return res.status(400).json({
       error: error.message

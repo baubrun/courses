@@ -6,9 +6,6 @@ import jwt from "jsonwebtoken"
 
 
 const hasAuthorization = (req, res, next) => {
-    console.log('req.profile hasAuthorization :>> ', req.profile);
-    console.log('req.auth  hasAuthorization:>> ', req.auth);
-    console.log('hasAuthorization :>>', req.profile._id == req.auth._id)
     const authorized = req.profile._id == req.auth._id
     if (!authorized) {
         return res.status(403).json({

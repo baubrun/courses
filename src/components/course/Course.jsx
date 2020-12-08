@@ -104,7 +104,7 @@ const Course = ({ match }) => {
   const [courseData, setCourseData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
-    error: "",
+    errorMsg: "",
     redirect: false,
   });
 
@@ -129,14 +129,16 @@ useEffect(() => {
     setValues({...values, redirect: true})
   }
 
+
+  if (_.isEmpty(course)) return null
+
+
   if (values.redirect) {
     return <Redirect to={"/teach/courses"} />;
   }
 
-  if (_.isEmpty(course)) return null
 
   return (
-
     <Box className={classes.root}>
       <Card className={classes.card}>
         <CardHeader
@@ -174,7 +176,7 @@ useEffect(() => {
                           ? "Add course"
                           : "Publish"}
                       </Button>
-                      <DeleteCourse course={course} onRemove={removeCourse}/>
+                      <DeleteCourse course={course} removeCourse={removeCourse}/>
                     </>
                   ) : (
                     <Button color="primary" variant="outlined">

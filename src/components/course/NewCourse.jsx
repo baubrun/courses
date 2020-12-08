@@ -12,7 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx"
+import clsx from "clsx";
 
 import { userState } from "../../redux/userSlice";
 import { createCourse, clearError, courseState } from "../../redux/courseSlice";
@@ -104,18 +104,19 @@ const NewCourse = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    const newCourse = {
-      category: values.category,
-      description: values.description,
-      instructor: user._id,
-      name: values.name,
-      image: file,
-    };
+    const newCourse = new FormData();
+    newCourse.append("category", values.category);
+    newCourse.append("description", values.description);
+    newCourse.append("instructor", user._id);
+    newCourse.append("name", values.name);
+    newCourse.append("image", file);
+
     const data = {
       course: newCourse,
       _id: user._id,
     };
     dispatch(createCourse(data));
+    setValues({ ...values, redirect: true });
   };
 
   if (values.redirect) {
@@ -182,13 +183,11 @@ const NewCourse = () => {
           <br />
 
           {values.errorMsg && (
-               <Box 
-               onClick={() => closeErrors()}
-               >
-                 <Typography className={classes.error} component="p">
-                   {values.errorMsg}
-                 </Typography>
-               </Box>
+            <Box onClick={() => closeErrors()}>
+              <Typography className={classes.error} component="p">
+                {values.errorMsg}
+              </Typography>
+            </Box>
           )}
         </CardContent>
         <CardActions>

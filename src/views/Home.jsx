@@ -34,7 +34,7 @@ const Home = () => {
 
         <CardMedia
           className={classes.media}
-          image={`${process.env.PUBLIC_URL}/images/classroom.jpg`}
+          image={`${process.env.PUBLIC_URL}/classroom.jpg`}
           title="classroom"
         />
 

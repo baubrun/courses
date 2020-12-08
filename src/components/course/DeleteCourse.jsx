@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -14,18 +14,17 @@ import courseAPI from "../../api/course";
 import { courseState, setError } from "../../redux/courseSlice";
 
 const DeleteCourse = (props) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { error } = useSelector(courseState);
   const [open, setOpen] = useState(false);
 
-
   const delCourse = async () => {
     const data = await courseAPI.removeCourse(props.course._id);
-    if (data && data.error) {
-      dispatch(setError(data.error));
-    } else {
+    if (data.success) {
       setOpen(false);
-      props.onRemove();
+      props.removeCourse();
+    } else {
+        dispatch(setError(data.error));
     }
   };
 
@@ -44,16 +43,16 @@ const DeleteCourse = (props) => {
       </IconButton>
 
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>{error ? error : `Delete ${props.course.name}`}</DialogTitle>
+        <DialogTitle>
+          {error ? error : `Delete ${props.course.name}`}
+        </DialogTitle>
         <DialogContent>
-         
           <DialogContentText>
-          {error ? error : `Confirm to delete course "${props.course.name}"`}
-        </DialogContentText>
-
+            {error ? error : `Confirm to delete course "${props.course.name}"`}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() =>setOpen(false)} color="primary">
+          <Button onClick={() => setOpen(false)} color="primary">
             Cancel
           </Button>
           <Button

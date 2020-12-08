@@ -21,7 +21,27 @@ const createNewLesson = async (lesson, id) => {
 };
 
 
+const removeCourse = async (courseId) => {
+    const token = authAPI.isAuthenticated();
+    try {
+        const res = await axios.delete(
+            `/api/courses/${courseId}`,
+             {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        return res.data;
+    } catch (error) {
+        return {
+            error: error.response.data.error
+        };
+    }
+};
+
+
 
 export default {
     createNewLesson,
+    removeCourse,
 }

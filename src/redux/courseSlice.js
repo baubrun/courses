@@ -73,7 +73,11 @@ const courseSlice = createSlice({
     loading: false,
     error: "",
   },
-  reducers: { },
+  reducers: { 
+    setError: (state, action) => {
+      state.error = action.payload.error
+    }
+  },
   extraReducers: {
 
 
@@ -133,6 +137,6 @@ const courseSlice = createSlice({
   }
 });
 
-
+export const {setError} = courseSlice.actions
 export const courseState = (state) => state.course;
 export default courseSlice.reducer;

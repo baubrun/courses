@@ -125,7 +125,7 @@ useEffect(() => {
     setCourseData(course);
   };
 
-  const removeCourse = (course) => {
+  const removeCourse = () => {
     setValues({...values, redirect: true})
   }
 
@@ -160,7 +160,7 @@ useEffect(() => {
               (
                 <span className={classes.action}>
                   <Link to={`/teach/course/edit/${course._id}`}>
-                    <IconButton color="secondary">
+                    <IconButton color="primary">
                       <Edit />
                     </IconButton>
                   </Link>
@@ -171,7 +171,7 @@ useEffect(() => {
                         variant="contained"
                       >
                         {course.lesson && courseData.lessons.length === 0
-                          ? "Add atleast 1 lesson to publish"
+                          ? "Add course"
                           : "Publish"}
                       </Button>
                       <DeleteCourse course={course} onRemove={removeCourse}/>

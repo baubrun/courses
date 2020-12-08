@@ -110,10 +110,24 @@ const read = (req, res) => {
   return res.status(200).json({course: req.course});
 };
 
+const remove = async (req, res) => {
+  try {
+    let course = req.course
+    let deleteCourse = await course.remove()
+    res.json(deleteCourse)
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message
+    });
+  }
+}
+
+
 export default {
   create,
   courseByID,
   listByInstructor,
   newLesson,
   read,
+  remove,
 };

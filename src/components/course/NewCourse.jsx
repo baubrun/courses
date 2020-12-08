@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(12),
     paddingBottom: theme.spacing(2),
   },
+  cancel: {
+    textDecoration: "none"
+  },
   error: {
     backgroundColor: "#ff3333",
     color: "white",
@@ -115,6 +118,7 @@ const NewCourse = () => {
           <Typography variant="h6" className={classes.title}>
             New Course
           </Typography>
+          <br/>
           <input
             accept="image/*"
             className={classes.input}
@@ -132,8 +136,7 @@ const NewCourse = () => {
           <span className={classes.filename}>
             {values.image ? values.image : ""}
           </span>
-
-
+          <br/>
           <TextField
             className={classes.textField}
             id="name"
@@ -143,6 +146,7 @@ const NewCourse = () => {
             onChange={(evt) => handleChange(evt)}
             value={values.name}
           />
+          <br/>
           <TextField
             className={classes.textField}
             id="multiline-flexible"
@@ -154,6 +158,7 @@ const NewCourse = () => {
             rows="2"
             value={values.description}
           />
+          <br/>
           <TextField
             className={classes.textField}
             id="category"
@@ -181,16 +186,17 @@ const NewCourse = () => {
           >
             Submit
           </Button>
-          <Link to="/teach/courses" className={classes.btn}>
+          
+          <Link className={classes.cancel} to="/teach/courses" className={classes.btn}>
             <Button
               className={classes.btn}
               onClick={() => history.push("/teach/courses")}
               variant="contained"
-
             >
               Cancel
             </Button>
           </Link>
+
         </CardActions>
       </Card>
     </form>

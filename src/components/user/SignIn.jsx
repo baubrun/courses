@@ -138,7 +138,7 @@ const SignIn = (props) => {
 
             {values.errorMsg && (
               <Box onClick={() => closeErrors()}>
-                <Typography className={classes.error} component="p">
+                <Typography className={classes.error} component="div">
                   {values.errorMsg}
                 </Typography>
               </Box>

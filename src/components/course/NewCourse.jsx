@@ -116,7 +116,9 @@ const NewCourse = () => {
       _id: user._id,
     };
     dispatch(createCourse(data));
-    setValues({ ...values, redirect: true });
+    if (!error) {
+      setValues({ ...values, redirect: true });
+    }
   };
 
   if (values.redirect) {
@@ -187,6 +189,7 @@ const NewCourse = () => {
               <Typography className={classes.error} component="p">
                 {values.errorMsg}
               </Typography>
+              <Box className={classes.close}>X</Box>
             </Box>
           )}
         </CardContent>

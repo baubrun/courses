@@ -54,7 +54,8 @@ const create = async (req, res) => {
       });
     } else {
       const ext = path.extname(file.originalname);
-      if (![".jpeg", ".jpg", ".png"].some((x) => x === ext)) {
+      const regexList = [/\.jpe?g/i, /\.png/i, /\.svg/i]
+      if (regexList.some((x) => x === ext)) {
         return res.status(400).json({
           error: "Invalid image type.",
         });

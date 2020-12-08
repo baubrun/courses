@@ -32,7 +32,7 @@ router.route("/api/courses/:courseId")
         courseController.remove,
     )
     .get(courseController.read)
-    .patch(
+    .put(
         authController.requireSignIn,
         courseController.isInstructor,
         courseController.update,

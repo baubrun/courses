@@ -73,7 +73,9 @@ const create = async (req, res) => {
 
     const newCourse = await course.save();
 
-    return res.status(200).json({course: newCourse});
+    return res.status(200).json({
+      course: newCourse
+    });
 
   } catch (error) {
     return res.status(400).json({
@@ -155,7 +157,59 @@ const remove = async (req, res) => {
   }
 }
 
-const update = async (req, res) => {}
+const update = async (req, res) => {
+
+  const {
+    files,
+    body: {
+      name,
+      description,
+      category,
+      instructor,
+      published,
+    },
+  } = req;
+
+  try {
+    let file = files[0];
+    if (files.length < 1) {
+      return res.status(400).json({
+        error: "Image required.",
+      });
+    } else {
+      const ext = path.extname(file.originalname);
+      const regexList = [/\.jpe?g/i, /\.png/i, /\.svg/i]
+      if (regexList.some((x) => x === ext)) {
+        return res.status(400).json({
+          error: "Invalid image type.",
+        });
+      }
+    }
+
+
+    const updated = await Course.findOneAndUpdate({
+      _id: req.params.courseId
+    },{
+      name: name,
+      image: file.filename,
+      instructor: valid_OId(instructor),
+      description: description,
+      category: category,
+      published: published,
+    })
+
+    return res.status(200).json({
+      course: updated
+    })
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message,
+    });
+
+  }
+
+
+}
 
 export default {
   create,

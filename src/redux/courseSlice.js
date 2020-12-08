@@ -66,6 +66,30 @@ async (courseId) => {
 })
 
 
+export const updateCourse = createAsyncThunk(
+  "/updateCourse",
+async (data) => {
+  const token = authAPI.isAuthenticated();
+  try {
+      const res = await axios.put(
+          `${domain}/api/courses/by/${data._id}`,
+          data.course, {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "multipart/form-data",
+              },
+          });
+      return res.data;
+  } catch (error) {
+      return {
+          error: error.response.data.error
+      };
+  }
+})
+
+
+
+
 const courseSlice = createSlice({
   name: "course",
   initialState: {
@@ -103,7 +127,6 @@ const courseSlice = createSlice({
     },
 
 
-
     [listCourseByInstructor.pending]: (state) => {
       state.loading = true;
     },
@@ -138,6 +161,26 @@ const courseSlice = createSlice({
       state.loading = false;
       state.error = action.payload.error;
     },
+
+
+    [updateCourse.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateCourse.fulfilled]: (state, action) => {
+        state.loading = false;
+      const { error, course } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.courses = [...state.courses, course]
+      }
+    },
+    [updateCourse.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
+
+
   }
 });
 

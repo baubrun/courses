@@ -35,7 +35,7 @@ const App = () => {
             <Route path="/course/:courseId" component={Course}/>
             <PrivateRoute path="/teach/courses" component={MyCourses}/>
 
-            <Route path="/teach/course/new" component={NewCourse} />
+            <PrivateRoute path="/teach/course/new" component={NewCourse} />
             <Route path="/teach/course/:courseId" component={Course}/>
 
 

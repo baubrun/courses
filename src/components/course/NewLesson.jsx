@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Add from "@material-ui/icons/AddBox";
@@ -12,6 +13,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
 import courseAPI from "../../api/course";
+import { clearError, courseState } from "../../redux/courseSlice";
+
 
 const useStyles = makeStyles((theme) => ({
   error: {
@@ -28,6 +31,8 @@ const useStyles = makeStyles((theme) => ({
 
 const NewLesson = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { error } = useSelector(courseState);
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
     errorMsg: "",
@@ -36,8 +41,17 @@ const NewLesson = (props) => {
     title: "",
   });
 
+
+  useEffect(() => {
+    if (error) {
+      setValues({ ...values, errorMsg: error });
+    }
+  }, [error]);
+
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
+    dispatch(clearError());
+
   };
 
 

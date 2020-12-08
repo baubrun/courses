@@ -11,7 +11,7 @@ const courseByID = async (req, res, next) => {
 
     if (!course)
       return res.status(400).json({
-        error: "Course not found.",
+        error: "Course not found."
       });
       req.course = course
       next()
@@ -34,7 +34,7 @@ const create = async (req, res) => {
 
   if (courseExists) {
     return res.status(401).json({
-      message: "Course already exists.",
+      error: "Course already exists.",
     });
   }
 
@@ -42,13 +42,13 @@ const create = async (req, res) => {
     let file = files[0];
     if (files.length < 1) {
       return res.status(400).json({
-        message: "Image required.",
+        error: "Image required.",
       });
     } else {
       const ext = path.extname(file.originalname);
       if (![".jpeg", ".jpg", ".png"].some((x) => x === ext)) {
         return res.status(400).json({
-          message: "Invalid image type.",
+          error: "Invalid image type.",
         });
       }
     }
@@ -56,8 +56,8 @@ const create = async (req, res) => {
     const course = new Course({
       name: name,
       image: file.filename,
-      // instructor: valid_OId(instructor),
-      instructor: req.profile,
+      instructor: valid_OId(instructor),
+      // instructor: req.profile,
       description: description,
       category: category,
       published: published,
@@ -69,7 +69,7 @@ const create = async (req, res) => {
 
   } catch (error) {
     return res.status(400).json({
-      message: error.message,
+      error: error.message,
     });
   }
 };
@@ -87,6 +87,18 @@ const listByInstructor = async (req, res) => {
     });
   }
 };
+
+
+const isInstructor = (req, res, next) => {
+  const isInstructor = req.course.instructor._id == req.auth._id
+  if (!isInstructor) {
+      return res.status(403).json({
+          error: "User is not authorized."
+      })
+  }
+  next()
+}
+
 
 const newLesson = async (req, res) => {
   try {
@@ -113,8 +125,8 @@ const read = (req, res) => {
 const remove = async (req, res) => {
   try {
     let course = req.course
-    let deleteCourse = await course.remove()
-    res.json(deleteCourse)
+    await course.remove()
+    return res.status(200)
   } catch (error) {
     return res.status(400).json({
       error: error.message
@@ -126,6 +138,7 @@ const remove = async (req, res) => {
 export default {
   create,
   courseByID,
+  isInstructor,
   listByInstructor,
   newLesson,
   read,

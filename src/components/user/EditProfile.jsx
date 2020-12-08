@@ -13,7 +13,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { userState, updateUser } from "../../redux/userSlice";
+import { userState, updateUser, clearError } from "../../redux/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -77,6 +77,7 @@ const EditProfile = () => {
 
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
+    dispatch(clearError())
   };
 
   const handleChange = (evt) => {

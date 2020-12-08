@@ -16,7 +16,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { userState, createUser } from "../../redux/userSlice";
+import { userState, createUser, clearError } from "../../redux/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SignUp = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch();  
   const { error, loggedIn } = useSelector(userState);
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -74,15 +74,18 @@ const SignUp = () => {
     }
   }, [error]);
 
+  const closeErrors = () => {
+    setValues({ ...values, errorMsg: "" });
+    dispatch(clearError());
+
+  };
+
   const handleChange = (evt) => {
     const { name, value } = evt.target;
     setValues({ ...values, [name]: value });
   };
 
-  const closeErrors = () => {
-    setValues({ ...values, errorMsg: "" });
-  };
-
+ 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     const userData = {

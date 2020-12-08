@@ -42,6 +42,17 @@ const create = async (req, res) => {
     }
 }
 
+const isInstructor = (req, res, next) => {
+    const isInstructor = req.profile.instructor
+    if (!isInstructor) {
+        return res.status(403).json({
+            error: "User is not authorized."
+        })
+    }
+    next()
+}
+
+
 
 const list = async (req, res) => {
     try {
@@ -57,16 +68,6 @@ const list = async (req, res) => {
 }
 
 
-const isInstructor = (req, res, next) => {
-    const isInstructor = req.course.instructor._id == req.auth._id
-    if (!isInstructor) {
-        return res.status(403).json({
-            error: "User is not authorized."
-        })
-    }
-    next()
-}
-
 
 
 const read = (req, res) => {
@@ -77,7 +78,7 @@ const read = (req, res) => {
 
 
 
-const remove = async (req, res, next) => {
+const remove = async (req, res) => {
     try {
         const user = req.profile
         let deletedUser = await user.remove()

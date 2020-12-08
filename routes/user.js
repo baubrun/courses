@@ -11,6 +11,10 @@ router.route("/api/users")
 
 router
   .route("/api/users/:userId")
+  .delete(
+    authController.hasAuthorization,
+    userController.remove
+  )
   .get(
     authController.requireSignIn,
     userController.read
@@ -20,11 +24,6 @@ router
     authController.hasAuthorization,
     userController.update,
   )
-  .delete(
-    authController.hasAuthorization,
-    userController.remove
-  );
-
 
 
 

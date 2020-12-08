@@ -10,8 +10,8 @@ async (data) => {
   const token = authAPI.isAuthenticated();
   try {
       const res = await axios.post(
-          `by/${data.id}`,
-          data.lesson, {
+          `${domain}/api/courses/by/${data._id}`,
+          data.course, {
               headers: {
                   Authorization: `Bearer ${token}`,
               },
@@ -74,6 +74,9 @@ const courseSlice = createSlice({
     error: "",
   },
   reducers: { 
+    clearError: (state, action) => {
+      state.error = ""
+    },
     setError: (state, action) => {
       state.error = action.payload.error
     }
@@ -137,6 +140,6 @@ const courseSlice = createSlice({
   }
 });
 
-export const {setError} = courseSlice.actions
+export const {clearError, setError} = courseSlice.actions
 export const courseState = (state) => state.course;
 export default courseSlice.reducer;

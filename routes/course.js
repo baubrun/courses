@@ -18,6 +18,7 @@ router.route("/api/courses/by/:userId")
     )
     .post(
         upload.any(),
+        authController.requireSignIn,
         authController.hasAuthorization,
         userController.isInstructor,
         courseController.create,
@@ -27,12 +28,17 @@ router.route("/api/courses/by/:userId")
 router.route("/api/courses/:courseId")
     .delete(
         authController.requireSignIn,
-        userController.isInstructor,
+        courseController.isInstructor,
         courseController.remove,
     )
     .get(courseController.read)
+    // .put(
+    //     authController.requireSignIn,
+    //     courseController.isInstructor,
+    //     courseController.update,
+    // )
 
-
+    
 router.route("/api/courses/:courseId/lesson/new")
     .put(
         authController.requireSignIn,

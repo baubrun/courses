@@ -53,8 +53,8 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn = (props) => {
   const classes = useStyles();
-  const { loggedIn, error } = useSelector(userState);
   const dispatch = useDispatch();
+  const { loggedIn, error } = useSelector(userState);
   const [values, setValues] = useState({
     created: "",
     email: "",

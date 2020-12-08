@@ -1,4 +1,4 @@
-import React, { useState, } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
@@ -10,12 +10,12 @@ import Button from "@material-ui/core/Button";
 import FileUpload from "@material-ui/icons/AddPhotoAlternate";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import Icon from "@material-ui/core/Icon";
+import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx"
 
-
-import { userState  } from "../../redux/userSlice";
-import { createCourse  } from "../../redux/courseSlice";
+import { userState } from "../../redux/userSlice";
+import { createCourse, clearError, courseState } from "../../redux/courseSlice";
 
 const IMG_DIM = 200;
 
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(2),
   },
   cancel: {
-    textDecoration: "none"
+    textDecoration: "none",
   },
   error: {
     backgroundColor: "#ff3333",
@@ -71,15 +71,27 @@ const NewCourse = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { user } = useSelector(userState);
+  const { error } = useSelector(courseState);
   const [file, setFile] = useState({});
   const [values, setValues] = useState({
     category: "",
     description: "",
-    error: "",
+    errorMsg: "",
     image: "",
     name: "",
     redirect: false,
   });
+
+  useEffect(() => {
+    if (error) {
+      setValues({ ...values, errorMsg: error });
+    }
+  }, [error]);
+
+  const closeErrors = () => {
+    setValues({ ...values, errorMsg: "" });
+    dispatch(clearError());
+  };
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -89,22 +101,21 @@ const NewCourse = () => {
     });
   };
 
-
   const handleSubmit = (evt) => {
-    evt.preventDefault()
+    evt.preventDefault();
 
     const newCourse = {
       category: values.category,
       description: values.description,
-      instructor: user._id ,
+      instructor: user._id,
       name: values.name,
       image: file,
-    }
+    };
     const data = {
-      data: newCourse,
-      id: user._id
-    }
-    dispatch(createCourse(data))
+      course: newCourse,
+      _id: user._id,
+    };
+    dispatch(createCourse(data));
   };
 
   if (values.redirect) {
@@ -112,13 +123,13 @@ const NewCourse = () => {
   }
 
   return (
-    <form >
+    <form onSubmit={handleSubmit}>
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h6" className={classes.title}>
             New Course
           </Typography>
-          <br/>
+          <br />
           <input
             accept="image/*"
             className={classes.input}
@@ -136,7 +147,7 @@ const NewCourse = () => {
           <span className={classes.filename}>
             {values.image ? values.image : ""}
           </span>
-          <br/>
+          <br />
           <TextField
             className={classes.textField}
             id="name"
@@ -146,7 +157,7 @@ const NewCourse = () => {
             onChange={(evt) => handleChange(evt)}
             value={values.name}
           />
-          <br/>
+          <br />
           <TextField
             className={classes.textField}
             id="multiline-flexible"
@@ -158,7 +169,7 @@ const NewCourse = () => {
             rows="2"
             value={values.description}
           />
-          <br/>
+          <br />
           <TextField
             className={classes.textField}
             id="category"
@@ -168,35 +179,38 @@ const NewCourse = () => {
             onChange={(evt) => handleChange(evt)}
             value={values.category}
           />
-          {values.error && (
-            <Typography component="p" color="error">
-              <Icon color="error" className={classes.error}>
-                error
-              </Icon>
-              {values.error}
-            </Typography>
+          <br />
+
+          {values.errorMsg && (
+               <Box 
+               onClick={() => closeErrors()}
+               >
+                 <Typography className={classes.error} component="p">
+                   {values.errorMsg}
+                 </Typography>
+               </Box>
           )}
         </CardContent>
         <CardActions>
           <Button
             className={classes.btn}
             color="primary"
-            onClick={(evt) => handleSubmit(evt)}
             variant="contained"
+            type="submit"
           >
             Submit
           </Button>
-          
-          <Link className={classes.cancel} to="/teach/courses" className={classes.btn}>
+          <Link
+            className={clsx([classes.cancel, classes.btn])}
+            to="/teach/courses"
+          >
             <Button
-              className={classes.btn}
               onClick={() => history.push("/teach/courses")}
               variant="contained"
             >
               Cancel
             </Button>
           </Link>
-
         </CardActions>
       </Card>
     </form>

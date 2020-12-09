@@ -315,6 +315,7 @@ useEffect(() => {
           </Button>
           <Button
             color="primary"
+            onClick={() => setOpenDialog(true)}
             variant="contained"
           >
             Publish

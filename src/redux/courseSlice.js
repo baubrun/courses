@@ -67,24 +67,6 @@ async (courseId) => {
 })
 
 
-export const removeCourse = createAsyncThunk(
-"/readCourse",
-async (courseId) => {
-  const token = authAPI.isAuthenticated();
-  try {
-    let res = await axios.delete(`${domain}/api/courses/${courseId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data
-  } catch (error) {
-    return {
-        error: error.response.data.error
-    };
-  }
-})
-
 
 export const updateCourse = createAsyncThunk(
   "/updateCourse",

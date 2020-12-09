@@ -16,12 +16,12 @@ import { courseState, setError } from "../../redux/courseSlice";
 const DeleteCourse = (props) => {
   const dispatch = useDispatch();
   const { error } = useSelector(courseState);
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const delCourse = async () => {
     const data = await courseAPI.removeCourse(props.course._id);
     if (data.success) {
-      setOpen(false);
+      setOpenDialog(false);
       props.removeCourse();
     } else {
         dispatch(setError(data.error));
@@ -36,13 +36,13 @@ const DeleteCourse = (props) => {
     <span>
       <IconButton
         aria-label="Delete"
-        onClick={() => setOpen(true)}
+        onClick={() => setOpenDialog(true)}
         color="secondary"
       >
         <DeleteIcon color="error" />
       </IconButton>
 
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>
           {error ? error : `Delete ${props.course.name}`}
         </DialogTitle>
@@ -52,7 +52,7 @@ const DeleteCourse = (props) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
+          <Button onClick={() => setOpenDialog(false)} color="primary">
             Cancel
           </Button>
           <Button

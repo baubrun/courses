@@ -15,18 +15,9 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 
 const DeleteUser = (props) => {
-    const [open, setOpen] = useState(false)
+    const [openDialog, setOpenDialog] = useState(false)
     const [redirect, setRedirect] = useState(false)
 
-
-
-    const handleOpen = () => {
-        setOpen(true)
-    }
-
-    const handleClose = () => {
-        setOpen(false)
-    }
 
     const deleteAccount = () => { 
      
@@ -37,11 +28,11 @@ const DeleteUser = (props) => {
       }
     
     return (<span>
-        <IconButton aria-label="Delete" onClick={() => handleOpen()} color="secondary">
+        <IconButton aria-label="Delete" onClick={() => setOpenDialog(true)} color="secondary">
           <DeleteIcon/>
         </IconButton>
   
-        <Dialog open={open} onClose={() => handleClose()}>
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
           <DialogTitle>{"Delete Account"}</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -49,7 +40,7 @@ const DeleteUser = (props) => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => handleClose()} color="primary">
+            <Button onClick={() => setOpenDialog(false)} color="primary">
               Cancel
             </Button>
             <Button onClick={() => deleteAccount()} color="secondary" autoFocus="autoFocus">

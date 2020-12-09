@@ -32,7 +32,7 @@ const NewLesson = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { error } = useSelector(courseState);
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
     errorMsg: "",
     content: "",
@@ -80,7 +80,7 @@ const NewLesson = (props) => {
         content: "",
         resource_url: "",
       });
-      setOpen(false)
+      setOpenDialog(false)
      }
   }
 }
@@ -90,15 +90,15 @@ const NewLesson = (props) => {
       <Button
         aria-label="Add Lesson"
         color="primary"
-        onClick={() => setOpen(true)}
+        onClick={() => setOpenDialog(true)}
         variant="contained"
       >
         <Add /> &nbsp; New Lesson
       </Button>
       <Dialog
         aria-labelledby="form-dialog-title"
-        open={open}
-        onClose={() => setOpen(false)}
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
       >
         <form className={classes.form} onSubmit={handleSubmit}>
           <DialogTitle id="form-dialog-title">Add New Lesson</DialogTitle>
@@ -143,7 +143,7 @@ const NewLesson = (props) => {
           )}
           <DialogActions>
             <Button
-              onClick={() => setOpen(false)}
+              onClick={() => setOpenDialog(false)}
               color="default"
               variant="contained"
             >

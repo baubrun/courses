@@ -166,6 +166,7 @@ const update = async (req, res) => {
       category,
       instructor,
       published,
+      lessons,
     },
   } = req;
 
@@ -193,6 +194,7 @@ const update = async (req, res) => {
       description: description ? description : undefined,
       category: category ? category : undefined,
       published: published ? published : undefined,
+      lessons: lessons ? JSON.parse(lessons) : undefined,
     }, {
       new: true,
       omitUndefined: true,

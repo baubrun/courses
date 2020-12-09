@@ -158,21 +158,21 @@ const EditCourse = ({ match }) => {
   };
 
   const handleLessonChange = (evt, idx) => {
+    let lessons = _.cloneDeep(values.lessons)
     const { name, value } = evt.target;
-    const lessons = values.lessons;
     lessons[idx][name] = value;
     setValues({ ...values, lessons });
   };
 
   const deleteLesson = (evt, idx) => {
-    const lessons = values.lessons;
+    let lessons = _.cloneDeep(values.lessons)
     lessons.splice(idx, 1);
     setValues({ ...values, lessons });
   };
 
   const moveUpLesson = (evt, idx) => {
-    const lessons = values.lessons;
-    const moveUp = lessons[idx];
+    let lessons = [...values.lessons]
+    let moveUp = lessons[idx];
     lessons[idx] = lessons[idx - 1];
     lessons[idx - 1] = moveUp;
     setValues({ ...values, lessons });
@@ -186,7 +186,7 @@ const EditCourse = ({ match }) => {
     newCourse.append("description", values.description);
     newCourse.append("instructor", user._id);
     newCourse.append("name", values.name);
-    newCourse.append("lessons", values.lessons);
+    newCourse.append("lessons",JSON.stringify( values.lessons));
     newCourse.append("image", file)
 
     const data = {
@@ -315,7 +315,7 @@ const EditCourse = ({ match }) => {
                               <IconButton
                                 aria-label="up"
                                 color="primary"
-                                onClick={moveUpLesson(idx)}
+                                onClick={(evt) => moveUpLesson(evt, idx)}
                                 className={classes.upArrow}
                               >
                                 <ArrowUp />
@@ -331,6 +331,7 @@ const EditCourse = ({ match }) => {
                                 label="Title"
                                 type="text"
                                 fullWidth
+                                name="title"
                                 value={lesson.title}
                                 onChange={(evt) => handleLessonChange(evt, idx)}
                               />
@@ -341,6 +342,7 @@ const EditCourse = ({ match }) => {
                                 rows="5"
                                 label="Content"
                                 type="text"
+                                name="content"
                                 fullWidth
                                 value={lesson.content}
                                 onChange={(evt) => handleLessonChange(evt, idx)}
@@ -351,6 +353,7 @@ const EditCourse = ({ match }) => {
                                 label="Resource link"
                                 type="text"
                                 fullWidth
+                                name="resource_url"
                                 value={lesson.resource_url}
                                 onChange={(evt) => handleLessonChange(evt, idx)}
                               />
@@ -363,10 +366,9 @@ const EditCourse = ({ match }) => {
                             <IconButton
                               edge="end"
                               aria-label="up"
-                              color="primary"
-                              onClick={deleteLesson(idx)}
+                              onClick={(evt) => deleteLesson(evt, idx)}
                             >
-                              <DeleteIcon />
+                              <DeleteIcon color="error" />
                             </IconButton>
                           </ListItemSecondaryAction>
                         )}

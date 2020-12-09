@@ -26,27 +26,6 @@ async (data) => {
 })
 
 
-// const createNewLesson = createAsyncThunk(
-//   "/createNewLesson",
-// async (course) => {
-//   const token = authAPI.isAuthenticated();
-//   try {
-//       const res = await axios.put(
-//           `/api/courses/${course._id}/lesson/new`,
-//           course.lesson, {
-//               headers: {
-//                   Authorization: `Bearer ${token}`,
-//               },
-//           });
-//       return res.data;
-//   } catch (error) {
-//       return {
-//           error: error.response.data.error
-//       };
-//   }
-// })
-
-
 
 export const listCourseByInstructor = createAsyncThunk(
   "/listCourseByInstructor",
@@ -75,6 +54,25 @@ async (courseId) => {
   const token = authAPI.isAuthenticated();
   try {
     let res = await axios.get(`${domain}/api/courses/${courseId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data
+  } catch (error) {
+    return {
+        error: error.response.data.error
+    };
+  }
+})
+
+
+export const removeCourse = createAsyncThunk(
+"/readCourse",
+async (courseId) => {
+  const token = authAPI.isAuthenticated();
+  try {
+    let res = await axios.delete(`${domain}/api/courses/${courseId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -151,23 +149,6 @@ const courseSlice = createSlice({
       state.loading = false;
       state.error = action.payload.error;
     },
-
-    // [createNewLesson.pending]: (state) => {
-    //   state.loading = true;
-    // },
-    // [createNewLesson.fulfilled]: (state, action) => {
-    //     state.loading = false;
-    //   const { error, course } = action.payload;
-    //   if (error) {
-    //     state.error = error;
-    //   } else {
-    //     state.courses = [...state.courses, course]
-    //   }
-    // },
-    // [createNewLesson.rejected]: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload.error;
-    // },
 
 
     [listCourseByInstructor.pending]: (state) => {

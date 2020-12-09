@@ -158,7 +158,6 @@ const remove = async (req, res) => {
 }
 
 const update = async (req, res) => {
-
   const {
     files,
     body: {
@@ -200,6 +199,7 @@ const update = async (req, res) => {
 
     return res.status(200).json({
       course: updated
+      // success: true
     })
   } catch (error) {
     return res.status(400).json({

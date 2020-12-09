@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
   },
   filename: {
-    marginLeft: "10px",
+    margin: "10px 0",
   },
   error: {
     backgroundColor: "#ff3333",
@@ -119,16 +119,15 @@ const EditCourse = ({ match }) => {
     redirect: false,
   });
 
+
   useEffect(() => {
     dispatch(readCourse(match.params.courseId));
   }, [match.params.userId]);
 
-
   useEffect(() => {
-      if (course){
-   setValues({...values, ...course})
-
-      }
+    if (course) {
+      setValues({ ...values, ...course });
+    }
   }, [course]);
 
   const closeErrors = () => {
@@ -178,7 +177,7 @@ const EditCourse = ({ match }) => {
 
     const data = {
       course: newCourse,
-      _id: user._id,
+      courseId: match.params.courseId,
     };
     dispatch(updateCourse(data));
     if (!error) {
@@ -255,6 +254,7 @@ const EditCourse = ({ match }) => {
                 onChange={(evt) => handleChange(evt)}
                 rows="5"
                 value={values.description}
+                variant="outlined"
               />
               <br />
               <input
@@ -270,9 +270,10 @@ const EditCourse = ({ match }) => {
                   CHANGE IMAGE <FileUpload />
                 </Button>
               </label>
-              <span className={classes.filename}>
-                {values.image ? values.image : ""}
-              </span>
+              <Box className={classes.filename}>
+                <h4>Image:</h4>&nbsp;{values? values.image : ""}
+              </Box>
+
               <br />
             </div>
           </div>

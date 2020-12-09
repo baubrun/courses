@@ -17,6 +17,7 @@ import clsx from "clsx";
 import { userState } from "../../redux/userSlice";
 import { createCourse, clearError, courseState } from "../../redux/courseSlice";
 
+
 const IMG_DIM = 200;
 
 const useStyles = makeStyles((theme) => ({

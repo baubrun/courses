@@ -68,9 +68,8 @@ const MyCourses = () => {
 
 
   useEffect(() => {
-    if (courses){
       setValues({...values, myCourses: courses})
-    }
+      console.log('courses my courses :>> ', courses);
   }, [courses]);
 
 

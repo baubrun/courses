@@ -72,7 +72,7 @@ async (data) => {
   const token = authAPI.isAuthenticated();
   try {
       const res = await axios.put(
-          `${domain}/api/courses/by/${data._id}`,
+          `${domain}/api/courses/${data.courseId}`,
           data.course, {
               headers: {
                   Authorization: `Bearer ${token}`,
@@ -172,7 +172,7 @@ const courseSlice = createSlice({
       if (error) {
         state.error = error;
       } else {
-        state.courses = [...state.courses, course]
+        state.course = course
       }
     },
     [updateCourse.rejected]: (state, action) => {

@@ -33,6 +33,7 @@ router.route("/api/courses/:courseId")
     )
     .get(courseController.read)
     .put(
+        upload.any(),
         authController.requireSignIn,
         courseController.isInstructor,
         courseController.update,

@@ -43,7 +43,7 @@ const create = async (req, res) => {
 }
 
 const isInstructor = (req, res, next) => {
-    const isInstructor = req.profile.instructor
+    const isInstructor = req.profile && req.profile.instructor
     if (!isInstructor) {
         return res.status(403).json({
             error: "User is not authorized."

@@ -15,7 +15,6 @@ import Typography from "@material-ui/core/Typography";
 import courseAPI from "../../api/course";
 import { clearError, courseState } from "../../redux/courseSlice";
 
-
 const useStyles = makeStyles((theme) => ({
   error: {
     backgroundColor: "#ff3333",
@@ -33,14 +32,13 @@ const NewLesson = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { error } = useSelector(courseState);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [open, setOpen] = useState(false);
   const [values, setValues] = useState({
     errorMsg: "",
     content: "",
     resource_url: "",
     title: "",
   });
-
 
   useEffect(() => {
     if (error) {
@@ -51,9 +49,7 @@ const NewLesson = (props) => {
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
     dispatch(clearError());
-
   };
-
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -72,37 +68,39 @@ const NewLesson = (props) => {
     };
 
     const data = await courseAPI.createNewLesson(lesson, props.courseId);
-    if (data && data.error) {
-      setValues({ ...values, errorMsg: data.error });
-    } else {
-      props.addLesson(data.newLesson);
+    if (data) {
+      if (data.error){
+        setValues({ ...values, errorMsg: data.error });
+      }
+     else {
+      props.addLesson(data.course);
       setValues({
         ...values,
         title: "",
         content: "",
         resource_url: "",
       });
-      setOpenDialog(false)
-    }
-  };
+      setOpen(false)
+     }
+  }
+}
 
   return (
     <>
       <Button
         aria-label="Add Lesson"
         color="primary"
-        onClick={() => setOpenDialog(true)}
+        onClick={() => setOpen(true)}
         variant="contained"
       >
         <Add /> &nbsp; New Lesson
       </Button>
       <Dialog
         aria-labelledby="form-dialog-title"
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
+        open={open}
+        onClose={() => setOpen(false)}
       >
         <form className={classes.form} onSubmit={handleSubmit}>
-
           <DialogTitle id="form-dialog-title">Add New Lesson</DialogTitle>
 
           <DialogContent>
@@ -137,34 +135,27 @@ const NewLesson = (props) => {
             />
           </DialogContent>
           {values.errorMsg && (
-               <Box 
-               onClick={() => closeErrors()}
-               >
-                 <Typography className={classes.error} component="p">
-                   {values.errorMsg}
-                 </Typography>
-               </Box>
+            <Box onClick={() => closeErrors()}>
+              <Typography className={classes.error} component="p">
+                {values.errorMsg}
+              </Typography>
+            </Box>
           )}
           <DialogActions>
             <Button
-              onClick={() => setOpenDialog(false)}
+              onClick={() => setOpen(false)}
               color="default"
               variant="contained"
             >
               Cancel
             </Button>
-            <Button 
-            color="primary" 
-            variant="contained" 
-            type="submit"
-            >
+            <Button color="primary" variant="contained" type="submit">
               Add
             </Button>
-
           </DialogActions>
         </form>
       </Dialog>
-      </>
+    </>
   );
 };
 

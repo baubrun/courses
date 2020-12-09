@@ -112,6 +112,7 @@ export const userSlice = createSlice({
     signOut: (state) => {
       state.loggedIn = false;
       state.user = {};
+      state.error = ""
       authAPI.deleteToken();
     },
   },

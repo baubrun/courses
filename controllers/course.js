@@ -115,7 +115,7 @@ const isInstructor = (req, res, next) => {
 const newLesson = async (req, res) => {
   try {
     let lesson = req.body;
-    let newLesson = await Course.findByIdAndUpdate(
+    let lessonAdded = await Course.findByIdAndUpdate(
         req.course._id, {
           $push: {
             lessons: lesson
@@ -128,7 +128,7 @@ const newLesson = async (req, res) => {
       .populate("instructor", "_id name")
       .exec();
     return res.status(200).json({
-      newLesson: newLesson
+      course: lessonAdded
     });
   } catch (error) {
     return res.status(400).json({

@@ -2,11 +2,11 @@ import axios from "axios"
 import authAPI from "../api/auth"
 
 
-const createNewLesson = async (lesson, id) => {
+const createNewLesson = async (lesson, courseId) => {
     const token = authAPI.isAuthenticated();
     try {
         const res = await axios.put(
-            `/api/courses/${id}/lesson/new`,
+            `/api/courses/${courseId}/lesson/new`,
             lesson, {
                 headers: {
                     Authorization: `Bearer ${token}`,

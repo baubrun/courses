@@ -26,6 +26,28 @@ async (data) => {
 })
 
 
+// const createNewLesson = createAsyncThunk(
+//   "/createNewLesson",
+// async (course) => {
+//   const token = authAPI.isAuthenticated();
+//   try {
+//       const res = await axios.put(
+//           `/api/courses/${course._id}/lesson/new`,
+//           course.lesson, {
+//               headers: {
+//                   Authorization: `Bearer ${token}`,
+//               },
+//           });
+//       return res.data;
+//   } catch (error) {
+//       return {
+//           error: error.response.data.error
+//       };
+//   }
+// })
+
+
+
 export const listCourseByInstructor = createAsyncThunk(
   "/listCourseByInstructor",
 async (userId) => {
@@ -99,12 +121,16 @@ const courseSlice = createSlice({
     error: "",
   },
   reducers: { 
+    clearCourses: (state) => {
+      state.courses = []
+      state.course = {}
+    },
     clearError: (state, action) => {
       state.error = ""
     },
     setError: (state, action) => {
       state.error = action.payload.error
-    }
+    },
   },
   extraReducers: {
 
@@ -125,6 +151,23 @@ const courseSlice = createSlice({
       state.loading = false;
       state.error = action.payload.error;
     },
+
+    // [createNewLesson.pending]: (state) => {
+    //   state.loading = true;
+    // },
+    // [createNewLesson.fulfilled]: (state, action) => {
+    //     state.loading = false;
+    //   const { error, course } = action.payload;
+    //   if (error) {
+    //     state.error = error;
+    //   } else {
+    //     state.courses = [...state.courses, course]
+    //   }
+    // },
+    // [createNewLesson.rejected]: (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload.error;
+    // },
 
 
     [listCourseByInstructor.pending]: (state) => {
@@ -184,6 +227,6 @@ const courseSlice = createSlice({
   }
 });
 
-export const {clearError, setError} = courseSlice.actions
+export const {clearCourses, clearError, setError} = courseSlice.actions
 export const courseState = (state) => state.course;
 export default courseSlice.reducer;

@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
-import theme from "./config/theme";
+import theme from "./css/theme";
 import Home from "./views/Home";
 import Users from "./components/user/Users";
 import NotFound from "./views/NotFound";

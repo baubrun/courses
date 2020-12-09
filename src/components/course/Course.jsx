@@ -26,7 +26,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import authAPI from "../../api/auth";
 import { userState } from "../../redux/userSlice";
-import { courseState, readCourse, clearError } from "../../redux/courseSlice";
+import { courseState, readCourse, clearError, updateCourse } from "../../redux/courseSlice";
 
 import NewLesson from "./NewLesson"
 import DeleteCourse from "./DeleteCourse"
@@ -144,12 +144,26 @@ useEffect(() => {
   };
   
   
-  const removeCourse = () => {
-    setValues({...values, redirect: true})
+  const handlePublish = () => {
+    let pb = new FormData()
+    pb.append("published", true)
+
+    const data = {
+      courseId: courseData._id,
+      course: pb
+    }
+    dispatch(updateCourse(data))
+    if (!error){
+      setOpenDialog(false)
+    }else {
+      setValues({...values, errorMsg: error})
+    }
   }
 
 
-  if (_.isEmpty(course)) return null
+  const removeCourse = () => {
+    setValues({...values, redirect: true})
+  }
 
 
   if (values.redirect) {
@@ -157,9 +171,12 @@ useEffect(() => {
   }
 
 
+  if (_.isEmpty(course)) return null
+
+
   return (
     <Box className={classes.root}>
-      <Card className={classes.card}>
+      <Card className={classes.card} elevation={4}>
         <CardHeader
           title={course.name}
           subheader={
@@ -168,7 +185,7 @@ useEffect(() => {
                 to={`/user/${course.instructor._id}`}
                 className={classes.sub}
               >
-                By {course.instructor.name}
+                By {course && course.instructor.name}
               </Link>
               <span className={classes.category}>{course.category}</span>
             </Box>
@@ -190,12 +207,13 @@ useEffect(() => {
                       <Button
                         color="secondary"
                         variant="contained"
+                        onClick={courseData.lessons && courseData.lessons.length > 0 ? () => setOpenDialog(true): null}
                       >
-                        {course.lesson && courseData.lessons.length === 0
-                          ? "Add course"
+                        {courseData.lessons && courseData.lessons.length === 0
+                          ? "Add Lesson"
                           : "Publish"}
                       </Button>
-                      <DeleteCourse course={course} removeCourse={removeCourse}/>
+                      <DeleteCourse course={courseData} removeCourse={removeCourse}/>
                     </>
                   ) : (
                     <Button color="primary" variant="outlined">
@@ -204,7 +222,7 @@ useEffect(() => {
                   )}
                 </span>
               )}
-              {course.published && (
+              {courseData.published && (
                 <Box>
                   <span className={classes.statSpan}>
                     <PeopleIcon />
@@ -223,15 +241,15 @@ useEffect(() => {
         <Box className={classes.flex}>
           <CardMedia
             className={classes.media}
-            image={`${process.env.PUBLIC_URL}/images/${course.image}`}
-            title={course.name}
+            image={`${process.env.PUBLIC_URL}/images/${courseData.image}`}
+            title={courseData.name}
           />
           <Box className={classes.details}>
             <Typography variant="body1" className={classes.subheading}>
-              {course.description}
+              {courseData.description}
             </Typography>
 
-            {course.published && (
+            {courseData.published && (
               <Box className={classes.enroll}>
                 enroll here
               </Box>
@@ -256,16 +274,16 @@ useEffect(() => {
             }
             subheader={
               <Typography variant="body1" className={classes.subheading}>
-                {course.lessons && course.lessons.length} lessons
+                {courseData.lessons && courseData.lessons.length} lessons
               </Typography>
             }
             action={
               loggedIn &&
               authAPI.isAuthenticated() &&
-              !course.published && (
+              !courseData.published && (
                 <span className={classes.action}>
                   <NewLesson 
-                  courseId={course._id} 
+                  courseId={courseData._id} 
                   addLesson={addLesson} 
                   />
                 </span>
@@ -299,10 +317,7 @@ useEffect(() => {
         <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
-           Publish msg here
-          </Typography>
-          <Typography variant="body1">
-            note here
+           {`Publish course "${courseData.name}" ?`}
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -315,10 +330,10 @@ useEffect(() => {
           </Button>
           <Button
             color="primary"
-            onClick={() => setOpenDialog(true)}
+            onClick={() => handlePublish()}
             variant="contained"
           >
-            Publish
+           CONFIRM
           </Button>
         </DialogActions>
       </Dialog>

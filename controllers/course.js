@@ -170,12 +170,9 @@ const update = async (req, res) => {
   } = req;
 
   try {
-    let file = files[0];
-    if (files.length < 1) {
-      return res.status(400).json({
-        error: "Image required.",
-      });
-    } else {
+    let file
+    if (files.length > 0) {
+       file = files[0];
       const ext = path.extname(file.originalname);
       const regexList = [/\.jpe?g/i, /\.png/i, /\.svg/i]
       if (regexList.some((x) => x === ext)) {
@@ -183,23 +180,26 @@ const update = async (req, res) => {
           error: "Invalid image type.",
         });
       }
+    } else {
+      file = undefined
     }
-
 
     const updated = await Course.findOneAndUpdate({
       _id: req.params.courseId
-    },{
-      name: name,
-      image: file.filename,
+    }, {
+      name: name? name : undefined,
+      image: file ? file.filename : undefined,
       instructor: valid_OId(instructor),
-      description: description,
-      category: category,
-      published: published,
+      description: description ? description : undefined,
+      category: category ? category : undefined,
+      published: published ? published : undefined,
+    }, {
+      new: true,
+      omitUndefined: true,
     })
 
     return res.status(200).json({
       course: updated
-      // success: true
     })
   } catch (error) {
     return res.status(400).json({

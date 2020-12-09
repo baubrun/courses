@@ -32,7 +32,7 @@ router.route("/api/courses/:courseId")
         courseController.remove,
     )
     .get(courseController.read)
-    .put(
+    .patch(
         upload.any(),
         authController.requireSignIn,
         courseController.isInstructor,

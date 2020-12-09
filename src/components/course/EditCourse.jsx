@@ -27,11 +27,12 @@ import { userState } from "../../redux/userSlice";
 import {
   updateCourse,
   readCourse,
-  clearError,
   courseState,
 } from "../../redux/courseSlice";
 
 import authAPI from "../../api/auth";
+import _ from "lodash"
+
 
 const useStyles = makeStyles((theme) => ({
   action: {
@@ -129,10 +130,7 @@ const EditCourse = ({ match }) => {
     }
   }, [course]);
 
-  const closeErrors = () => {
-    setValues({ ...values, errorMsg: "" });
-    dispatch(clearError());
-  };
+
 
   const fileImage = () => {
     return (
@@ -189,7 +187,7 @@ const EditCourse = ({ match }) => {
     newCourse.append("instructor", user._id);
     newCourse.append("name", values.name);
     newCourse.append("lessons", values.lessons);
-    newCourse.append("image", file);
+    newCourse.append("image", file)
 
     const data = {
       course: newCourse,
@@ -383,14 +381,6 @@ const EditCourse = ({ match }) => {
             </List>
           </div>
         </form>
-
-        {values.errorMsg && (
-          <Box onClick={() => closeErrors()}>
-            <Typography className={classes.error} component="p">
-              {values.errorMsg}
-            </Typography>
-          </Box>
-        )}
       </Card>
     </div>
   );

@@ -26,7 +26,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import authAPI from "../../api/auth";
 import { userState } from "../../redux/userSlice";
-import { courseState, readCourse } from "../../redux/courseSlice";
+import { courseState, readCourse, clearError } from "../../redux/courseSlice";
 
 import NewLesson from "./NewLesson"
 import DeleteCourse from "./DeleteCourse"
@@ -55,6 +55,13 @@ const useStyles = makeStyles((theme) => ({
   },
   enroll: {
     float: "right",
+  },
+  error: {
+    backgroundColor: "#ff3333",
+    color: "white",
+    cursor: "pointer",
+    verticalAlign: "middle",
+    padding: "10px",
   },
   flex: {
     display: "flex",
@@ -99,7 +106,7 @@ const Course = ({ match }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { loggedIn, user } = useSelector(userState);
-  const {course} = useSelector(courseState);
+  const {course, error} = useSelector(courseState);
   const [courseData, setCourseData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
@@ -119,11 +126,24 @@ useEffect(() => {
   }
 }, [course])
 
+useEffect(() => {
+  if (error) {
+    setValues({ ...values, errorMsg: error });
+  }
+}, [error]);
+
+
 
   const addLesson = (course) => {
     setCourseData(course);
   };
 
+  const closeErrors = () => {
+    setValues({ ...values, errorMsg: "" });
+    dispatch(clearError());
+  };
+  
+  
   const removeCourse = () => {
     setValues({...values, redirect: true})
   }
@@ -219,6 +239,13 @@ useEffect(() => {
           </Box>
         </Box>
 
+        {values.errorMsg && (
+              <Box onClick={() => closeErrors()}>
+                <Typography className={classes.error} component="div">
+                  {values.errorMsg}
+                </Typography>
+              </Box>
+            )}
         <Divider />
         <Box>
           <CardHeader

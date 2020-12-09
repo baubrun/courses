@@ -71,7 +71,7 @@ export const updateCourse = createAsyncThunk(
 async (data) => {
   const token = authAPI.isAuthenticated();
   try {
-      const res = await axios.put(
+      const res = await axios.patch(
           `${domain}/api/courses/${data.courseId}`,
           data.course, {
               headers: {

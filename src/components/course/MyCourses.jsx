@@ -69,7 +69,6 @@ const MyCourses = () => {
 
   useEffect(() => {
       setValues({...values, myCourses: courses})
-      console.log('courses my courses :>> ', courses);
   }, [courses]);
 
 

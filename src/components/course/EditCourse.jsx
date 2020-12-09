@@ -119,7 +119,6 @@ const EditCourse = ({ match }) => {
     redirect: false,
   });
 
-
   useEffect(() => {
     dispatch(readCourse(match.params.courseId));
   }, [match.params.userId]);
@@ -133,6 +132,23 @@ const EditCourse = ({ match }) => {
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
     dispatch(clearError());
+  };
+
+  const fileImage = () => {
+    return (
+      <>
+        {values && values.image && (
+          <Box className={classes.filename}>
+            <h4>Image:</h4> {values ? values.image : ""}
+          </Box>
+        )}
+        {file && file.name && (
+          <Box className={classes.filename}>
+            <h4>New Image:</h4> {file ? file.name : ""}
+          </Box>
+        )}
+      </>
+    );
   };
 
   const handleChange = (evt) => {
@@ -270,10 +286,7 @@ const EditCourse = ({ match }) => {
                   CHANGE IMAGE <FileUpload />
                 </Button>
               </label>
-              <Box className={classes.filename}>
-                <h4>Image:</h4>&nbsp;{values? values.image : ""}
-              </Box>
-
+              {fileImage()}
               <br />
             </div>
           </div>

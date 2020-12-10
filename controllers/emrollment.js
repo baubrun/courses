@@ -64,7 +64,7 @@ const findEnrollment = async (req, res, next) => {
         if (!enrollment) {
             next()
         } else {
-            res.json({enrollment: enrollment})
+            res.json({enrollment})
         }
     } catch (err) {
         return res.status(500).json({
@@ -72,6 +72,21 @@ const findEnrollment = async (req, res, next) => {
         });
     }
 }
+
+
+const listEnrolled = async (req, res) => {
+    try {
+      let enrollments = await Enrollment
+        .find({student: req.auth._id})
+        .sort({"completed": 1})
+        .populate("course", "_id name category")
+      return res.json({enrollments})
+    } catch (err) {
+      return res.status(500).json({
+        error: error.message
+    });
+}
+  }
 
 
 const read = (req, res) => {
@@ -84,4 +99,5 @@ export default {
     read,
     enrollmentByID,
     findEnrollment,
+    listEnrolled,
 }

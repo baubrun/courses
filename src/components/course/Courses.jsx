@@ -60,7 +60,7 @@ const Courses = (props) => {
     <GridList cellHeight={220} className={classes.gridList} cols={2}>
       {props.courses.map((course, idx) => {
         return (
-          findCommon(course) && (
+        //   findCommon(course) && (
             <GridListTile
               className={classes.tile}
               key={idx}
@@ -69,7 +69,7 @@ const Courses = (props) => {
               <Link to={`/course/${course._id}`}>
                 <img
                   className={classes.image}
-                  src={course.image}
+                  src={`${process.env.PUBLIC_URL}/${course.image}`}
                   alt={course.name}
                 />
               </Link>
@@ -96,7 +96,7 @@ const Courses = (props) => {
               />
             </GridListTile>
           )
-        );
+        // );
       })}
     </GridList>
   );

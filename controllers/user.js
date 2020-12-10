@@ -58,7 +58,7 @@ const list = async (req, res) => {
     try {
         let users = await User.find().select("-password -__v")
         return res.status(200).json({
-            users: users
+            users
         })
     } catch (error) {
         return res.status(400).json({

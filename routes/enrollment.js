@@ -7,6 +7,12 @@ import enrollmentController from "../controllers/emrollment.js";
 const router = express.Router();
 
 
+router.route("/api/enrollment/enrolled")
+.get(
+    authController.requireSignIn, 
+    enrollmentController.listEnrolled,
+)
+
 router.route("/api/enrollment/new/:courseId")
 .get(
     authController.requireSignIn, 

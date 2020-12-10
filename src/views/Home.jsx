@@ -8,9 +8,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 
-import { courseState, listCoursesPublished  } from "../redux/courseSlice";
-import Courses from "../components/course/Courses"
-
+import { courseState, listCoursesPublished } from "../redux/courseSlice";
+import Courses from "../components/course/Courses";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -32,49 +31,40 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {courses, error} = useSelector(courseState);
-  const [coursesData, setCoursesData] = useState([])
+  const { courses, error } = useSelector(courseState);
+  const [coursesData, setCoursesData] = useState([]);
+  const [enrolledData, setEnrolledData] = useState([]);
 
-
-  useEffect(() => {
-    dispatch(listCoursesPublished())
-  }, [])
   
   useEffect(() => {
-    if (courses){
-      setCoursesData(courses)
+    dispatch(listCoursesPublished());
+  }, []);
+
+  useEffect(() => {
+    if (courses) {
+      setCoursesData(courses);
     }
-  }, [courses])
-  
-  
+  }, [courses]);
 
-  
-  if (courses.length < 1) {
     return (
       <>
         <Card className={classes.card}>
-          <Typography className={classes.title} variant="h6">
-            Home Page
+          <Typography variant="h5" component="h2">
+            All Courses
           </Typography>
-  
-          <CardMedia
-            className={classes.media}
-            image={`${process.env.PUBLIC_URL}/classroom.jpg`}
-            title="classroom"
-          />
-  
-          <CardContent>
-            <Typography variant="body1" component="p">
-              Welcome to LA CLASSE
+          {coursesData.length > 0 
+          && coursesData.length !== enrolled.length 
+          ? (
+            <Courses courses={coursesData} common={enrolled} />
+          ) : (
+            <Typography variant="body1" className={classes.noTitle}>
+              No new courses.
             </Typography>
-          </CardContent>
+          )}
         </Card>
-  
       </>
     );
-  } else {
-    return <Courses courses={coursesData} />
-  }
+ 
 };
 
 export default Home;

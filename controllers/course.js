@@ -91,7 +91,7 @@ const listByInstructor = async (req, res) => {
       instructor: req.profile._id,
     }).populate("instructor", "_id name");
     return res.status(200).json({
-      courses: courses
+      courses
     });
   } catch (error) {
     return res.status(400).json({
@@ -106,7 +106,7 @@ const listPublished = async (req, res) => {
       published: true,
     }).populate("instructor", "_id name")
     return res.status(200).json({
-      courses: courses
+      courses
     })
   } catch (error) {
     return res.status(400).json({

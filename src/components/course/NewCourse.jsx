@@ -190,7 +190,6 @@ const NewCourse = () => {
               <Typography className={classes.error} component="p">
                 {values.errorMsg}
               </Typography>
-              <Box className={classes.close}>X</Box>
             </Box>
           )}
         </CardContent>

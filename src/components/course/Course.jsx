@@ -30,6 +30,7 @@ import { courseState, readCourse, clearError, updateCourse } from "../../redux/c
 
 import NewLesson from "./NewLesson"
 import DeleteCourse from "./DeleteCourse"
+import Enroll from "../enroll/Enroll"
 import _ from "lodash"
 
 
@@ -251,7 +252,7 @@ useEffect(() => {
 
             {courseData.published && (
               <Box className={classes.enroll}>
-                enroll here
+               <Enroll courseId={courseData._id}/>
               </Box>
             )}
           </Box>

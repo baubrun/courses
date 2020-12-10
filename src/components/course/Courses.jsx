@@ -9,7 +9,7 @@ import GridListTileBar from "@material-ui/core/GridListTileBar";
 import clsx from "clsx";
 
 import authAPI from "../../api/auth";
-import Enroll from "./Enroll";
+import Enroll from "../enroll/Enroll";
 
 import { userState } from "../../redux/userSlice";
 

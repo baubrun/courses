@@ -5,18 +5,44 @@ import {
 } from "./helper.js"
 
 
+
+const complete = async (req, res) => {
+    const {lessonStatusId, courseCompleted, complete } = req.body
+    let updatedData = {}
+    updatedData["lessonStatus.$.complete"] = complete 
+    updatedData.updated = Date.now()
+
+    if(courseCompleted)
+      updatedData.completed = courseCompleted
+  
+      try {
+        const enrollment = await Enrollment
+        .updateOne(
+            {"lessonStatus._id": lessonStatusId}, 
+            {"$set": updatedData}
+        )
+       return res.json({enrollment})
+      } catch (error) {
+        return res.status(500).json({
+            error: error.message
+        });
+      }
+  }
+  
+
+
 const create = async (req, res) => {
     let newEnrollment = {
         course: req.course,
         student: req.auth,
     }
-    newEnrollment.lessonStatus = 
-    req.course.lessons.map((lesson) => {
-        return {
-            lesson: lesson,
-            complete: false
-        }
-    })
+    newEnrollment.lessonStatus =
+        req.course.lessons.map((lesson) => {
+            return {
+                lesson: lesson,
+                complete: false
+            }
+        })
     const enrollment = new Enrollment(newEnrollment)
     try {
         const enrollmentSaved = await enrollment.save()
@@ -29,6 +55,7 @@ const create = async (req, res) => {
         });
     }
 }
+
 
 const enrollmentByID = async (req, res, next, id) => {
     try {
@@ -64,7 +91,9 @@ const findEnrollment = async (req, res, next) => {
         if (!enrollment) {
             next()
         } else {
-            res.json({enrollment})
+            res.json({
+                enrollment
+            })
         }
     } catch (err) {
         return res.status(500).json({
@@ -74,30 +103,50 @@ const findEnrollment = async (req, res, next) => {
 }
 
 
+const isStudent = (req, res, next) => {
+    const student = req.auth
+     && req.auth._id == req.enrollment.student._id
+    if (!student) {
+        return res.status(403).json({
+            error: "User is not enrolled."
+        })
+    }
+    next()
+}
+
+
 const listEnrolled = async (req, res) => {
     try {
-      let enrollments = await Enrollment
-        .find({student: req.auth._id})
-        .sort({"completed": 1})
-        .populate("course", "_id name category")
-      return res.json({enrollments})
+        let enrollments = await Enrollment
+            .find({
+                student: req.auth._id
+            })
+            .sort({
+                "completed": 1
+            })
+            .populate("course", "_id name category")
+        return res.json({
+            enrollments
+        })
     } catch (err) {
-      return res.status(500).json({
-        error: error.message
-    });
+        return res.status(500).json({
+            error: error.message
+        });
+    }
 }
-  }
 
 
 const read = (req, res) => {
-    return res.json(req.enrollment)
+    return res.json({enrollment: req.enrollment})
 }
 
 
 export default {
+    complete,
     create,
     read,
     enrollmentByID,
     findEnrollment,
+    isStudent,
     listEnrolled,
 }

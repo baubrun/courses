@@ -15,7 +15,7 @@ import MyCourses from "./components/course/MyCourses";
 import Course from "./components/course/Course";
 import PrivateRoute from "./components/PrivateRoute";
 import EditCourse from "./components/course/EditCourse"
-import Enroll from "./components/course/Enroll"
+import Enrollment from "./components/enroll/Enrollment"
 
 
 const App = () => {
@@ -41,7 +41,7 @@ const App = () => {
             component={EditCourse}
           />
           <PrivateRoute path="/teach/course/:courseId" component={Course} />
-          <PrivateRoute path="/learn/:enrollmentId" component={Enroll} />
+          <PrivateRoute path="/learn/:enrollmentId" component={Enrollment}/>
 
           <Route component={NotFound} />
         </Switch>

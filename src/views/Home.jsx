@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 
 import { courseState, listCoursesPublished } from "../redux/courseSlice";
@@ -53,9 +50,10 @@ const Home = () => {
             All Courses
           </Typography>
           {coursesData.length > 0 
-          && coursesData.length !== enrolled.length 
+          && coursesData.length 
+          !== enrolledData.length 
           ? (
-            <Courses courses={coursesData} common={enrolled} />
+            <Courses courses={coursesData} />
           ) : (
             <Typography variant="body1" className={classes.noTitle}>
               No new courses.

@@ -5,9 +5,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
+import clsx from "clsx";
 
-import authAPI from "../../api/auth"
-import Enroll from "./Enroll"
+import authAPI from "../../api/auth";
+import Enroll from "./Enroll";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -23,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     minHeight: 200,
     padding: "16px 0px 0px",
+  },
+  link: {
+    color: "white",
+    textDecoration: "none",
   },
   tile: {
     textAlign: "center",
@@ -60,42 +65,44 @@ const Courses = (props) => {
     <GridList cellHeight={220} className={classes.gridList} cols={2}>
       {props.courses.map((course, idx) => {
         return (
-        //   findCommon(course) && (
-            <GridListTile
-              className={classes.tile}
-              key={idx}
-              style={{ padding: 0 }}
-            >
-              <Link to={`/course/${course._id}`}>
-                <img
-                  className={classes.image}
-                  src={`${process.env.PUBLIC_URL}/${course.image}`}
-                  alt={course.name}
-                />
-              </Link>
-              <GridListTileBar
-                className={classes.tileBar}
-                title={
-                  <Link
-                    to={`/course/${course._id}`}
-                    className={classes.tileTitle}
-                  >
-                    {course.name}
-                  </Link>
-                }
-                subtitle={<span>{course.category}</span>}
-                actionIcon={
-                  <div className={classes.action}>
-                    {authAPI.isAuthenticated() ? (
-                      <Enroll courseId={course._id} />
-                    ) : (
-                      <Link to="/signIn">Sign in to Enroll</Link>
-                    )}
-                  </div>
-                }
+          //   findCommon(course) && (
+          <GridListTile
+            className={classes.tile}
+            key={idx}
+            style={{ padding: 0 }}
+          >
+            <Link className={classes.link} to={`/course/${course._id}`}>
+              <img
+                className={classes.image}
+                src={`${process.env.PUBLIC_URL}/images/${course.image}`}
+                alt={course.name}
               />
-            </GridListTile>
-          )
+            </Link>
+            <GridListTileBar
+              className={classes.tileBar}
+              title={
+                <Link
+                  to={`/course/${course._id}`}
+                  className={clsx([classes.tileTitle, classes.link])}
+                >
+                  {course.name}
+                </Link>
+              }
+              subtitle={<span>{course.category}</span>}
+              actionIcon={
+                <div className={classes.action}>
+                  {authAPI.isAuthenticated() ? (
+                    <Enroll courseId={course._id} />
+                  ) : (
+                    <Link className={classes.link} to="/signIn">
+                      Sign in to Enroll
+                    </Link>
+                  )}
+                </div>
+              }
+            />
+          </GridListTile>
+        );
         // );
       })}
     </GridList>

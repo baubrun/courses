@@ -50,15 +50,9 @@ async (userId) => {
 export const listCoursesPublished = createAsyncThunk(
   "/listCoursesPublished",
 async () => {
-  const token = authAPI.isAuthenticated();
   try {
     let res = await axios.get(
-      `${domain}/api/courses/published`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+      `${domain}/api/courses/published`)
    return res.data
   } catch (error) {
     return {
@@ -73,7 +67,8 @@ export const readCourse = createAsyncThunk(
 async (courseId) => {
   const token = authAPI.isAuthenticated();
   try {
-    let res = await axios.get(`${domain}/api/courses/${courseId}`, {
+    let res = await axios.get(
+      `${domain}/api/courses/${courseId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -166,6 +161,23 @@ const courseSlice = createSlice({
       }
     },
     [listCourseByInstructor.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
+
+    [listCoursesPublished.pending]: (state) => {
+      state.loading = true;
+    },
+    [listCoursesPublished.fulfilled]: (state, action) => {
+        state.loading = false;
+      const { error, courses } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.courses = courses;
+      }
+    },
+    [listCoursesPublished.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.error;
     },

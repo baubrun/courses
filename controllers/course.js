@@ -104,10 +104,10 @@ const listPublished = async (req, res) => {
   try {
     const courses = await Course.find({
       published: true,
-    })
+    }).populate("instructor", "_id name")
     return res.status(200).json({
       courses: courses
-    }).populate("instructor", "_id name")
+    })
   } catch (error) {
     return res.status(400).json({
       error: error.message,

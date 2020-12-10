@@ -4,15 +4,15 @@ import LessonSchema from "./lesson.js"
 
 
 
-const CourseSchema = new mongoose.Schema({
+const CourseSchema = mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    required: "Name is required."
+    required: true
   },
   image: {
     type: String,
-    required: "Image is required."
+    required: true
 
   },
   description: {
@@ -21,7 +21,7 @@ const CourseSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: "Category is required."
+    required: true
   },
   updated: Date,
   created: {

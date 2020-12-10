@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
 const Course = ({ match }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { loggedIn, user } = useSelector(userState);
+  const { user } = useSelector(userState);
   const {course, error} = useSelector(courseState);
   const [courseData, setCourseData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);

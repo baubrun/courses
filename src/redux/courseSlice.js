@@ -47,6 +47,26 @@ async (userId) => {
   }
 })
 
+export const listCoursesPublished = createAsyncThunk(
+  "/listCoursesPublished",
+async () => {
+  const token = authAPI.isAuthenticated();
+  try {
+    let res = await axios.get(
+      `${domain}/api/courses/published`,
+     {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+   return res.data
+  } catch (error) {
+    return {
+        error: error.response.data.error
+    };
+  }
+})
+
 
 export const readCourse = createAsyncThunk(
 "/readCourse",

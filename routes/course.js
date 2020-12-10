@@ -39,6 +39,8 @@ router.route("/api/courses/:courseId")
         courseController.update,
     )
 
+router.route('/api/courses/published')
+    .get(courseController.listPublished)
     
 router.route("/api/courses/:courseId/lesson/new")
     .put(

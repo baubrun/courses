@@ -278,8 +278,8 @@ useEffect(() => {
               </Typography>
             }
             action={
-              loggedIn &&
-              authAPI.isAuthenticated() &&
+              authAPI.isAuthenticated()
+              && user._id == course.instructor._id &&
               !courseData.published && (
                 <span className={classes.action}>
                   <NewLesson 

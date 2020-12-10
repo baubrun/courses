@@ -100,6 +100,21 @@ const listByInstructor = async (req, res) => {
   }
 };
 
+const listPublished = async (req, res) => {
+  try {
+    const courses = await Course.find({
+      published: true,
+    })
+    return res.status(200).json({
+      courses: courses
+    }).populate("instructor", "_id name")
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message,
+    });
+  }
+}
+
 
 const isInstructor = (req, res, next) => {
   const isInstructor = req.course.instructor._id == req.auth._id
@@ -185,23 +200,24 @@ const update = async (req, res) => {
       file = undefined
     }
 
-    const updated = await Course.findOneAndUpdate({
+    const updatedCourse = await Course.findOneAndUpdate({
       _id: req.params.courseId
     }, {
       name: name? name : undefined,
       image: file ? file.filename : undefined,
-      instructor: valid_OId(instructor),
+      instructor: instructor ? valid_OId(instructor): undefined,
       description: description ? description : undefined,
       category: category ? category : undefined,
       published: published ? published : undefined,
       lessons: lessons ? JSON.parse(lessons) : undefined,
+      updated: Date.now()
     }, {
       new: true,
       omitUndefined: true,
     })
 
     return res.status(200).json({
-      course: updated
+      course: updatedCourse
     })
   } catch (error) {
     return res.status(400).json({
@@ -218,6 +234,7 @@ export default {
   courseByID,
   isInstructor,
   listByInstructor,
+  listPublished,
   newLesson,
   read,
   remove,

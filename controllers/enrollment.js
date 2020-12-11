@@ -65,7 +65,7 @@ const create = async (req, res) => {
 
 
 const enrollmentByID = async (req, res, next) => {
-    const id = valid_OId(req.params.courseId)
+    const id = valid_OId(req.params.enrollmentId)
 
     try {
         const enrollment = await Enrollment.findById(id)
@@ -114,7 +114,7 @@ const findEnrollment = async (req, res, next) => {
 
 const isStudent = (req, res, next) => {
     const student = req.auth &&
-        req.auth._id == req.enrollment.student._id
+        req.auth == req.enrollment.student._id
     if (!student) {
         return res.status(403).json({
             error: "User is not enrolled."
@@ -125,7 +125,6 @@ const isStudent = (req, res, next) => {
 
 
 const listEnrolled = async (req, res) => {
-    console.log('req.auth :>>', req.auth)
     try {
         let enrollments = await Enrollment
             .find({

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import Card from "@material-ui/core/Card";
@@ -25,12 +25,18 @@ import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import CardContent from "@material-ui/core/CardContent";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { enrollmentState, clearError, completeEnrollment } from "../../redux/enrollmentSlice";
+import {
+  enrollmentState,
+  clearError,
+  completeEnrollment,
+  readEnrollment,
+} from "../../redux/enrollmentSlice";
 import { userState } from "../../redux/userSlice";
 import authAPI from "../../api/auth";
 import _ from "lodash";
 
-const useStyles = makeStyles((theme) => ({  error: {
+const useStyles = makeStyles((theme) => ({
+  error: {
     backgroundColor: "#ff3333",
     color: "white",
     cursor: "pointer",
@@ -130,7 +136,7 @@ const useStyles = makeStyles((theme) => ({  error: {
   },
 }));
 
-const Enrollment = (props) => {
+const Enrollment = ({match}) => {
   const classes = useStyles();
   const { enrollment, error } = useSelector(enrollmentState);
   const { user } = useSelector(userState);
@@ -143,17 +149,22 @@ const Enrollment = (props) => {
   const [enrollmentData, setEnrollmentData] = useState({});
 
 
+  const enrollId = match.params.enrollmentId
+
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
     dispatch(clearError());
   };
 
   useEffect(() => {
-    if (props.enrollments) {
-      const found = props.enrollments.find(i => i.student === user.Id)
-      setEnrollmentData(found);
+    dispatch(readEnrollment(enrollId));
+  }, []);
+
+  useEffect(() => {
+    if (enrollment) {
+      setEnrollmentData(enrollment)
     }
-  }, [props.enrollments]);
+  },[enrollment])
 
 
   useEffect(() => {
@@ -166,14 +177,14 @@ const Enrollment = (props) => {
     setValues({ ...values, drawer: idx });
   };
 
-  
   const totalCompleted = (lessons) => {
-    let count = lessons.reduce((total, lessonStatus) => 
-      total + (lessonStatus.complete ? 1 : 0), 0)
+    let count = lessons.reduce(
+      (total, lessonStatus) => total + (lessonStatus.complete ? 1 : 0),
+      0
+    );
     setTotalComplete(count);
     return count;
   };
-
 
   const markComplete = () => {
     if (!enrollmentData.lessonStatus[values.drawer].complete) {
@@ -184,8 +195,8 @@ const Enrollment = (props) => {
       const count = totalCompleted(lessonStatus);
 
       let data = {
-          enrollment: {},
-          enrollmentId: props.match.params.enrollmentId
+        enrollment: {},
+        enrollmentId: enrollId
       };
       data.enrollment.lessonStatusId = lessonStatus[values.drawer]._id;
       data.enrollment.complete = true;
@@ -194,12 +205,11 @@ const Enrollment = (props) => {
         data.enrollment.courseCompleted = Date.now();
       }
 
-      dispatch(completeEnrollment(data))
+      dispatch(completeEnrollment(data));
     }
   };
 
-
-  if (_.isEmpty(enrollmentData)) return null
+  if (_.isEmpty(enrollmentData)) return null;
 
   return (
     <Box className={classes.root}>
@@ -382,18 +392,17 @@ const Enrollment = (props) => {
                 </Button>
               </a>
             </CardActions>
-
           </Card>
         </>
       )}
-      
+
       {values.errorMsg && (
-              <Box onClick={() => closeErrors()}>
-                <Typography className={classes.error} component="div">
-                  {values.errorMsg}
-                </Typography>
-              </Box>
-            )}
+        <Box onClick={() => closeErrors()}>
+          <Typography className={classes.error} component="div">
+            {values.errorMsg}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

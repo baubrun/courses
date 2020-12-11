@@ -41,7 +41,7 @@ const Home = () => {
 
 
   useEffect(() => {
-    dispatch(listEnrollments());
+    // dispatch(listEnrollments());
   }, []);
 
 

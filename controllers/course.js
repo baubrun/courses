@@ -8,9 +8,9 @@ import {
 
 const courseByID = async (req, res, next) => {
 
-  const id = req.params.courseId
+  const id = valid_OId(req.params.courseId)
   try {
-    let course = await Course.findById(valid_OId(id)).populate("instructor", "_id name");
+    let course = await Course.findById(id).populate("instructor", "_id name");
 
     if (!course)
       return res.status(400).json({

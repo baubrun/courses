@@ -25,15 +25,23 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import authAPI from "../../api/auth";
-import courseAPI from "../../api/course";
 import { userState } from "../../redux/userSlice";
-import { courseState, readCourse, clearError, updateCourse } from "../../redux/courseSlice";
+import {
+  courseState,
+  readCourse,
+  clearError,
+  updateCourse,
+} from "../../redux/courseSlice";
+import {
+  enrollmentState,
+  readEnrollmentStats,
+  clearEnrollmentError,
+} from "../../redux/enrollmentSlice";
 
-import NewLesson from "./NewLesson"
-import DeleteCourse from "./DeleteCourse"
-import Enroll from "../enroll/Enroll"
-import _ from "lodash"
-
+import NewLesson from "./NewLesson";
+import DeleteCourse from "./DeleteCourse";
+import Enroll from "../enroll/Enroll";
+import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   action: {
@@ -94,9 +102,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sub: {
-    display: "block",
+    display: "inline-block",
     margin: "3px 0px 5px 0px",
     fontSize: "0.9em",
+    width: "auto"
   },
   subheading: {
     margin: "10px",
@@ -104,51 +113,59 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const initCourseState = {
   published: false,
   name: "",
-  image:"",
-  instructor:{
+  image: "",
+  instructor: {
     _id: "",
     name: "",
   },
   description: "",
   category: "",
   lessons: [],
-}
+};
 
 const Course = ({ match }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { user } = useSelector(userState);
-  const {course, error} = useSelector(courseState);
+  const { course, error } = useSelector(courseState);
+  const { stats, statsError } = useSelector(enrollmentState);
   const [courseData, setCourseData] = useState({});
+  const [statsData, setStatsData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
     errorMsg: "",
     redirect: false,
-    stats: {},
+    statsErrorMsg: "",
   });
 
+  useEffect(() => {
+    dispatch(readCourse(match.params.courseId));
+    // dispatch(readEnrollmentStats(match.params.courseId))
+  }, []);
 
+  useEffect(() => {
+    if (course) {
+      setCourseData(course);
+    }
+    if (stats){
+      setStatsData(stats);
+    }
+  }, [course, stats]);
 
-useEffect(() => {
-   dispatch(readCourse(match.params.courseId))
-}, [])
+  useEffect(() => {
+    if (error) {
+      setValues({ ...values, errorMsg: error });
+    }
+  }, [error]);
 
-useEffect(() => {
-  if (course){
-    setCourseData(course)
-  }
-}, [course])
-
-useEffect(() => {
-  if (error) {
-    setValues({ ...values, errorMsg: error });
-  }
-}, [error]);
-
+  useEffect(() => {
+    if (statsError) {
+      setValues({ ...values, statsErrorMsg: statsError });
+    }
+  }, [statsError]);
 
 
   const addLesson = (course) => {
@@ -158,38 +175,34 @@ useEffect(() => {
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
     dispatch(clearError());
+    dispatch(clearEnrollmentError())
   };
-  
-  
+
   const handlePublish = () => {
-    let pb = new FormData()
-    pb.append("published", true)
+    let pb = new FormData();
+    pb.append("published", true);
 
     const data = {
       courseId: courseData._id,
-      course: pb
+      course: pb,
+    };
+    dispatch(updateCourse(data));
+    if (!error) {
+      setOpenDialog(false);
+    } else {
+      setValues({ ...values, errorMsg: error });
     }
-    dispatch(updateCourse(data))
-    if (!error){
-      setOpenDialog(false)
-    }else {
-      setValues({...values, errorMsg: error})
-    }
-  }
-
+  };
 
   const removeCourse = () => {
-    setValues({...values, redirect: true})
-  }
-
+    setValues({ ...values, redirect: true });
+  };
 
   if (values.redirect) {
     return <Redirect to={"/teach/courses"} />;
   }
 
-
-  if (_.isEmpty(courseData)) return null
-
+  if (_.isEmpty(courseData)) return null;
 
   return (
     <Box className={classes.root}>
@@ -209,45 +222,50 @@ useEffect(() => {
           }
           action={
             <>
-              { 
-              authAPI.isAuthenticated()
-              && user._id == courseData.instructor._id &&
-              (
-                <span className={classes.action}>
-                  <Link to={`/teach/course/edit/${courseData._id}`}>
-                    <IconButton color="primary">
-                      <Edit />
-                    </IconButton>
-                  </Link>
-                  {!courseData.published ? (
-                    <>
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        onClick={courseData.lessons && courseData.lessons.length > 0 ? () => setOpenDialog(true): null}
-                      >
-                        {courseData.lessons && courseData.lessons.length === 0
-                          ? "Add Lesson"
-                          : "Publish"}
+              {authAPI.isAuthenticated() &&
+                user._id == courseData.instructor._id && (
+                  <span className={classes.action}>
+                    <Link to={`/teach/course/edit/${courseData._id}`}>
+                      <IconButton color="primary">
+                        <Edit />
+                      </IconButton>
+                    </Link>
+                    {!courseData.published ? (
+                      <>
+                        <Button
+                          color="secondary"
+                          variant="contained"
+                          onClick={
+                            courseData.lessons && courseData.lessons.length > 0
+                              ? () => setOpenDialog(true)
+                              : null
+                          }
+                        >
+                          {courseData.lessons && courseData.lessons.length === 0
+                            ? "Add Lesson"
+                            : "Publish"}
+                        </Button>
+                        <DeleteCourse
+                          course={course}
+                          removeCourse={removeCourse}
+                        />
+                      </>
+                    ) : (
+                      <Button color="primary" variant="outlined">
+                        Published
                       </Button>
-                      <DeleteCourse course={course} removeCourse={removeCourse}/>
-                    </>
-                  ) : (
-                    <Button color="primary" variant="outlined">
-                      Published
-                    </Button>
-                  )}
-                </span>
-              )}
+                    )}
+                  </span>
+                )}
               {courseData.published && (
                 <Box>
                   <span className={classes.statSpan}>
                     <PeopleIcon />
-                   enroll stats here
+                    {stats.totalEnrolled}
                   </span>
                   <span className={classes.statSpan}>
                     <CompletedIcon />
-                   completed info here
+                    {stats.totalCompleted}
                   </span>
                 </Box>
               )}
@@ -268,19 +286,19 @@ useEffect(() => {
 
             {courseData.published && (
               <Box className={classes.enroll}>
-               <Enroll courseId={courseData._id}/>
+                <Enroll courseId={courseData._id} />
               </Box>
             )}
           </Box>
         </Box>
 
         {values.errorMsg && (
-              <Box onClick={() => closeErrors()}>
-                <Typography className={classes.error} component="div">
-                  {values.errorMsg}
-                </Typography>
-              </Box>
-            )}
+          <Box onClick={() => closeErrors()}>
+            <Typography className={classes.error} component="div">
+              {values.errorMsg}
+            </Typography>
+          </Box>
+        )}
         <Divider />
         <Box>
           <CardHeader
@@ -295,14 +313,11 @@ useEffect(() => {
               </Typography>
             }
             action={
-              authAPI.isAuthenticated()
-              && user._id == courseData.instructor._id &&
+              authAPI.isAuthenticated() &&
+              user._id === courseData.instructor._id &&
               !courseData.published && (
                 <span className={classes.action}>
-                  <NewLesson 
-                  courseId={courseData._id} 
-                  addLesson={addLesson} 
-                  />
+                  <NewLesson courseId={courseData._id} addLesson={addLesson} />
                 </span>
               )
             }
@@ -334,7 +349,7 @@ useEffect(() => {
         <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
-           {`Publish course "${courseData.name}" ?`}
+            {`Publish course "${courseData.name}" ?`}
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -350,7 +365,7 @@ useEffect(() => {
             onClick={() => handlePublish()}
             variant="contained"
           >
-           CONFIRM
+            CONFIRM
           </Button>
         </DialogActions>
       </Dialog>

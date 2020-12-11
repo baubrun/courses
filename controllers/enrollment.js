@@ -39,6 +39,12 @@ const complete = async (req, res) => {
 
 
 const create = async (req, res) => {
+    console.log('req.profile enrollment create :>>', req.profile)
+    console.log("\n")
+    console.log('req.auth enrollment create :>>', req.auth)
+    console.log("\n")
+    console.log("req.body enrollment create :>>", req.body)
+  
     let newEnrollment = {
         course: req.course,
         student: req.auth,
@@ -64,7 +70,9 @@ const create = async (req, res) => {
 }
 
 
-const enrollmentByID = async (req, res, next, id) => {
+const enrollmentByID = async (req, res, next) => {
+    const id = valid_OId(req.params.courseId)
+
     try {
         const enrollment = await Enrollment.findById(id)
             .populate({
@@ -90,6 +98,11 @@ const enrollmentByID = async (req, res, next, id) => {
 
 
 const findEnrollment = async (req, res, next) => {
+    console.log('req.profile findEnrollment :>>', req.profile)
+  console.log("\n")
+  console.log('req.auth findEnrollment :>>', req.auth)
+  console.log("\n")
+  console.log("req.body findEnrollment :>>", req.body)
     try {
         let enrollment = await Enrollment.findOne({
             course: req.course._id,
@@ -102,7 +115,7 @@ const findEnrollment = async (req, res, next) => {
                 enrollment
             })
         }
-    } catch (err) {
+    } catch (error) {
         return res.status(500).json({
             error: error.message
         });
@@ -149,6 +162,26 @@ const read = (req, res) => {
     })
 }
 
+const readStats = async (req, res) => {
+    try {
+        let stats = {}
+        stats.totalEnrolled = await Enrollment.find({
+            course: req.course._id
+        }).countDocuments()
+
+        stats.totalCompleted = await Enrollment.find({
+            course: req.course._id
+        }).exists("completed", true).countDocuments()
+
+        return res.json({stats})
+    } catch (error) {
+        return res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
+
 
 export default {
     complete,
@@ -158,4 +191,5 @@ export default {
     findEnrollment,
     isStudent,
     listEnrolled,
+    readStats,
 }

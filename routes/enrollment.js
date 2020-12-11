@@ -8,24 +8,28 @@ const router = express.Router();
 
 
 router.route("/api/enrollment/enrolled")
-.get(
-    authController.requireSignIn, 
-    enrollmentController.listEnrolled,
-)
+    .get(
+        authController.requireSignIn,
+        enrollmentController.listEnrolled,
+    )
 
 router.route("/api/enrollment/new/:courseId")
     .post(
-        authController.requireSignIn, 
+        authController.requireSignIn,
         enrollmentController.findEnrollment,
         enrollmentController.create,
     )
 
+router.route("/api/enrollment/stats/:courseId")
+    .get(enrollmentController.readStats)
+
+
 router.route("/api/enrollment/:enrollmentId")
-.get(
-    authController.requireSignIn, 
-    enrollmentController.isStudent,
-    enrollmentController.read
-)
+    .get(
+        authController.requireSignIn,
+        enrollmentController.isStudent,
+        enrollmentController.read
+    )
 
 
 

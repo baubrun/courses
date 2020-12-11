@@ -44,6 +44,7 @@ if (error) {
 })
 
 
+
 app.use("/", userRoutes)
 app.use("/", authRoutes)
 app.use("/", courseRoutes)

@@ -25,7 +25,7 @@ router.route("/api/courses/by/:userId")
         upload.any(),
         authController.requireSignIn,
         authController.hasAuthorization,
-        userController.isInstructor,
+        courseController.isInstructor,
         courseController.create,
     )
 
@@ -56,6 +56,6 @@ router.route("/api/courses/:courseId/lesson/new")
 
 
 router.param("courseId", courseController.courseByID)
-router.param("userId", userController.userByID)
+// router.param("userId", userController.userByID)
 
 export default router

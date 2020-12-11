@@ -19,7 +19,7 @@ export const createEnrollment = createAsyncThunk(
          {
           headers: {
             Authorization: `Bearer ${token}`,
-          },
+          }
         });
       return res.data;
     } catch (error) {
@@ -95,6 +95,26 @@ export const listEnrollments = createAsyncThunk(
   });
 
 
+export const readEnrollmentStats = createAsyncThunk(
+  "/readEnrollmentStats",
+  async (courseId) => {
+    const token = authAPI.isAuthenticated();
+    try {
+      const res = await axios.get(
+        `${domain}/api/enrollment/stats/${courseId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return {
+        error: error.response.data.error
+      };
+    }
+  });
+
+
 
 
 
@@ -104,10 +124,11 @@ const enrollmentSlice = createSlice({
     enrollment: {},
     enrollments: [],
     loading: false,
-    error: "",
+    statsError: "",
+    stats: {},
   },
   reducers: {
-    clearError: (state) => {
+    clearEnrollmentError: (state) => {
       state.error = ""
     },
   },
@@ -118,6 +139,8 @@ const enrollmentSlice = createSlice({
       state.loading = true;
     },
     [createEnrollment.fulfilled]: (state, action) => {
+      console.log('action.payload createEnrollment :>>', action.payload)
+
       state.loading = false;
       const {
         error,
@@ -139,6 +162,8 @@ const enrollmentSlice = createSlice({
       state.loading = true;
     },
     [readEnrollment.fulfilled]: (state, action) => {
+      console.log('action.payload readEnrollment :>>', action.payload)
+
       state.loading = false;
       const {
         error,
@@ -151,6 +176,28 @@ const enrollmentSlice = createSlice({
       }
     },
     [readEnrollment.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
+
+
+    [readEnrollmentStats.pending]: (state) => {
+      state.loading = true;
+    },
+    [readEnrollmentStats.fulfilled]: (state, action) => {
+      console.log('action.payload readEnrollmentStats :>>', action.payload)
+      state.loading = false;
+      const {
+        error,
+        stats
+      } = action.payload;
+      if (error) {
+        state.statsError = error;
+      } else {
+        state.stats = stats
+      }
+    },
+    [readEnrollmentStats.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.error;
     },
@@ -181,7 +228,8 @@ const enrollmentSlice = createSlice({
 });
 
 export const {
-  clearError
+  clearError,
+  clearEnrollmentError,
 } = enrollmentSlice.actions
 export const enrollmentState = (state) => state.enrollment;
 export default enrollmentSlice.reducer;

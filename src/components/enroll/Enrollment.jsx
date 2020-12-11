@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme) => ({  error: {
   },
 }));
 
-const Enrollment = ({ match }) => {
+const Enrollment = (props) => {
   const classes = useStyles();
   const { enrollment, error } = useSelector(enrollmentState);
   const { user } = useSelector(userState);
@@ -141,10 +141,20 @@ const Enrollment = ({ match }) => {
     drawer: -1,
   });
   const [enrollmentData, setEnrollmentData] = useState({});
+
+
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
     dispatch(clearError());
   };
+
+  useEffect(() => {
+    if (props.enrollments) {
+      const found = props.enrollments.find(i => i.student === user.Id)
+      setEnrollmentData(found);
+    }
+  }, [props.enrollments]);
+
 
   useEffect(() => {
     if (error) {
@@ -175,7 +185,7 @@ const Enrollment = ({ match }) => {
 
       let data = {
           enrollment: {},
-          enrollmentId: match.params.enrollmentId
+          enrollmentId: props.match.params.enrollmentId
       };
       data.enrollment.lessonStatusId = lessonStatus[values.drawer]._id;
       data.enrollment.complete = true;
@@ -187,6 +197,9 @@ const Enrollment = ({ match }) => {
       dispatch(completeEnrollment(data))
     }
   };
+
+
+  if (_.isEmpty(enrollmentData)) return null
 
   return (
     <Box className={classes.root}>

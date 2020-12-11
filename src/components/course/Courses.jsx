@@ -61,16 +61,18 @@ const Courses = (props) => {
   const classes = useStyles();
 
   const findCommon = (course) => {
-    return !props.common.find((enrolled) => {
-      return enrolled.course._id == course._id;
-    });
-  };
+    return !props.enrollments.find((c) => c.course._id === course._id)
+
+    // return !props.enrollments.find((c) => {
+    //   return c.course._id == course._id;
+    // });
+  }
 
   return (
     <GridList cellHeight={220} className={classes.gridList} cols={2}>
       {props.courses.map((course, idx) => {
         return (
-            findCommon(course) && (
+            // findCommon(course) && (
           <GridListTile
             className={classes.tile}
             key={idx}
@@ -108,7 +110,7 @@ const Courses = (props) => {
             />
           </GridListTile>
         )
-        )
+        // )
       })}
     </GridList>
   );

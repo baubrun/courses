@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -60,12 +60,12 @@ const Enrollments = (props) => {
       cellHeight={120} 
       className={classes.gridList} 
       cols={4}>
-        {props.enrollments.map((course, i) => (
-          <GridListTile key={i} className={classes.tile}>
+        {props.enrollments.map((course, idx) => (
+          <GridListTile key={idx} className={classes.tile}>
             <Link to={`/learn/${course._id}`}>
               <img
                 className={classes.image}
-                src={`/api/courses/photo/${course.course._id}`}
+                src={`${process.env.PUBLIC_URL}/${course.course._id}`}
                 alt={course.course.name}
               />
             </Link>

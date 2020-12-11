@@ -128,7 +128,7 @@ const listEnrolled = async (req, res) => {
     try {
         let enrollments = await Enrollment
             .find({
-                student: req.auth._id
+                student: req.auth
             })
             .sort({
                 "completed": 1

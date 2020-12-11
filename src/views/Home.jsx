@@ -10,7 +10,7 @@ import { courseState, listCoursesPublished } from "../redux/courseSlice";
 import { enrollmentState, listEnrollments } from "../redux/enrollmentSlice";
 
 import Courses from "../components/course/Courses";
-import Enrollments from "../components/enroll/Enrollment"
+import Enrollments from "../components/enroll/Enrollments"
 import authAPI from "../api/auth"
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +41,7 @@ const Home = () => {
 
 
   useEffect(() => {
-    // dispatch(listEnrollments());
+    dispatch(listEnrollments());
   }, []);
 
 
@@ -64,6 +64,8 @@ const Home = () => {
   }, [enrollments]);
 
 
+  if (enrolledData.length < 1) return null
+
   return (
     <div className={classes.extraTop}>
       {
@@ -75,10 +77,10 @@ const Home = () => {
             component="h2"
             className={classes.enrolledTitle}
           >
-            Courses you are enrolled in
+            Courses you are enrolled in 
           </Typography>
           {enrolledData.length !== 0 ? (
-            <Enrollments enrollments={enrolledData} />
+            <Enrollments enrollments={enrollments} />
           ) : (
             <Typography variant="body1" className={classes.noTitle}>
               No courses.
@@ -91,7 +93,9 @@ const Home = () => {
           All Courses
         </Typography>
         {coursesData.length !== 0 && coursesData.length !== enrolledData.length ? (
-          <Courses courses={coursesData} common={enrolledData} />
+          <Courses 
+          courses={coursesData} 
+          enrollments={enrolledData} />
         ) : (
           <Typography variant="body1" className={classes.noTitle}>
             No new courses.

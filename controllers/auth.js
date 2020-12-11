@@ -40,7 +40,6 @@ const signIn = async (req, res) => {
         let user = await User.findOne({
             email: email
         });
-
         if (!user) {
             return res.status(401).json({
                 error: "User not found.",

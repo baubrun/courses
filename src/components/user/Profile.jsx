@@ -19,7 +19,7 @@ import Person from "@material-ui/icons/Person";
 import Divider from "@material-ui/core/Divider";
 import DeleteUser from "./DeleteUser";
 
-import { userState } from "../../redux/userSlice";
+import { userState, readUser } from "../../redux/userSlice";
 
 import authAPI from "../../api/auth";
 import userAPI from "../../api/user";
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = ({ match }) => {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const { user } = useSelector(userState);
   const [values, setValues] = useState({
     profile: {},
@@ -46,24 +47,29 @@ const Profile = ({ match }) => {
     redirect: false,
   });
 
-  const paramId = match.params.userId;
+    const userId = match.params.userId
+
+
 
   const getProfile = async () => {
-    const data = await userAPI.readUser(paramId);
+    const data = await userAPI.readUser(userId);
     if (data && data.error) {
       setValues({
         ...values,
         redirect: true
       });
     } else {
-      setValues({ ...values, profile: data });
+      setValues({ ...values, profile: data.user });
     }
   };
 
 
   useEffect(() => {
-    getProfile();
-  }, []);
+    getProfile()
+  }, [userId]);
+
+
+  
 
 
   if (values.redirect ) {

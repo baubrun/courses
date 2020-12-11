@@ -37,6 +37,7 @@ const App = () => {
         <PrivateRoute path="/teach/course/edit/:courseId" component={EditCourse}/>
         <PrivateRoute path="/teach/course/:courseId" component={Course}/>
         <PrivateRoute path="/learn/:enrollmentId" component={Enrollment}/>
+        <Route component={NotFound} />
         </Switch>
       </ThemeProvider>
     </BrowserRouter>

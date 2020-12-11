@@ -73,7 +73,7 @@ const list = async (req, res) => {
 const read = (req, res) => {
     req.profile.password = undefined
     req.profile.__v = undefined
-    return res.status(200).json(req.profile)
+    return res.status(200).json({user: req.profile})
 }
 
 

@@ -36,11 +36,7 @@ app.use(cors())
 
 // express-jwt
 app.use((error, req, res, next) => {
-    if (error.name === "UnauthorizedError") {
-        return res.status(401).json({
-            error: `${error.name}: ${error.message}`
-        })
-    } else if (error) {
+if (error) {
         return res.status(400).json({
             error: `${error.name}: ${error.message}`
         })

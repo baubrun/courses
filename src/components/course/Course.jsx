@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -25,6 +25,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import authAPI from "../../api/auth";
+import courseAPI from "../../api/course";
 import { userState } from "../../redux/userSlice";
 import { courseState, readCourse, clearError, updateCourse } from "../../redux/courseSlice";
 
@@ -103,6 +104,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+const initCourseState = {
+  published: false,
+  name: "",
+  image:"",
+  instructor:{
+    _id: "",
+    name: "",
+  },
+  description: "",
+  category: "",
+  lessons: [],
+}
+
 const Course = ({ match }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -113,12 +128,13 @@ const Course = ({ match }) => {
   const [values, setValues] = useState({
     errorMsg: "",
     redirect: false,
+    stats: {},
   });
 
 
 
 useEffect(() => {
-   dispatch(readCourse( match.params.courseId))
+   dispatch(readCourse(match.params.courseId))
 }, [])
 
 useEffect(() => {
@@ -172,38 +188,38 @@ useEffect(() => {
   }
 
 
-  if (_.isEmpty(course)) return null
+  if (_.isEmpty(courseData)) return null
 
 
   return (
     <Box className={classes.root}>
       <Card className={classes.card} elevation={4}>
         <CardHeader
-          title={course.name}
+          title={courseData.name}
           subheader={
             <Box>
               <Link
-                to={`/user/${course.instructor._id}`}
+                to={`/user/${courseData.instructor._id}`}
                 className={classes.sub}
               >
-                By {course && course.instructor.name}
+                By {courseData && courseData.instructor.name}
               </Link>
-              <span className={classes.category}>{course.category}</span>
+              <span className={classes.category}>{courseData.category}</span>
             </Box>
           }
           action={
             <>
               { 
               authAPI.isAuthenticated()
-              && user._id == course.instructor._id &&
+              && user._id == courseData.instructor._id &&
               (
                 <span className={classes.action}>
-                  <Link to={`/teach/course/edit/${course._id}`}>
+                  <Link to={`/teach/course/edit/${courseData._id}`}>
                     <IconButton color="primary">
                       <Edit />
                     </IconButton>
                   </Link>
-                  {!course.published ? (
+                  {!courseData.published ? (
                     <>
                       <Button
                         color="secondary"
@@ -214,7 +230,7 @@ useEffect(() => {
                           ? "Add Lesson"
                           : "Publish"}
                       </Button>
-                      <DeleteCourse course={courseData} removeCourse={removeCourse}/>
+                      <DeleteCourse course={course} removeCourse={removeCourse}/>
                     </>
                   ) : (
                     <Button color="primary" variant="outlined">
@@ -280,7 +296,7 @@ useEffect(() => {
             }
             action={
               authAPI.isAuthenticated()
-              && user._id == course.instructor._id &&
+              && user._id == courseData.instructor._id &&
               !courseData.published && (
                 <span className={classes.action}>
                   <NewLesson 

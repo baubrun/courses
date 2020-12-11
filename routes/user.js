@@ -27,7 +27,7 @@ router
 
 
 
-router.param("userId", userController.userById)
+router.param("userId", userController.userByID)
 
 
 export default router;

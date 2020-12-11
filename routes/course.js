@@ -55,8 +55,7 @@ router.route("/api/courses/:courseId/lesson/new")
 
 
 
-
-router.param("userId", userController.userById)
 router.param("courseId", courseController.courseByID)
+router.param("userId", userController.userByID)
 
 export default router

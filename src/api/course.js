@@ -1,6 +1,6 @@
 import axios from "axios"
 import authAPI from "../api/auth"
-
+import {domain} from "../api/utils"
 
 const createNewLesson = async (lesson, courseId) => {
     const token = authAPI.isAuthenticated();
@@ -21,12 +21,29 @@ const createNewLesson = async (lesson, courseId) => {
 };
 
 
+export const readCourse = async (courseId) => {
+    const token = authAPI.isAuthenticated();
+    try {
+        let res = await axios.get(
+            `${domain}/api/courses/${courseId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        return res.data
+    } catch (error) {
+        return {
+            error: error.response.data.error
+        };
+    }
+}
+
+
 const removeCourse = async (courseId) => {
     const token = authAPI.isAuthenticated();
     try {
         const res = await axios.delete(
-            `/api/courses/${courseId}`,
-             {
+            `/api/courses/${courseId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -43,5 +60,6 @@ const removeCourse = async (courseId) => {
 
 export default {
     createNewLesson,
+    readCourse,
     removeCourse,
 }

@@ -70,7 +70,7 @@ const Courses = (props) => {
     <GridList cellHeight={220} className={classes.gridList} cols={2}>
       {props.courses.map((course, idx) => {
         return (
-          //   findCommon(course) && (
+            findCommon(course) && (
           <GridListTile
             className={classes.tile}
             key={idx}
@@ -107,8 +107,8 @@ const Courses = (props) => {
               }
             />
           </GridListTile>
-        );
-        // );
+        )
+        )
       })}
     </GridList>
   );

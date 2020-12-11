@@ -2,24 +2,23 @@ import {
   createSlice,
   createAsyncThunk
 } from "@reduxjs/toolkit";
+import axios from "axios";
 import {
   domain
 } from "../api/utils"
-import axios from "axios";
 import authAPI from "../api/auth";
 
 
 export const createEnrollment = createAsyncThunk(
   "/createEnrollment",
-  async (data) => {
+  async (courseId) => {
     const token = authAPI.isAuthenticated();
     try {
       const res = await axios.post(
-        `${domain}/api/enrollment/new/${data._id}`,
-        data.course, {
+        `${domain}/api/enrollment/new/${courseId}`,
+         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
           },
         });
       return res.data;
@@ -76,12 +75,34 @@ export const readEnrollment = createAsyncThunk(
 
 
 
+export const listEnrollments = createAsyncThunk(
+  "/listEnrollments",
+  async () => {
+    const token = authAPI.isAuthenticated();
+    try {
+      const res = await axios.get(
+        `${domain}/api/enrollment/enrolled`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return {
+        error: error.response.data.error
+      };
+    }
+  });
+
+
+
 
 
 const enrollmentSlice = createSlice({
   name: "enrollment",
   initialState: {
     enrollment: {},
+    enrollments: [],
     loading: false,
     error: "",
   },
@@ -130,6 +151,27 @@ const enrollmentSlice = createSlice({
       }
     },
     [readEnrollment.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
+
+
+    [listEnrollments.pending]: (state) => {
+      state.loading = true;
+    },
+    [listEnrollments.fulfilled]: (state, action) => {
+      state.loading = false;
+      const {
+        error,
+        enrollments
+      } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.enrollments = enrollments
+      }
+    },
+    [listEnrollments.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.error;
     },

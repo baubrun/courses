@@ -280,7 +280,7 @@ const Enrollment = ({ match }) => {
           <div className={classes.flex}>
             <CardMedia
               className={classes.media}
-              image={enrollmentData.course.image}
+              image={`${process.env.PUBLIC_URL}/images/${enrollmentData.course.image}`}
               title={enrollmentData.course.name}
             />
             <div className={classes.details}>

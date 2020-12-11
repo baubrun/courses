@@ -24,26 +24,19 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <NavBar />
         <Switch>
-          <Route exact={true} path="/" component={Home} />
-          <Route path="/users" component={Users} />
-
-          <Route path="/signUp" component={SignUp} />
-          <Route path="/signIn" component={SignIn} />
-
-          <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
-          <Route path="/user/:userId" component={Profile} />
-          <Route path="/course/:courseId" component={Course} />
-          <PrivateRoute path="/teach/courses" component={MyCourses} />
-
-          <PrivateRoute path="/teach/course/new" component={NewCourse} />
-          <PrivateRoute
-            path="/teach/course/edit/:courseId"
-            component={EditCourse}
-          />
-          <PrivateRoute path="/teach/course/:courseId" component={Course} />
-          <PrivateRoute path="/learn/:enrollmentId" component={Enrollment}/>
-
-          <Route component={NotFound} />
+        <Route exact={true} path="/" component={Home}/>
+        <Route path="/users" component={Users}/>
+        <Route path="/signup" component={SignUp}/>
+        <Route path="/signin" component={SignIn}/>
+        <PrivateRoute path="/user/edit/:userId" component={EditProfile}/>
+        <Route path="/user/:userId" component={Profile}/>
+        <Route path="/course/:courseId" component={Course}/>
+        <PrivateRoute path="/teach/courses" component={MyCourses}/>
+        
+        <PrivateRoute path="/teach/course/new" component={NewCourse}/>
+        <PrivateRoute path="/teach/course/edit/:courseId" component={EditCourse}/>
+        <PrivateRoute path="/teach/course/:courseId" component={Course}/>
+        <PrivateRoute path="/learn/:enrollmentId" component={Enrollment}/>
         </Switch>
       </ThemeProvider>
     </BrowserRouter>

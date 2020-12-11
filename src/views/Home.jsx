@@ -5,8 +5,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 
+import { userState } from "../redux/userSlice";
 import { courseState, listCoursesPublished } from "../redux/courseSlice";
+import { enrollmentState, listEnrollments } from "../redux/enrollmentSlice";
+
 import Courses from "../components/course/Courses";
+import Enrollments from "../components/enroll/Enrollment"
+import authAPI from "../api/auth"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -28,14 +33,22 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { user } = useSelector(userState);
   const { courses, error } = useSelector(courseState);
+  const { enrollments } = useSelector(enrollmentState);
   const [coursesData, setCoursesData] = useState([]);
   const [enrolledData, setEnrolledData] = useState([]);
 
-  
+
+  useEffect(() => {
+    dispatch(listEnrollments());
+  }, []);
+
+
   useEffect(() => {
     dispatch(listCoursesPublished());
   }, []);
+
 
   useEffect(() => {
     if (courses) {
@@ -43,26 +56,50 @@ const Home = () => {
     }
   }, [courses]);
 
-    return (
-      <>
-        <Card className={classes.card}>
-          <Typography variant="h5" component="h2">
-            All Courses
+
+  useEffect(() => {
+    if (enrollments) {
+      setEnrolledData(enrollments);
+    }
+  }, [enrollments]);
+
+
+  return (
+    <div className={classes.extraTop}>
+      {
+      authAPI.isAuthenticated() && user._id  &&
+      (
+        <Card className={`${classes.card} ${classes.enrolledCard}`}>
+          <Typography
+            variant="h6"
+            component="h2"
+            className={classes.enrolledTitle}
+          >
+            Courses you are enrolled in
           </Typography>
-          {coursesData.length > 0 
-          && coursesData.length 
-          !== enrolledData.length 
-          ? (
-            <Courses courses={coursesData} />
+          {enrolledData.length !== 0 ? (
+            <Enrollments enrollments={enrolledData} />
           ) : (
             <Typography variant="body1" className={classes.noTitle}>
-              No new courses.
+              No courses.
             </Typography>
           )}
         </Card>
-      </>
-    );
- 
+      )}
+      <Card className={classes.card}>
+        <Typography variant="h5" component="h2">
+          All Courses
+        </Typography>
+        {coursesData.length !== 0 && coursesData.length !== enrolledData.length ? (
+          <Courses courses={coursesData} common={enrolledData} />
+        ) : (
+          <Typography variant="body1" className={classes.noTitle}>
+            No new courses.
+          </Typography>
+        )}
+      </Card>
+    </div>
+  );
 };
 
 export default Home;

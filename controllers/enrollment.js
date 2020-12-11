@@ -7,28 +7,35 @@ import {
 
 
 const complete = async (req, res) => {
-    const {lessonStatusId, courseCompleted, complete } = req.body
+    const {
+        lessonStatusId,
+        courseCompleted,
+        complete
+    } = req.body
     let updatedData = {}
-    updatedData["lessonStatus.$.complete"] = complete 
+    updatedData["lessonStatus.$.complete"] = complete
     updatedData.updated = Date.now()
 
-    if(courseCompleted)
-      updatedData.completed = courseCompleted
-  
-      try {
+    if (courseCompleted)
+        updatedData.completed = courseCompleted
+
+    try {
         const enrollment = await Enrollment
-        .updateOne(
-            {"lessonStatus._id": lessonStatusId}, 
-            {"$set": updatedData}
-        )
-       return res.json({enrollment})
-      } catch (error) {
+            .updateOne({
+                "lessonStatus._id": lessonStatusId
+            }, {
+                "$set": updatedData
+            })
+        return res.json({
+            enrollment
+        })
+    } catch (error) {
         return res.status(500).json({
             error: error.message
         });
-      }
-  }
-  
+    }
+}
+
 
 
 const create = async (req, res) => {
@@ -104,8 +111,8 @@ const findEnrollment = async (req, res, next) => {
 
 
 const isStudent = (req, res, next) => {
-    const student = req.auth
-     && req.auth._id == req.enrollment.student._id
+    const student = req.auth &&
+        req.auth._id == req.enrollment.student._id
     if (!student) {
         return res.status(403).json({
             error: "User is not enrolled."
@@ -137,7 +144,9 @@ const listEnrolled = async (req, res) => {
 
 
 const read = (req, res) => {
-    return res.json({enrollment: req.enrollment})
+    return res.json({
+        enrollment: req.enrollment
+    })
 }
 
 

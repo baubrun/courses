@@ -7,6 +7,7 @@ import {
 
 
 const courseByID = async (req, res, next) => {
+
   const id = req.params.courseId
   try {
     let course = await Course.findById(valid_OId(id)).populate("instructor", "_id name");
@@ -117,10 +118,10 @@ const listPublished = async (req, res) => {
 
 
 const isInstructor = (req, res, next) => {
-  const isInstructor = req.course.instructor._id == req.auth._id
+  const isInstructor = req.course.instructor._id === req.auth._id
   if (!isInstructor) {
     return res.status(403).json({
-      error: "User is not authorized."
+      error: "User is not an isInstructor."
     })
   }
   next()

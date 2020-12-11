@@ -46,7 +46,7 @@ const isInstructor = (req, res, next) => {
     const isInstructor = req.profile && req.profile.instructor
     if (!isInstructor) {
         return res.status(403).json({
-            error: "User is not authorized."
+            error: "User is not an isInstructor."
         })
     }
     next()
@@ -131,7 +131,7 @@ const update = async (req, res) => {
 }
 
 
-const userById = async (req, res, next, id) => {
+const userByID = async (req, res, next, id) => {
     try {
         let user = await User.findById(id)
         if (!user)
@@ -155,5 +155,5 @@ export default {
     read,
     remove,
     update,
-    userById,
+    userByID,
 }

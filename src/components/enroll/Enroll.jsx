@@ -37,17 +37,20 @@ const Enroll = (props) => {
     dispatch(clearError());
   };
 
+
+
   useEffect(() => {
     if (error) {
       setValues({ ...values, errorMsg: error });
     }
   }, [error]);
 
+
   const handleEnroll = () => {
     dispatch(createEnrollment(props.courseId));
-    if (!error) {
-      setValues({ ...values, redirect: true });
-    }
+    // if (!error) {
+    //   setValues({ ...values, redirect: true });
+    // }
   };
 
   if (values.redirect) {

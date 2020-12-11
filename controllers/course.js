@@ -3,7 +3,7 @@ import path from "path";
 import {
   valid_OId
 } from "./helper.js"
-
+import _ from "lodash"
 
 
 const courseByID = async (req, res, next) => {
@@ -153,6 +153,18 @@ const newLesson = async (req, res) => {
   }
 };
 
+
+const photo = (req, res) => {
+  const imgFound = req.course.image
+  if (imgFound){
+    console.log('req.course.image :>> ', req.course.image);
+    return res.send(req.course.image)
+  } else {
+    return res.send("default.png")
+  }
+}
+
+
 const read = (req, res) => {
   return res.status(200).json({
     course: req.course
@@ -237,6 +249,7 @@ export default {
   listByInstructor,
   listPublished,
   newLesson,
+  photo,
   read,
   remove,
   update,

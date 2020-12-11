@@ -29,6 +29,12 @@ router.route("/api/courses/by/:userId")
         courseController.create,
     )
 
+router
+  .route("/api/courses/photo/:courseId")
+  .get(
+    courseController.photo, 
+);
+
 
 router.route("/api/courses/:courseId")
     .delete(

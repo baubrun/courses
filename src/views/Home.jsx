@@ -13,6 +13,8 @@ import Courses from "../components/course/Courses";
 import Enrollments from "../components/enroll/Enrollments"
 import authAPI from "../api/auth"
 
+import clsx from "clsx"
+
 const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 600,
@@ -64,14 +66,13 @@ const Home = () => {
   }, [enrollments]);
 
 
-  if (enrolledData.length < 1) return null
 
   return (
     <div className={classes.extraTop}>
       {
       authAPI.isAuthenticated() && user._id  &&
       (
-        <Card className={`${classes.card} ${classes.enrolledCard}`}>
+        <Card className={clsx([classes.card, classes.enrolledCard])}>
           <Typography
             variant="h6"
             component="h2"
@@ -93,7 +94,8 @@ const Home = () => {
           All Courses
         </Typography>
         {coursesData.length !== 0 && coursesData.length !== enrolledData.length ? (
-          <Courses 
+         
+         <Courses 
           courses={coursesData} 
           enrollments={enrolledData} />
         ) : (

@@ -125,6 +125,7 @@ const isStudent = (req, res, next) => {
 
 
 const listEnrolled = async (req, res) => {
+    console.log('req.auth :>>', req.auth)
     try {
         let enrollments = await Enrollment
             .find({
@@ -133,7 +134,7 @@ const listEnrolled = async (req, res) => {
             .sort({
                 "completed": 1
             })
-            .populate("course", "_id name category")
+            .populate("course", "_id name image category")
         return res.json({
             enrollments
         })

@@ -38,13 +38,7 @@ const complete = async (req, res) => {
 
 
 
-const create = async (req, res) => {
-    console.log('req.profile enrollment create :>>', req.profile)
-    console.log("\n")
-    console.log('req.auth enrollment create :>>', req.auth)
-    console.log("\n")
-    console.log("req.body enrollment create :>>", req.body)
-  
+const create = async (req, res) => {  
     let newEnrollment = {
         course: req.course,
         student: req.auth,
@@ -98,11 +92,6 @@ const enrollmentByID = async (req, res, next) => {
 
 
 const findEnrollment = async (req, res, next) => {
-    console.log('req.profile findEnrollment :>>', req.profile)
-  console.log("\n")
-  console.log('req.auth findEnrollment :>>', req.auth)
-  console.log("\n")
-  console.log("req.body findEnrollment :>>", req.body)
     try {
         let enrollment = await Enrollment.findOne({
             course: req.course._id,

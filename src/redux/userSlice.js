@@ -204,7 +204,6 @@ export const userSlice = createSlice({
     },
     [readUser.fulfilled]: (state, action) => {
       state.loading = false;
-      console.log('action.payload :>> ', action.payload);
       const { error, user } = action.payload;
       if (error) {
         state.error = error;

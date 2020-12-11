@@ -16,7 +16,6 @@ const hasAuthorization = (req, res, next) => {
 
 const requireSignIn = (req, res, next) => {
     const authHeader = req.headers.authorization
-
     if (authHeader.startsWith("Bearer ")) {
         const token = authHeader.substring(7, authHeader.length);
         const decoded = jwt.verify(token, config.jwtSecret)

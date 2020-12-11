@@ -16,10 +16,10 @@ export const createEnrollment = createAsyncThunk(
     try {
       const res = await axios.post(
         `${domain}/api/enrollment/new/${courseId}`,
-         {
+         null,{
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         });
       return res.data;
     } catch (error) {
@@ -123,6 +123,7 @@ const enrollmentSlice = createSlice({
   initialState: {
     enrollment: {},
     enrollments: [],
+    error: "",
     loading: false,
     statsError: "",
     stats: {},
@@ -139,7 +140,6 @@ const enrollmentSlice = createSlice({
       state.loading = true;
     },
     [createEnrollment.fulfilled]: (state, action) => {
-      console.log('action.payload createEnrollment :>>', action.payload)
 
       state.loading = false;
       const {
@@ -162,7 +162,6 @@ const enrollmentSlice = createSlice({
       state.loading = true;
     },
     [readEnrollment.fulfilled]: (state, action) => {
-      console.log('action.payload readEnrollment :>>', action.payload)
 
       state.loading = false;
       const {
@@ -185,7 +184,6 @@ const enrollmentSlice = createSlice({
       state.loading = true;
     },
     [readEnrollmentStats.fulfilled]: (state, action) => {
-      console.log('action.payload readEnrollmentStats :>>', action.payload)
       state.loading = false;
       const {
         error,

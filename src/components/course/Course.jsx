@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
   },
   sub: {
     display: "inline-block",
-    margin: "3px 0px 5px 0px",
+    margin: "3px 10px 5px 0px",
     fontSize: "0.9em",
     width: "auto"
   },

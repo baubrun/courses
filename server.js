@@ -34,15 +34,6 @@ app.use(express.urlencoded({
 
 app.use(cors())
 
-// express-jwt
-app.use((error, req, res, next) => {
-if (error) {
-        return res.status(400).json({
-            error: `${error.name}: ${error.message}`
-        })
-    }
-})
-
 
 
 app.use("/", userRoutes)

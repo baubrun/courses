@@ -1,4 +1,3 @@
-import expressJwt from "express-jwt"
 import config from "../config/index.js"
 import bcrypt from "bcryptjs"
 import User from "../models/user.js"
@@ -6,21 +5,30 @@ import jwt from "jsonwebtoken"
 
 
 const hasAuthorization = (req, res, next) => {
-    const authorized = req.profile._id === req.auth._id
+    const authorized = req.profile && req.auth && req.profile._id == req.auth
     if (!authorized) {
         return res.status(403).json({
-            error: "User is not authorized."
+            error: "Unauthorized."
         })
     }
     next();
 };
 
+const requireSignIn = (req, res, next) => {
+    const authHeader = req.headers.authorization
 
-const requireSignIn = expressJwt({
-    algorithms: ["HS256"],
-    secret: config.jwtSecret,
-    userProperty: "auth",
-})
+    if (authHeader.startsWith("Bearer ")) {
+        const token = authHeader.substring(7, authHeader.length);
+        const decoded = jwt.verify(token, config.jwtSecret)
+        req.auth = decoded._id
+        next()
+    } else {
+        return res.status(401).json({
+            error: "Authorization not found."
+        })
+    }
+}
+
 
 
 const signIn = async (req, res) => {

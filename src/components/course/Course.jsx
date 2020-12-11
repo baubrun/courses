@@ -157,13 +157,13 @@ const Course = ({ match }) => {
 
   useEffect(() => {
     if (error) {
-      setValues({ ...values, errorMsg: error });
+      setValues({ ...values, errorMsg: error, redirect: true });
     }
   }, [error]);
 
   useEffect(() => {
     if (statsError) {
-      setValues({ ...values, statsErrorMsg: statsError });
+      setValues({ ...values, statsErrorMsg: statsError , redirect: true});
     }
   }, [statsError]);
 

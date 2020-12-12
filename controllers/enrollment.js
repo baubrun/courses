@@ -10,24 +10,31 @@ const complete = async (req, res) => {
     const {
         lessonStatusId,
         courseCompleted,
-        complete
+        complete,
+        lesson,
     } = req.body
-    let updatedData = {}
-    updatedData["lessonStatus.$.complete"] = complete
-    updatedData.updated = Date.now()
+    console.log('req.body :>> ', req.body);
+    let newData = {
+    }
+    newData['lessonStatus.$.complete'] = complete 
 
-    if (courseCompleted)
-        updatedData.completed = courseCompleted
+    newData.updated = Date.now()
+    if (courseCompleted){
+        newData.completed = courseCompleted
+    }
+    console.log('newData :>>', newData)
 
     try {
-        const enrollment = await Enrollment
+        await Enrollment
             .updateOne({
                 "lessonStatus._id": lessonStatusId
             }, {
-                "$set": updatedData
+                "$set": newData
             })
-        return res.json({
-            enrollment
+
+        const updatedData = await Enrollment.findById(lessonStatusId)
+        return res.status(200).json({
+            enrollment: updatedData
         })
     } catch (error) {
         return res.status(500).json({

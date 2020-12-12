@@ -200,6 +200,7 @@ const Enrollment = ({match}) => {
         enrollmentId: enrollId
       };
       data.enrollment.lessonStatusId = lessonStatus[values.drawer]._id;
+      data.enrollment.lesson = lessonStatus[values.drawer].lesson;
       data.enrollment.complete = true;
 
       if (count === lessonStatus.length) {
@@ -386,6 +387,7 @@ const Enrollment = ({match}) => {
             </CardContent>
             <CardActions>
               <a
+              style={{textDecoration: "none"}}
                 href={enrollmentData.course.lessons[values.drawer].resource_url}
               >
                 <Button variant="contained" color="primary">

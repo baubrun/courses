@@ -15,16 +15,18 @@ const hasAuthorization = (req, res, next) => {
 };
 
 const requireSignIn = (req, res, next) => {
-    const authHeader = req.headers.authorization
-    if (authHeader.startsWith("Bearer ")) {
-        const token = authHeader.substring(7, authHeader.length);
-        const decoded = jwt.verify(token, config.jwtSecret)
-        req.auth = decoded._id
-        next()
-    } else {
-        return res.status(401).json({
-            error: "Authorization not found."
-        })
+    if (req.headers && req.headers.authorization) {
+        const authHeader = req.headers.authorization
+        if (authHeader.startsWith("Bearer ")) {
+            const token = authHeader.substring(7, authHeader.length);
+            const decoded = jwt.verify(token, config.jwtSecret)
+            req.auth = decoded._id
+            next()
+        } else {
+            return res.status(401).json({
+                error: "Authorization not found."
+            })
+        }
     }
 }
 

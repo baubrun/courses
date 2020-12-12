@@ -35,12 +35,11 @@ export const completeEnrollment = createAsyncThunk(
   async (data) => {
     const token = authAPI.isAuthenticated();
     try {
-      const res = await axios.post(
-        `${domain}/api/enrollment/new/${data.enrollmentId}`,
+      const res = await axios.put(
+        `${domain}/api/enrollment/complete/${data.enrollmentId}`,
         data.enrollment, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
           },
         });
       return res.data;
@@ -153,6 +152,27 @@ const enrollmentSlice = createSlice({
       }
     },
     [createEnrollment.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
+
+    [completeEnrollment.pending]: (state) => {
+      state.loading = true;
+    },
+    [completeEnrollment.fulfilled]: (state, action) => {
+      console.log('action.payload :>> ', action.payload);
+      state.loading = false;
+      const {
+        error,
+        enrollment
+      } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.enrollment = enrollment
+      }
+    },
+    [completeEnrollment.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.error;
     },

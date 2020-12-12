@@ -159,7 +159,7 @@ const Enrollment = ({match}) => {
 
   useEffect(() => {
     dispatch(readEnrollment(enrollId));
-  }, []);
+  }, [enrollment]);
 
   useEffect(() => {
     if (enrollment) {

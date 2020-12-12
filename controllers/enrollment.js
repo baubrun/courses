@@ -7,34 +7,35 @@ import {
 
 
 const complete = async (req, res) => {
-    const _id = valid_OId(req.params.enrollmentId)
     const {
         lessonStatusId,
         courseCompleted,
         complete,
     } = req.body
-    console.log('req.body :>> ', req.body);
-    let newData = {
-    }
-    newData['lessonStatus.$.complete'] = complete 
+    let newData = {}
+    newData['lessonStatus.$.complete'] = complete
 
     newData.updated = Date.now()
-    if (courseCompleted){
+    if (courseCompleted) {
         newData.completed = courseCompleted
     }
 
     try {
-        await Enrollment
-            .updateOne({
+        const updated = await Enrollment
+            .findOneAndUpdate({
                 "lessonStatus._id": lessonStatusId
             }, {
                 "$set": newData
+            }, {
+                new: true
+            }).populate({
+                path: "course",
             })
-
-        const updatedData = await Enrollment.findById(_id)
-        return res.status(200).json({
-            enrollment: updatedData
-        })
+        return res.status(200).json(
+            {
+            enrollment: updated
+            }
+        )
     } catch (error) {
         return res.status(500).json({
             error: error.message
@@ -44,7 +45,7 @@ const complete = async (req, res) => {
 
 
 
-const create = async (req, res) => {  
+const create = async (req, res) => {
     let newEnrollment = {
         course: req.course,
         student: req.auth,
@@ -168,7 +169,9 @@ const readStats = async (req, res) => {
             course: req.course._id
         }).exists("completed", true).countDocuments()
 
-        return res.json({stats})
+        return res.json({
+            stats
+        })
     } catch (error) {
         return res.status(500).json({
             error: error.message

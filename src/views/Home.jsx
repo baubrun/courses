@@ -35,16 +35,18 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { user } = useSelector(userState);
-  const { courses, error } = useSelector(courseState);
+  const { user, loggedIn } = useSelector(userState);
+  const { courses } = useSelector(courseState);
   const { enrollments } = useSelector(enrollmentState);
   const [coursesData, setCoursesData] = useState([]);
   const [enrolledData, setEnrolledData] = useState([]);
 
 
   useEffect(() => {
-    dispatch(listEnrollments());
-  }, []);
+    if (loggedIn){
+      dispatch(listEnrollments());
+    }
+  }, [loggedIn]);
 
 
   useEffect(() => {

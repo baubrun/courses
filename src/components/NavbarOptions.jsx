@@ -30,9 +30,8 @@ const NavbarOptions = () => {
   };
 
   const logOut = () => {
-    dispatch(signOut());
     dispatch(clearError())
-    // dispatch(clearCourses())
+    dispatch(signOut());
   };
 
   return (

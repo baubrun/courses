@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
   },
   details: {
     margin: "16px",
+    width: "50%"
   },
   enroll: {
     float: "right",
@@ -84,6 +85,7 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 300,
     width: 300,
+    objectFit: "contain",
   },
   root: theme.mixins.gutters({
     maxWidth: 800,
@@ -105,7 +107,6 @@ const useStyles = makeStyles((theme) => ({
     display: "inline-block",
     margin: "3px 10px 5px 0px",
     fontSize: "0.9em",
-    width: "auto"
   },
   subheading: {
     margin: "10px",

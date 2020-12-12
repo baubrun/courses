@@ -68,8 +68,8 @@ const useStyles = makeStyles((theme) => ({
     margin: "16px",
   },
   sub: {
-    display: "block",
-    margin: "3px 0px 5px 0px",
+    display: "inline-block",
+    margin: "3px 10px 5px 0px",
     fontSize: "0.9em",
   },
   avatar: {
@@ -280,7 +280,7 @@ const Enrollment = ({match}) => {
             subheader={
               <div>
                 <Link
-                  to={"/user/" + enrollmentData.course.instructor._id}
+                  to={`/user/${enrollmentData.course.instructor._id}`}
                   className={classes.sub}
                 >
                   By {enrollmentData.course.instructor.name}

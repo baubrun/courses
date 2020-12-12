@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
   details: {
     margin: "16px",
+    width: "50%",
   },
   sub: {
     display: "inline-block",
@@ -218,7 +219,7 @@ const Enrollment = ({match}) => {
         <List>
           <ListItem
             button
-            onClick={() => selectDrawer(-1)}
+            onClick={(evt) => selectDrawer(evt, -1)}
             className={
               values.drawer == -1 ? classes.selectedDrawer : classes.unselected
             }
@@ -236,7 +237,7 @@ const Enrollment = ({match}) => {
             <ListItem
               button
               key={idx}
-              onClick={() => selectDrawer(idx)}
+              onClick={(evt, ) => selectDrawer(evt, idx)}
               className={
                 values.drawer == idx
                   ? classes.selectedDrawer

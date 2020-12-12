@@ -14,7 +14,8 @@ import NavbarOptions from "./NavbarOptions";
 const NavBar = () => {
 
   return (
-    <AppBar position="static">
+    <AppBar position="relative" style={{zIndex: 10000}}>
+    
        <CssBaseline />
       <Toolbar>
         <Typography variant="h6" color="inherit">

@@ -105,12 +105,12 @@ const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     width: 240,
     backgroundColor: "#616161",
+    marginTop: 65,
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-  toolbar: theme.mixins.toolbar,
   selectedDrawer: {
     backgroundColor: "#e9e3df",
   },
@@ -214,7 +214,7 @@ const Enrollment = ({match}) => {
   return (
     <Box className={classes.root}>
       <Drawer variant="permanent">
-        <Box className={classes.toolbar} />
+        <Box className={classes.drawerPaper} />
         <List>
           <ListItem
             button

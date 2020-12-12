@@ -196,7 +196,12 @@ const Enrollment = ({match}) => {
       const count = totalCompleted(lessonStatus);
 
       let data = {
-        enrollment: {},
+        enrollment: {
+          lessonStatusId: [],
+          lesson: [],
+          complete: false,
+          courseCompleted: ""
+        },
         enrollmentId: enrollId
       };
       data.enrollment.lessonStatusId = lessonStatus[values.drawer]._id;

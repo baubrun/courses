@@ -7,11 +7,11 @@ import {
 
 
 const complete = async (req, res) => {
+    const _id = valid_OId(req.params.enrollmentId)
     const {
         lessonStatusId,
         courseCompleted,
         complete,
-        lesson,
     } = req.body
     console.log('req.body :>> ', req.body);
     let newData = {
@@ -22,7 +22,6 @@ const complete = async (req, res) => {
     if (courseCompleted){
         newData.completed = courseCompleted
     }
-    console.log('newData :>>', newData)
 
     try {
         await Enrollment
@@ -32,7 +31,7 @@ const complete = async (req, res) => {
                 "$set": newData
             })
 
-        const updatedData = await Enrollment.findById(lessonStatusId)
+        const updatedData = await Enrollment.findById(_id)
         return res.status(200).json({
             enrollment: updatedData
         })

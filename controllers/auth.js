@@ -15,7 +15,6 @@ const hasAuthorization = (req, res, next) => {
 };
 
 const requireSignIn = (req, res, next) => {
-    if (req.headers && req.headers.authorization) {
         const authHeader = req.headers.authorization
         if (authHeader.startsWith("Bearer ")) {
             const token = authHeader.substring(7, authHeader.length);
@@ -27,7 +26,6 @@ const requireSignIn = (req, res, next) => {
                 error: "Authorization not found."
             })
         }
-    }
 }
 
 

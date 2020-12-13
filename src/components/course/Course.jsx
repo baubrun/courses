@@ -142,9 +142,12 @@ const Course = ({ match }) => {
     statsErrorMsg: "",
   });
 
+
+  const courseId = match.params.courseId
+
   useEffect(() => {
-    dispatch(readCourse(match.params.courseId));
-    // dispatch(readEnrollmentStats(match.params.courseId))
+    dispatch(readCourse(courseId));
+    dispatch(readEnrollmentStats(courseId))
   }, []);
 
   useEffect(() => {

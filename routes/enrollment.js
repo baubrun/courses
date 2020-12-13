@@ -20,12 +20,17 @@ router.route("/api/enrollment/new/:courseId")
         enrollmentController.create,
     )
 
-router.route('/api/enrollment/complete/:enrollmentId')
+router.route("/api/enrollment/stats/:courseId")
+    .get(enrollmentController.readStats)
+
+
+
+router.route("/api/enrollment/complete/:enrollmentId")
     .put(
-        authController.requireSignIn, 
+        authController.requireSignIn,
         enrollmentController.isStudent,
         enrollmentController.complete
-        )
+    )
 
 
 

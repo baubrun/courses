@@ -1,5 +1,4 @@
 import Enrollment from "../models/enrollment.js";
-import path from "path";
 import {
     valid_OId
 } from "./helper.js"
@@ -46,9 +45,21 @@ const complete = async (req, res) => {
 
 
 const create = async (req, res) => {
+
+    const student = req.auth
+    const isEnrolled = await Enrollment.find({
+        course: req.course._id
+    })
+
+    if (isEnrolled){
+        return res.status(403).json({
+            error: ""
+        })
+    }
+
     let newEnrollment = {
         course: req.course,
-        student: req.auth,
+        student,
     }
     newEnrollment.lessonStatus =
         req.course.lessons.map((lesson) => {
@@ -158,6 +169,7 @@ const read = (req, res) => {
     })
 }
 
+
 const readStats = async (req, res) => {
     try {
         let stats = {}
@@ -169,7 +181,7 @@ const readStats = async (req, res) => {
             course: req.course._id
         }).exists("completed", true).countDocuments()
 
-        return res.json({
+        return res.status(200).json({
             stats
         })
     } catch (error) {

@@ -160,7 +160,6 @@ const enrollmentSlice = createSlice({
       state.loading = true;
     },
     [completeEnrollment.fulfilled]: (state, action) => {
-      console.log('action.payload :>> ', action.payload);
       state.loading = false;
       const {
         error,

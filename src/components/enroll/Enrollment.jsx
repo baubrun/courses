@@ -126,9 +126,11 @@ const useStyles = makeStyles((theme) => ({
   },
   progress: {
     textAlign: "center",
-    color: "#dfdfdf",
+    // color: "#dfdfdf",
+    color: theme.palette.primary,
     "& span": {
-      color: "#fffde7",
+      // color: "#fffde7",
+      color: theme.palette.secondary,
       fontSize: "1.15em",
     },
   },
@@ -137,7 +139,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Enrollment = ({match}) => {
+const Enrollment = ({ match }) => {
   const classes = useStyles();
   const { enrollment, error } = useSelector(enrollmentState);
   const { user } = useSelector(userState);
@@ -149,8 +151,18 @@ const Enrollment = ({match}) => {
   });
   const [enrollmentData, setEnrollmentData] = useState({});
 
+  const enrollId = match.params.enrollmentId;
 
-  const enrollId = match.params.enrollmentId
+
+  const totalCompleted = () => {
+    if (enrollment && enrollment.lessonStatus) {
+        const count = enrollment.lessonStatus.reduce((total, lesson) => {
+          return total + (lesson.complete ? 1 : 0)
+      }, 0)
+        
+      setTotalComplete(count);
+    }
+  };
 
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
@@ -159,14 +171,17 @@ const Enrollment = ({match}) => {
 
   useEffect(() => {
     dispatch(readEnrollment(enrollId));
-  }, [enrollment]);
+  }, []);
 
   useEffect(() => {
     if (enrollment) {
-      setEnrollmentData(enrollment)
+      setEnrollmentData(enrollment);
     }
-  },[enrollment])
+  }, [enrollment]);
 
+  useEffect(() => {
+      totalCompleted();
+  }, [enrollment]);
 
   useEffect(() => {
     if (error) {
@@ -178,14 +193,6 @@ const Enrollment = ({match}) => {
     setValues({ ...values, drawer: idx });
   };
 
-  const totalCompleted = (lessons) => {
-    let count = lessons.reduce(
-      (total, lessonStatus) => total + (lessonStatus.complete ? 1 : 0),
-      0
-    );
-    setTotalComplete(count);
-    return count;
-  };
 
   const markComplete = () => {
     if (!enrollmentData.lessonStatus[values.drawer].complete) {
@@ -193,22 +200,21 @@ const Enrollment = ({match}) => {
 
       lessonStatus[values.drawer].complete = true;
 
-      const count = totalCompleted(lessonStatus);
 
       let data = {
         enrollment: {
           lessonStatusId: [],
           lesson: [],
           complete: false,
-          courseCompleted: ""
+          courseCompleted: "",
         },
-        enrollmentId: enrollId
+        enrollmentId: enrollId,
       };
       data.enrollment.lessonStatusId = lessonStatus[values.drawer]._id;
       data.enrollment.lesson = lessonStatus[values.drawer].lesson;
       data.enrollment.complete = true;
 
-      if (count === lessonStatus.length) {
+      if (totalComplete === lessonStatus.length - 1) {
         data.enrollment.courseCompleted = Date.now();
       }
 
@@ -243,7 +249,7 @@ const Enrollment = ({match}) => {
             <ListItem
               button
               key={idx}
-              onClick={(evt, ) => selectDrawer(evt, idx)}
+              onClick={(evt) => selectDrawer(evt, idx)}
               className={
                 values.drawer == idx
                   ? classes.selectedDrawer
@@ -271,16 +277,15 @@ const Enrollment = ({match}) => {
           <ListItem>
             <ListItemText
               primary={
-                <div className={classes.progress}>
-                  <span>{totalComplete}</span> out of
-                  <span>{enrollmentData.lessonStatus.length}</span> completed
-                </div>
+                <Box className={classes.progress}>
+                  <span>{`${totalComplete} out of ${enrollmentData.lessonStatus.length} completed`}</span>
+                </Box>
               }
             />
           </ListItem>
         </List>
       </Drawer>
-      {values.drawer == -1 && (
+      {values.drawer === -1 && (
         <Card className={classes.card}>
           <CardHeader
             title={enrollmentData.course.name}
@@ -290,7 +295,7 @@ const Enrollment = ({match}) => {
                   to={`/user/${enrollmentData.course.instructor._id}`}
                   className={classes.sub}
                 >
-                  By {enrollmentData.course.instructor.name}
+                  {`By ${enrollmentData.course.instructor.name}`}
                 </Link>
                 <span className={classes.category}>
                   {enrollmentData.course.category}
@@ -298,7 +303,7 @@ const Enrollment = ({match}) => {
               </div>
             }
             action={
-              totalComplete == enrollmentData.lessonStatus.length && (
+              totalComplete === enrollmentData.lessonStatus.length && (
                 <span className={classes.action}>
                   <Button variant="contained" color="secondary">
                     <CheckCircle /> &nbsp; Completed
@@ -331,7 +336,7 @@ const Enrollment = ({match}) => {
               subheader={
                 <Typography variant="body1" className={classes.subheading}>
                   {enrollmentData.course.lessons &&
-                    enrollmentData.course.lessons.length}{" "}
+                    enrollmentData.course.lessons.length}
                   lessons
                 </Typography>
               }
@@ -344,12 +349,12 @@ const Enrollment = ({match}) => {
             />
             <List>
               {enrollmentData.course.lessons &&
-                enrollmentData.course.lessons.map((lesson, i) => {
+                enrollmentData.course.lessons.map((lesson, idx) => {
                   return (
-                    <span key={i}>
+                    <span key={idx}>
                       <ListItem>
                         <ListItemAvatar>
-                          <Avatar>{i + 1}</Avatar>
+                          <Avatar>{idx + 1}</Avatar>
                         </ListItemAvatar>
                         <ListItemText primary={lesson.title} />
                       </ListItem>
@@ -361,7 +366,7 @@ const Enrollment = ({match}) => {
           </div>
         </Card>
       )}
-      {values.drawer != -1 && (
+      {values.drawer !== -1 && (
         <>
           <Typography variant="h5" className={classes.heading}>
             {enrollmentData.course.name}
@@ -392,7 +397,7 @@ const Enrollment = ({match}) => {
             </CardContent>
             <CardActions>
               <a
-              style={{textDecoration: "none"}}
+                style={{ textDecoration: "none" }}
                 href={enrollmentData.course.lessons[values.drawer].resource_url}
               >
                 <Button variant="contained" color="primary">

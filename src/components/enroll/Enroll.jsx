@@ -48,9 +48,6 @@ const Enroll = (props) => {
 
   const handleEnroll = () => {
     dispatch(createEnrollment(props.courseId));
-    // if (!error) {
-    //   setValues({ ...values, redirect: true });
-    // }
   };
 
   if (values.redirect) {

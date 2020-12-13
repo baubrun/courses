@@ -73,7 +73,7 @@ const EditProfile = () => {
         name: user.name,
       });
     }
-  }, [user, values]);
+  }, [user]);
 
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
@@ -108,7 +108,11 @@ const EditProfile = () => {
       password: values.password,
     };
 
+
     dispatch(updateUser(newData))
+    if (!values.errorMsg){
+      setValues({...values, redirect: true})
+    }
   }
 
 
@@ -118,8 +122,9 @@ const EditProfile = () => {
 
   return (
     <Card className={classes.card}>
+              <form onSubmit={handleSubmit}>
+
       <CardContent>
-        <form onSubmit={handleSubmit}>
         <Typography className={classes.title} variant="h6">
           Edit Profile
         </Typography>
@@ -143,7 +148,7 @@ const EditProfile = () => {
           onChange={(evt) => handleChange(evt)}
           type="email"
           value={values.email || ""}
-        ></TextField>
+        />
         <TextField
           className={classes.textField}
           id="name"
@@ -181,7 +186,6 @@ const EditProfile = () => {
           }
           label={values.instructor ? "Yes" : "No"}
         />
-        </form>
       </CardContent>
       <CardActions>
         <Button
@@ -193,6 +197,8 @@ const EditProfile = () => {
           submit
         </Button>
       </CardActions>
+      </form>
+
     </Card>
   );
 };

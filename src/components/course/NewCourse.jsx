@@ -16,8 +16,6 @@ import clsx from "clsx";
 
 import { userState } from "../../redux/userSlice";
 import {
-  // createCourse,
-  clearError,
   courseState,
 } from "../../redux/courseSlice";
 
@@ -96,7 +94,6 @@ const NewCourse = () => {
 
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
-    // dispatch(clearError());
   };
 
   const handleChange = (evt) => {
@@ -138,8 +135,6 @@ const NewCourse = () => {
 
     createCourse(data);
 
-    // dispatch(createCourse(data));
-    console.log('error :>> ', error);
     if (!values.errorMsg) {
       setValues({ ...values, redirect: true });
     }

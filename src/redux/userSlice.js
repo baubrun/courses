@@ -95,13 +95,14 @@ export const readUser = createAsyncThunk(
   
   
 
-export const updateUser = createAsyncThunk("/updateUser", async (data) => {
+export const updateUser = createAsyncThunk("/updateUser", 
+async (data) => {
   const token = authAPI.isAuthenticated();
   try {
     const res = await axios.patch(
-      `${domain}/api/users/${data.id}`, {
-        user: data.data,
-      }, {
+      `${domain}/api/users/${data._id}`, 
+        {user: data}
+      , {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -160,22 +161,22 @@ export const userSlice = createSlice({
     },
 
 
-    // [deleteUser.pending]: (state) => {
-    //   state.loading = true;
-    // },
-    // [deleteUser.fulfilled]: (state, action) => {
-    //   state.loading = false;
-    //   const { error, users } = action.payload;
-    //   if (error) {
-    //     state.error = error;
-    //   } else {
-    //     state.users = users
-    //   }
-    // },
-    // [deleteUser.rejected]: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload.error;
-    // },
+    [deleteUser.pending]: (state) => {
+      state.loading = true;
+    },
+    [deleteUser.fulfilled]: (state, action) => {
+      state.loading = false;
+      const { error, users } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.users = users
+      }
+    },
+    [deleteUser.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
 
 
     [listUsers.pending]: (state) => {
@@ -241,24 +242,22 @@ export const userSlice = createSlice({
     },
 
 
-
-
-    // [updateUser.pending]: (state) => {
-    //   state.loading = true;
-    // },
-    // [updateUser.fulfilled]: (state, action) => {
-    //   state.loading = false;
-    //   const { error, user } = action.payload;
-    //   if (error) {
-    //     state.error = error;
-    //   } else {
-    //     state.user = user;
-    //   }
-    // },
-    // [updateUser.rejected]: (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload.error;
-    // },
+    [updateUser.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateUser.fulfilled]: (state, action) => {
+      state.loading = false;
+      const { error, user } = action.payload;
+      if (error) {
+        state.error = error;
+      } else {
+        state.user = user;
+      }
+    },
+    [updateUser.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
 
 
   },

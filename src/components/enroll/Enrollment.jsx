@@ -126,10 +126,8 @@ const useStyles = makeStyles((theme) => ({
   },
   progress: {
     textAlign: "center",
-    // color: "#dfdfdf",
     color: theme.palette.primary,
     "& span": {
-      // color: "#fffde7",
       color: theme.palette.secondary,
       fontSize: "1.15em",
     },

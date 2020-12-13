@@ -10,7 +10,7 @@ async (data) => {
   const token = authAPI.isAuthenticated();
   try {
       const res = await axios.post(
-          `${domain}/api/courses/by/${data._id}`,
+          `${domain}/api/courses/by/${data.userId}`,
           data.course, {
               headers: {
                   Authorization: `Bearer ${token}`,

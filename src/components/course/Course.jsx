@@ -246,7 +246,7 @@ const Course = ({ match }) => {
                           }
                         >
                           {courseData.lessons && courseData.lessons.length === 0
-                            ? "Add Lesson"
+                            ? "Add Lesson to publish course"
                             : "Publish"}
                         </Button>
                         <DeleteCourse

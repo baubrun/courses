@@ -114,7 +114,7 @@ const NewCourse = () => {
 
     const data = {
       course: newCourse,
-      _id: user._id,
+      userId: user._id,
     };
     dispatch(createCourse(data));
     if (!error) {

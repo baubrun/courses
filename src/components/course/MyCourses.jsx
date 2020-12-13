@@ -68,7 +68,9 @@ const MyCourses = () => {
 
 
   useEffect(() => {
+    if (courses){
       setValues({...values, myCourses: courses})
+    }
   }, [courses]);
 
 
@@ -106,7 +108,7 @@ const MyCourses = () => {
               return (
                 <Link
                   className={classes.link}
-                  to={"/teach/course/" + course._id}
+                  to={`/teach/course/${course._id}`}
                   key={idx}
                 >
                   <ListItem button>

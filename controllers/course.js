@@ -10,7 +10,9 @@ const courseByID = async (req, res, next) => {
 
   const id = valid_OId(req.params.courseId)
   try {
-    let course = await Course.findById(id).populate("instructor", "_id name");
+    let course = await Course
+    .findById(id)
+    .populate("instructor", "_id name");
 
     if (!course)
       return res.status(400).json({
@@ -118,10 +120,10 @@ const listPublished = async (req, res) => {
 
 
 const isInstructor = (req, res, next) => {
-  const isInstructor = req.course.instructor._id === req.auth._id
+  const isInstructor = req.course.instructor._id == req.auth
   if (!isInstructor) {
     return res.status(403).json({
-      error: "User is not an isInstructor."
+      error: "Unauthorized instructor."
     })
   }
   next()
@@ -130,7 +132,7 @@ const isInstructor = (req, res, next) => {
 
 const newLesson = async (req, res) => {
   try {
-    let lesson = req.body;
+    let lesson = req.body
     let lessonAdded = await Course.findByIdAndUpdate(
         req.course._id, {
           $push: {

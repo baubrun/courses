@@ -15,8 +15,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 
 import { userState } from "../../redux/userSlice";
-import { createCourse, clearError, courseState } from "../../redux/courseSlice";
+import {
+  // createCourse,
+  clearError,
+  courseState,
+} from "../../redux/courseSlice";
 
+import courseAPI from "../../api/course";
 
 const IMG_DIM = 200;
 
@@ -91,7 +96,7 @@ const NewCourse = () => {
 
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
-    dispatch(clearError());
+    // dispatch(clearError());
   };
 
   const handleChange = (evt) => {
@@ -102,7 +107,21 @@ const NewCourse = () => {
     });
   };
 
-  const handleSubmit = (evt) => {
+  const createCourse = async (course) => {
+    const data = await courseAPI.createCourse(course);
+    if (data) {
+      if (data.error) {
+        setValues({ ...values, errorMsg: data.error });
+      } else {
+        setValues({
+          ...values,
+          redirect: true,
+        });
+      }
+    }
+  };
+
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
 
     const newCourse = new FormData();
@@ -116,8 +135,12 @@ const NewCourse = () => {
       course: newCourse,
       userId: user._id,
     };
-    dispatch(createCourse(data));
-    if (!error) {
+
+    createCourse(data);
+
+    // dispatch(createCourse(data));
+    console.log('error :>> ', error);
+    if (!values.errorMsg) {
       setValues({ ...values, redirect: true });
     }
   };
@@ -160,6 +183,7 @@ const NewCourse = () => {
             name="name"
             onChange={(evt) => handleChange(evt)}
             value={values.name}
+            required
           />
           <br />
           <TextField
@@ -172,6 +196,7 @@ const NewCourse = () => {
             onChange={(evt) => handleChange(evt)}
             rows="2"
             value={values.description}
+            required
           />
           <br />
           <TextField
@@ -182,6 +207,7 @@ const NewCourse = () => {
             name="category"
             onChange={(evt) => handleChange(evt)}
             value={values.category}
+            required
           />
           <br />
 

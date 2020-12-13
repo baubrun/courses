@@ -64,6 +64,8 @@ const Courses = (props) => {
   return (
     <GridList cellHeight={220} className={classes.gridList} cols={2}>
       {props.courses.map((course, idx) => {
+        if (course.published){
+
         return (
           <GridListTile
             className={classes.tile}
@@ -102,6 +104,7 @@ const Courses = (props) => {
             />
           </GridListTile>
         )
+            }
       })}
     </GridList>
   );

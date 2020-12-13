@@ -6,10 +6,11 @@ import {
 import _ from "lodash"
 
 
-const courseByID = async (req, res, next) => {
-
-  const id = valid_OId(req.params.courseId)
+const courseByID = async (req, res, next, id) => {
+  
   try {
+    const id = valid_OId(req.params.courseId)
+
     let course = await Course
     .findById(id)
     .populate("instructor", "_id name");

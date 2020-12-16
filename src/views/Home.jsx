@@ -82,6 +82,7 @@ const Home = () => {
           >
             Courses you are enrolled in 
           </Typography>
+
           {enrolledData.length !== 0 ? (
             <Enrollments enrollments={enrollments} />
           ) : (
@@ -91,18 +92,19 @@ const Home = () => {
           )}
         </Card>
       )}
+
       <Card className={classes.card}>
         <Typography variant="h5" component="h2">
           All Courses
         </Typography>
-        {coursesData.length !== 0 && coursesData.length !== enrolledData.length ? (
-         
+        {coursesData.length !== 0 && coursesData.length !== enrolledData.length 
+        ? (
          <Courses 
           courses={coursesData} 
           enrollments={enrolledData} />
         ) : (
           <Typography variant="body1" className={classes.noTitle}>
-            No new courses.
+            Other Courses
           </Typography>
         )}
       </Card>

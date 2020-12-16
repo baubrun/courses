@@ -148,7 +148,7 @@ const enrollmentSlice = createSlice({
       if (error) {
         state.error = error;
       } else {
-        state.enrollment = enrollment
+        state.enrollments = [...state.enrollments, enrollment]
       }
     },
     [createEnrollment.rejected]: (state, action) => {

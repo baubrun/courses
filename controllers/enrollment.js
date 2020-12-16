@@ -47,16 +47,7 @@ const complete = async (req, res) => {
 const create = async (req, res) => {
 
     const student = req.auth
-    const isEnrolled = await Enrollment.find({
-        course: req.course._id
-    })
-
-    if (isEnrolled){
-        return res.status(403).json({
-            error: ""
-        })
-    }
-
+ 
     let newEnrollment = {
         course: req.course,
         student,
@@ -118,7 +109,7 @@ const findEnrollment = async (req, res, next) => {
         if (!enrollment) {
             next()
         } else {
-            res.json({
+            return res.status(200).json({
                 enrollment
             })
         }

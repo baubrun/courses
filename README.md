@@ -8,8 +8,8 @@
 #### Technologies: Express.js, MongoDB, Node.js, React.js, Redux
 <br/>
 
-### Build in progress. App not yet completed.
-### In the meantime, please run locally.
+### Build in progress. App NOT yet completed... 
+
 <br/>
 
 

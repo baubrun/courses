@@ -1,6 +1,7 @@
 import User from "../models/user.js"
 import _ from "lodash"
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 
 
 const SALT = 10
@@ -32,8 +33,14 @@ const create = async (req, res) => {
     })
     try {
         await user.save()
+        const token = jwt.sign({
+            _id: user.id
+        },
+        process.env.JWT_SECRET,
+    )
+
         return res.status(200).json({
-            user
+            user, token
         })
     } catch (error) {
         return res.status(400).json({

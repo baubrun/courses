@@ -145,13 +145,15 @@ export const userSlice = createSlice({
       state.loading = false
       const {
         error,
-        user
+        user,
+        token
       } = action.payload;
       if (error) {
         state.error = error;
       } else {
          state.user = user
          state.loggedIn = true
+         authAPI.setToken(token)
       }
     },
     [createUser.rejected]: (state, action) => {

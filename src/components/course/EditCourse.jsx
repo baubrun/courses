@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import Box from "@material-ui/core/Box";
@@ -105,7 +105,6 @@ const useStyles = makeStyles((theme) => ({
 const EditCourse = ({ match }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const history = useHistory();
   const { user } = useSelector(userState);
   const { error, course } = useSelector(courseState);
   const [file, setFile] = useState({});

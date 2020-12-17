@@ -7,7 +7,8 @@ import { makeStyles,  } from "@material-ui/core/styles";
 import Library from "@material-ui/icons/LocalLibrary";
 
 import { userState, signOut } from "../redux/userSlice";
-import { clearError, clearCourses } from "../redux/courseSlice";
+import { clearError } from "../redux/courseSlice";
+import { clearEnrollment } from "../redux/enrollmentSlice";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -31,6 +32,7 @@ const NavbarOptions = () => {
 
   const logOut = () => {
     dispatch(clearError())
+    dispatch(clearEnrollment())
     dispatch(signOut());
   };
 

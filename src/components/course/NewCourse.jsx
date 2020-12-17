@@ -17,9 +17,10 @@ import clsx from "clsx";
 import { userState } from "../../redux/userSlice";
 import {
   courseState,
+  createCourse,
 } from "../../redux/courseSlice";
 
-import courseAPI from "../../api/course";
+// import courseAPI from "../../api/course";
 
 const IMG_DIM = 200;
 
@@ -84,6 +85,7 @@ const NewCourse = () => {
     image: "",
     name: "",
     redirect: false,
+    createdNew: false,
   });
 
   useEffect(() => {
@@ -91,6 +93,14 @@ const NewCourse = () => {
       setValues({ ...values, errorMsg: error });
     }
   }, [error]);
+
+
+  useEffect(() => {
+    if(values.createdNew && !values.errorMsg){
+      setValues({...values, redirect: true})
+    }
+  })
+
 
   const closeErrors = () => {
     setValues({ ...values, errorMsg: "" });
@@ -104,19 +114,6 @@ const NewCourse = () => {
     });
   };
 
-  const createCourse = async (course) => {
-    const data = await courseAPI.createCourse(course);
-    if (data) {
-      if (data.error) {
-        setValues({ ...values, errorMsg: data.error });
-      } else {
-        setValues({
-          ...values,
-          redirect: true,
-        });
-      }
-    }
-  };
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
@@ -133,11 +130,10 @@ const NewCourse = () => {
       userId: user._id,
     };
 
-    createCourse(data);
 
-    if (!values.errorMsg) {
-      setValues({ ...values, redirect: true });
-    }
+    dispatch(createCourse(data))
+    setValues({...values, createdNew: true})
+
   };
 
   if (values.redirect) {

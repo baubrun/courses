@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React  from "react";
+
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
@@ -6,6 +7,8 @@ import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import CompletedIcon from "@material-ui/icons/VerifiedUser";
 import InProgressIcon from "@material-ui/icons/DonutLarge";
+
+
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -55,8 +58,6 @@ const useStyles = makeStyles((theme) => ({
 const Enrollments = (props) => {
   const classes = useStyles();
 
-
-
   return (
     <div>
       <GridList 
@@ -64,6 +65,7 @@ const Enrollments = (props) => {
       className={classes.gridList} 
       cols={4}>
         {props.enrollments.map((course, idx) => (
+          
           <GridListTile key={idx} className={classes.tile}>
             <Link to={`/learn/${course._id}`}>
               <img

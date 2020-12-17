@@ -128,6 +128,9 @@ const enrollmentSlice = createSlice({
     stats: {},
   },
   reducers: {
+    clearEnrollment: (state) => {
+      state.enrollments = []
+    },
     clearEnrollmentError: (state) => {
       state.error = ""
     },
@@ -247,6 +250,7 @@ const enrollmentSlice = createSlice({
 export const {
   clearError,
   clearEnrollmentError,
+  clearEnrollment
 } = enrollmentSlice.actions
 export const enrollmentState = (state) => state.enrollment;
 export default enrollmentSlice.reducer;

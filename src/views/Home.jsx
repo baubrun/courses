@@ -43,16 +43,8 @@ const Home = () => {
 
 
   useEffect(() => {
-    if (loggedIn){
-      dispatch(listEnrollments());
-    }
-  }, [loggedIn]);
-
-
-  useEffect(() => {
     dispatch(listCoursesPublished());
   }, []);
-
 
   useEffect(() => {
     if (courses) {
@@ -62,10 +54,22 @@ const Home = () => {
 
 
   useEffect(() => {
+    if (loggedIn){
+      dispatch(listEnrollments());
+    }
+  }, [loggedIn]);
+
+
+  useEffect(() => {
     if (enrollments) {
       setEnrolledData(enrollments);
+
     }
   }, [enrollments]);
+
+
+
+
 
 
 
@@ -84,7 +88,7 @@ const Home = () => {
           </Typography>
 
           {enrolledData.length !== 0 ? (
-            <Enrollments enrollments={enrollments} />
+            <Enrollments enrollments={enrolledData} />
           ) : (
             <Typography variant="body1" className={classes.noTitle}>
               No courses.

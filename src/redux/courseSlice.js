@@ -116,10 +116,6 @@ const courseSlice = createSlice({
     error: "",
   },
   reducers: { 
-    clearCourses: (state) => {
-      state.courses = []
-      state.course = {}
-    },
     clearError: (state, action) => {
       state.error = ""
     },
@@ -222,6 +218,6 @@ const courseSlice = createSlice({
   }
 });
 
-export const {clearCourses, clearError, setError} = courseSlice.actions
+export const {clearError, setError} = courseSlice.actions
 export const courseState = (state) => state.course;
 export default courseSlice.reducer;

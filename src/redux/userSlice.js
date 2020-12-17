@@ -138,21 +138,20 @@ export const userSlice = createSlice({
   },
   extraReducers: {
 
-    [createUser.pending]: (state, action) => {
+    [createUser.pending]: (state) => {
       state.loading = true
     },
     [createUser.fulfilled]: (state, action) => {
       state.loading = false
       const {
         error,
-        success
+        user
       } = action.payload;
       if (error) {
         state.error = error;
       } else {
-        if (success) {
-          state.loggedIn = true;
-        }
+         state.user = user
+         state.loggedIn = true
       }
     },
     [createUser.rejected]: (state, action) => {

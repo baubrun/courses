@@ -61,11 +61,6 @@ const SignUp = () => {
     redirect: false
   });
 
-  useEffect(() => {
-    if (loggedIn) {
-      setValues({ ...values, redirect: true });
-    }
-  }, [loggedIn]);
 
 
   useEffect(() => {
@@ -95,6 +90,9 @@ const SignUp = () => {
     };
 
     dispatch(createUser(userData));
+    if (!values.errorMsg){
+      setValues({ ...values, redirect: true });
+    }
   };
 
   if (values.redirect) {

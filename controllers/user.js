@@ -33,7 +33,7 @@ const create = async (req, res) => {
     try {
         await user.save()
         return res.status(200).json({
-            success: true
+            user
         })
     } catch (error) {
         return res.status(400).json({

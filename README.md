@@ -8,10 +8,6 @@
 #### Technologies: Express.js, MongoDB, Node.js, React.js, Redux
 <br/>
 
-### Build in progress. App NOT yet completed... 
-
-<br/>
-
 
 ### Server 
 #### yarn server

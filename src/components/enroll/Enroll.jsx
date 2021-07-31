@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { createEnrollment, enrollmentState, clearError } from "../../redux/enrollmentSlice";
+import { userState } from "../../redux/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   error: {
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const Enroll = (props) => {
   const classes = useStyles();
   const { error } = useSelector(enrollmentState);
+  const { user } = useSelector(userState);
   const dispatch = useDispatch();
   const [values, setValues] = useState({
     enrollmentId: "",
@@ -60,6 +62,7 @@ const Enroll = (props) => {
         variant="contained"
         color="secondary"
         onClick={() => handleEnroll()}
+        disabled={!user.name}
       >
         Enroll
       </Button>

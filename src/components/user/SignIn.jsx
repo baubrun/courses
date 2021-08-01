@@ -11,7 +11,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { clearError, signIn, userState } from "../../redux/userSlice";
+import { signIn, userState } from "../../redux/userSlice";
+import { hideLoader,  showLoader,  showToaster } from "../../redux/layoutSlice";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -54,11 +55,10 @@ const useStyles = makeStyles((theme) => ({
 const SignIn = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { loggedIn, error } = useSelector(userState);
+  const { loggedIn, error, isLoading } = useSelector(userState);
   const [values, setValues] = useState({
     created: "",
     email: "",
-    errorMsg: "",
     name: "",
     password: "",
     redirect: false,
@@ -73,16 +73,19 @@ const SignIn = (props) => {
     }
   }, [loggedIn]);
 
+  // useEffect(() => {
+  //   if (!isLoading) dispatch(hideLoader())
+  // }, [isLoading])
+
+
   useEffect(() => {
     if (error) {
-      setValues({ ...values, errorMsg: error });
+      dispatch(showToaster({
+        status: "error",
+        message: error
+      }))
     }
   }, [error]);
-
-  const closeErrors = () => {
-    setValues({ ...values, errorMsg: "" });
-    dispatch(clearError());
-  };
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -99,8 +102,9 @@ const SignIn = (props) => {
       email: values.email,
       password: values.password,
     };
-
-    dispatch(signIn(userData));
+    dispatch(showLoader())
+    dispatch(signIn(userData))
+    dispatch(hideLoader())
   };
 
   if (values.redirect) {
@@ -136,13 +140,7 @@ const SignIn = (props) => {
               value={values.password}
             />
 
-            {values.errorMsg && (
-              <Box onClick={() => closeErrors()}>
-                <Typography className={classes.error} component="div">
-                  {values.errorMsg}
-                </Typography>
-              </Box>
-            )}
+      
           </CardContent>
           <CardActions>
             <Button

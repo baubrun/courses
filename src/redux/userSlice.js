@@ -7,20 +7,24 @@ import authAPI from "../api/auth";
 import {
   domain
 } from "../api/utils"
-
+import { showToaster, showLoader, hideLoader } from "../redux/layoutSlice"
 
 
 
 export const createUser = createAsyncThunk(
   "/api/users",
-  async (data) => {
+  async (data, thunkAPI) => {
     try {
+      thunkAPI.dispatch(showLoader())
       const res = await axios.post(`${domain}/api/users`, data);
       return res.data;
     } catch (error) {
       return {
         error: error.response.data.error
       };
+      // thunkAPI.rejectWithValue(error.response.data)
+    } finally{
+      thunkAPI.dispatch(hideLoader())
     }
   });
 
@@ -53,68 +57,71 @@ export const listUsers = createAsyncThunk(
       return res.data;
     } catch (error) {
       return {
-        error: error.response.data.error
+        error: error.response.data
       };
     }
   });
 
 
 export const readUser = createAsyncThunk(
-    "/readUser",
-  async (userId) => {
+  "/readUser",
+  async (userId, thunkAPI) => {
+    thunkAPI.dispatch(showLoader())
+    console.log('thunkAPI :>> ', thunkAPI);
     const token = authAPI.isAuthenticated()
-     try {
-       const res = await axios.get(
-         `${domain}/api/users/${userId}`, {
-         headers: {
-           Authorization: `Bearer ${token}`,
-         },
-       });
-       return res.data
-         } catch (error) {
-       return {
-         error: error.response.data.error
-       };
-     }
-   })
- 
-
-  export const signIn = createAsyncThunk(
-    "/signIn",
-    async (data) => {
-      try {
-        const res = await axios.post(
-          `${domain}/auth/signIn`, data)
-        return res.data;
-      } catch (error) {
-        return {
-          error: error.response.data.error
-        };
-      }
-    });
-  
-  
-
-export const updateUser = createAsyncThunk("/updateUser", 
-async (data) => {
-  const token = authAPI.isAuthenticated();
-  try {
-    const res = await axios.patch(
-      `${domain}/api/users/${data._id}`, 
-        {user: data}
-      , {
+    try {
+      const res = await axios.get(
+        `${domain}/api/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
-    return res.data;
-  } catch (error) {
-    return {
-      error: error.response.data.error
-    };
-  }
-});
+      });
+      return res.data
+    } catch (error) {
+      thunkAPI.dispatch(showToaster(error.response.data, "error"))
+      // return {
+      //   error: error.response.data.error
+      // };
+    } finally {
+      thunkAPI.dispatch(hideLoader())
+    }
+  })
+
+
+export const signIn = createAsyncThunk(
+  "/signIn",
+  async (data, thunkAPI) => {
+    try {
+      const res = await axios.post(
+        `${domain}/auth/signIn`, data)
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data) 
+    } 
+  });
+
+
+
+export const updateUser = createAsyncThunk("/updateUser",
+  async (data) => {
+    const token = authAPI.isAuthenticated();
+    try {
+      const res = await axios.patch(
+        `${domain}/api/users/${data._id}`,
+        { user: data }
+        , {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return res.data;
+    } catch (error) {
+      return {
+        error: error.response.data.error
+      };
+    }
+  });
 
 export const userSlice = createSlice({
   name: "user",
@@ -122,27 +129,23 @@ export const userSlice = createSlice({
     loggedIn: false,
     user: {},
     users: [],
-    error: "",
-    loading: false,
+    error: null,
+    isLoading: false,
   },
   reducers: {
-    clearError: (state) => {
-      state.error = ""
-    },
     signOut: (state) => {
       state.loggedIn = false;
       state.user = {};
-      state.error = ""
       authAPI.deleteToken();
     },
   },
   extraReducers: {
 
     [createUser.pending]: (state) => {
-      state.loading = true
+      state.isLoading = true
     },
     [createUser.fulfilled]: (state, action) => {
-      state.loading = false
+      state.isLoading = false
       const {
         error,
         user,
@@ -151,22 +154,22 @@ export const userSlice = createSlice({
       if (error) {
         state.error = error;
       } else {
-         state.user = user
-         state.loggedIn = true
-         authAPI.setToken(token)
+        state.user = user
+        state.loggedIn = true
+        authAPI.setToken(token)
       }
     },
     [createUser.rejected]: (state, action) => {
-      state.loading = false
-      state.error = action.payload.error;
+      state.isLoading = false
+      state.error = action.payload?.error;
     },
 
 
     [deleteUser.pending]: (state) => {
-      state.loading = true;
+      state.isLoading = true;
     },
     [deleteUser.fulfilled]: (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       const { error, users } = action.payload;
       if (error) {
         state.error = error;
@@ -175,16 +178,16 @@ export const userSlice = createSlice({
       }
     },
     [deleteUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.isLoading = false;
+      state.error = action.payload?.error;
     },
 
 
     [listUsers.pending]: (state) => {
-      state.loading = true;
+      state.isLoading = true;
     },
     [listUsers.fulfilled]: (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       const {
         error,
         users
@@ -196,50 +199,44 @@ export const userSlice = createSlice({
       }
     },
     [listUsers.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.isLoading = false;
+      state.error = action.payload?.error;
     },
 
 
     [readUser.pending]: (state) => {
-      state.loading = true;
+      state.isLoading = true;
     },
-    [readUser.fulfilled]: (state, action) => {
-      state.loading = false;
-      const { error, user } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.user = user;
-      }
-    },
+    [readUser.fulfilled]: (state, action) => (
+      state.loading = false,
+      state.user = action.payload?.user
+      
+    ),
     [readUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.isLoading = false;
+      state.error = action.payload?.error;
     },
 
 
-    [signIn.pending]: (state) => {
-      state.loading = true;
+    [signIn.pending]: (state, action) => {
+      state.isLoading = true;
     },
     [signIn.fulfilled]: (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       const {
-        error,
         user,
         token
       } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
+       {
         state.user = user;
         state.loggedIn = true
         authAPI.setToken(token)
       }
     },
     [signIn.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.isLoading = false;
+      state.error = action.payload?.error
+     
     },
 
 
@@ -247,7 +244,7 @@ export const userSlice = createSlice({
       state.loading = true;
     },
     [updateUser.fulfilled]: (state, action) => {
-      state.loading = false;
+      state.isLoading = false;
       const { error, user } = action.payload;
       if (error) {
         state.error = error;
@@ -256,8 +253,8 @@ export const userSlice = createSlice({
       }
     },
     [updateUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.isLoading = false;
+      state.error = action.payload?.error;
     },
 
 

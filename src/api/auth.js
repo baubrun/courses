@@ -1,5 +1,5 @@
 const deleteToken = () => {
-  sessionStorage.removeItem("jwt")
+  localStorage.removeItem("jwt")
 };
 
 
@@ -7,7 +7,7 @@ const isAuthenticated = () => {
   if (typeof window == "undefined")
   return false
 
-  let token = JSON.parse(sessionStorage.getItem("jwt"))
+  let token = JSON.parse(localStorage.getItem("jwt"))
   if (token) {
     return token
   } else {
@@ -21,7 +21,7 @@ const isAuthorized = (id, resource) => {
 
 const setToken = (jwt) => {
   if (typeof window !== "undefined") {
-    sessionStorage.setItem("jwt", JSON.stringify(jwt));
+    localStorage.setItem("jwt", JSON.stringify(jwt));
   }
 };
 

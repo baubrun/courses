@@ -7,11 +7,12 @@ import {
   domain
 } from "../api/utils"
 import authAPI from "../api/auth";
-
+import { showToaster, showLoader, hideLoader } from "../redux/layoutSlice"
+import { STATUS_ERROR } from "../constants/layout";
 
 export const createEnrollment = createAsyncThunk(
   "/createEnrollment",
-  async (courseId) => {
+  async (courseId, thunkAPI) => {
     const token = authAPI.isAuthenticated();
     try {
       const res = await axios.post(
@@ -23,9 +24,13 @@ export const createEnrollment = createAsyncThunk(
         });
       return res.data;
     } catch (error) {
-      return {
-        error: error.response.data.error
-      };
+      // return {
+      //   error: error.response.data.error
+      // };
+      thunkAPI.dispatch(showToaster({
+        message: error.response.data.error,
+        toasterStatus: STATUS_ERROR,
+      }))
     }
   })
 
@@ -55,7 +60,8 @@ export const completeEnrollment = createAsyncThunk(
 
 export const readEnrollment = createAsyncThunk(
   "/readEnrollment",
-  async (enrollmentId) => {
+  async (enrollmentId, thunkAPI) => {
+    thunkAPI.dispatch(showLoader())
     const token = authAPI.isAuthenticated();
     try {
       const res = await axios.get(
@@ -64,6 +70,7 @@ export const readEnrollment = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+
       return res.data;
     } catch (error) {
       return {
@@ -122,7 +129,6 @@ const enrollmentSlice = createSlice({
   initialState: {
     enrollment: {},
     enrollments: [],
-    error: "",
     loading: false,
     statsError: "",
     stats: {},

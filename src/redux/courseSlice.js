@@ -1,108 +1,103 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {domain} from "../api/utils"
+import {
+  createSlice,
+  createAsyncThunk
+} from "@reduxjs/toolkit";
+import {
+  domain
+} from "../api/utils"
 import axios from "axios";
 import authAPI from "../api/auth";
 
 
 export const createCourse = createAsyncThunk(
   "/createCourse",
-async (data) => {
-  const token = authAPI.isAuthenticated();
-  try {
+  async (data, thunkAPI) => {
+    const token = authAPI.isAuthenticated();
+    try {
       const res = await axios.post(
-          `${domain}/api/courses/by/${data.userId}`,
-          data.course, {
-              headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "multipart/form-data",
-              },
-          });
+        `${domain}/api/courses/by/${data.userId}`,
+        data.course, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return res.data;
-  } catch (error) {
-      return {
-          error: error.response.data.error
-      };
-  }
-})
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    } 
+  })
 
 
 
 export const listCourseByInstructor = createAsyncThunk(
   "/listCourseByInstructor",
-async (userId) => {
-  const token = authAPI.isAuthenticated();
-  try {
-    let res = await axios.get(
-      `${domain}/api/courses/by/${userId}`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-   return res.data
-  } catch (error) {
-    return {
-        error: error.response.data.error
-    };
-  }
-})
+  async (userId, thunkAPI) => {
+    const token = authAPI.isAuthenticated();
+    try {
+      let res = await axios.get(
+        `${domain}/api/courses/by/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    } 
+  })
 
 export const listCoursesPublished = createAsyncThunk(
   "/listCoursesPublished",
-async () => {
-  try {
-    let res = await axios.get(
-      `${domain}/api/courses/published`)
-   return res.data
-  } catch (error) {
-    return {
-        error: error.response.data.error
-    };
-  }
-})
+  async (_, thunkAPI) => {
+    try {
+      let res = await axios.get(
+        `${domain}/api/courses/published`)
+      return res.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    } 
+  })
 
 
 export const readCourse = createAsyncThunk(
-"/readCourse",
-async (courseId) => {
-  const token = authAPI.isAuthenticated();
-  try {
-    let res = await axios.get(
-      `${domain}/api/courses/${courseId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data
-  } catch (error) {
-    return {
-        error: error.response.data.error
-    };
-  }
-})
+  "/readCourse",
+  async (courseId, thunkAPI) => {
+    const token = authAPI.isAuthenticated();
+    try {
+      let res = await axios.get(
+        `${domain}/api/courses/${courseId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    } 
+    
+  })
 
 
 
 export const updateCourse = createAsyncThunk(
   "/updateCourse",
-async (data) => {
-  const token = authAPI.isAuthenticated();
-  try {
+  async (data, thunkAPI) => {
+    const token = authAPI.isAuthenticated();
+    try {
       const res = await axios.patch(
-          `${domain}/api/courses/${data.courseId}`,
-          data.course, {
-              headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "multipart/form-data",
-              },
-          });
+        `${domain}/api/courses/${data.courseId}`,
+        data.course, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return res.data;
-  } catch (error) {
-      return {
-          error: error.response.data.error
-      };
-  }
-})
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    } 
+  })
 
 
 
@@ -112,12 +107,11 @@ const courseSlice = createSlice({
   initialState: {
     course: {},
     courses: [],
-    loading: false,
-    error: "",
+    error: null,
   },
-  reducers: { 
+  reducers: {
     clearError: (state, action) => {
-      state.error = ""
+      state.error = null
     },
     setError: (state, action) => {
       state.error = action.payload.error
@@ -126,98 +120,51 @@ const courseSlice = createSlice({
   extraReducers: {
 
 
-    [createCourse.pending]: (state) => {
-      state.loading = true;
-    },
+  
     [createCourse.fulfilled]: (state, action) => {
-        state.loading = false;
-      const { error, course } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.courses = [...state.courses, course]
-      }
+      state.courses = [...state.courses, action.payload?.course]
     },
     [createCourse.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
 
-    [listCourseByInstructor.pending]: (state) => {
-      state.loading = true;
-    },
     [listCourseByInstructor.fulfilled]: (state, action) => {
-        state.loading = false;
-      const { error, courses } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.courses = courses;
-      }
-    },
+        state.courses = action.payload?.courses;
+      },
     [listCourseByInstructor.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
-    [listCoursesPublished.pending]: (state) => {
-      state.loading = true;
-    },
+
     [listCoursesPublished.fulfilled]: (state, action) => {
-        state.loading = false;
-      const { error, courses } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.courses = courses;
-      }
-    },
+        state.courses = action.payload?.courses;
+      },
     [listCoursesPublished.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
 
-    [readCourse.pending]: (state) => {
-      state.loading = true;
-    },
     [readCourse.fulfilled]: (state, action) => {
-        state.loading = false;
-      const { error, course } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.course = course;
-      }
+        state.course = action.payload?.course;
     },
     [readCourse.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
-
-    [updateCourse.pending]: (state) => {
-      state.loading = true;
-    },
     [updateCourse.fulfilled]: (state, action) => {
-        state.loading = false;
-      const { error, course } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
-        state.course = course
-      }
+        state.course = action.payload?.course
     },
     [updateCourse.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
-
 
   }
 });
 
-export const {clearError, setError} = courseSlice.actions
+export const {
+  clearError,
+  setError
+} = courseSlice.actions
 export const courseState = (state) => state.course;
 export default courseSlice.reducer;

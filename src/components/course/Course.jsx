@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Suspense } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Redirect, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import Avatar from "@material-ui/core/Avatar";
@@ -10,10 +10,6 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CompletedIcon from "@material-ui/icons/VerifiedUser";
 import Divider from "@material-ui/core/Divider";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Edit from "@material-ui/icons/Edit";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -29,20 +25,22 @@ import { userState } from "../../redux/userSlice";
 import {
   courseState,
   readCourse,
-  clearError,
   updateCourse,
+  clearError
 } from "../../redux/courseSlice";
 import {
   enrollmentState,
   readEnrollmentStats,
-  clearEnrollmentError,
 } from "../../redux/enrollmentSlice";
+import { cancelAlert, showToaster } from "../../redux/layoutSlice"
 
 import NewLesson from "./NewLesson";
 import DeleteCourse from "./DeleteCourse";
 import Enroll from "../enroll/Enroll";
 import _ from "lodash";
-
+import { showAlert } from "../../redux/layoutSlice";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const useStyles = makeStyles((theme) => ({
   action: {
     margin: "10px 0px",
@@ -130,23 +128,22 @@ const initCourseState = {
 const Course = ({ match }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const location = useLocation()
+  const layout = useSelector(s => s.layout)
   const { user } = useSelector(userState);
   const { course, error } = useSelector(courseState);
-  const { stats, statsError } = useSelector(enrollmentState);
+  const { stats } = useSelector(enrollmentState);
   const [courseData, setCourseData] = useState({});
   const [statsData, setStatsData] = useState({});
-  const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
-    errorMsg: "",
     redirect: false,
-    statsErrorMsg: "",
   });
 
-
   const courseId = match.params.courseId
+  const pathName = location.pathname.includes("teach/course")
 
   useEffect(() => {
-    dispatch(readCourse(courseId));
+    dispatch(readCourse(courseId))
     dispatch(readEnrollmentStats(courseId))
   }, []);
 
@@ -159,30 +156,13 @@ const Course = ({ match }) => {
     }
   }, [course, stats]);
 
-  useEffect(() => {
-    if (error) {
-      setValues({ ...values, errorMsg: error, redirect: true });
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (statsError) {
-      setValues({ ...values, statsErrorMsg: statsError , redirect: true});
-    }
-  }, [statsError]);
-
 
   const addLesson = (course) => {
     setCourseData(course);
   };
 
-  const closeErrors = () => {
-    setValues({ ...values, errorMsg: "" });
-    dispatch(clearError());
-    dispatch(clearEnrollmentError())
-  };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     let pb = new FormData();
     pb.append("published", true);
 
@@ -190,17 +170,40 @@ const Course = ({ match }) => {
       courseId: courseData._id,
       course: pb,
     };
-    dispatch(updateCourse(data));
-    if (!error) {
-      setOpenDialog(false);
-    } else {
-      setValues({ ...values, errorMsg: error });
-    }
+    console.log('data :>> ', data);
+    dispatch(updateCourse(data))
+    dispatch(cancelAlert())
   };
 
   const removeCourse = () => {
     setValues({ ...values, redirect: true });
   };
+
+
+  const showDialog = () => {
+    dispatch(showAlert({
+      message: `Publish course "${courseData.name}" ?`,
+      title: "Publish Course"
+    }))
+  }
+
+  useEffect(() => {
+    if (layout?.alertContinue) {
+      handlePublish()
+    }
+  }, [layout?.alertContinue]);
+
+  useEffect(() => {
+    if (error) {
+       dispatch(showToaster({
+            message: error,
+            status: "error"
+          }))
+    }
+    return () => {
+      if (error) dispatch(clearError())
+    }
+  }, [error])
 
   if (values.redirect) {
     return <Redirect to={"/teach/courses"} />;
@@ -219,7 +222,7 @@ const Course = ({ match }) => {
                 to={`/user/${courseData.instructor._id}`}
                 className={classes.sub}
               >
-                By {courseData && courseData.instructor.name}
+                By {courseData.instructor?.name}
               </Link>
               <span className={classes.category}>{courseData.category}</span>
             </Box>
@@ -239,11 +242,8 @@ const Course = ({ match }) => {
                         <Button
                           color="secondary"
                           variant="contained"
-                          onClick={
-                            courseData.lessons && courseData.lessons.length > 0
-                              ? () => setOpenDialog(true)
-                              : null
-                          }
+                          disabled={ courseData.lessons?.length < 1}
+                          onClick={() => showDialog()}
                         >
                           {courseData.lessons && courseData.lessons.length === 0
                             ? "Add Lesson to publish course"
@@ -278,17 +278,18 @@ const Course = ({ match }) => {
         />
 
         <Box className={classes.flex}>
-          <CardMedia
-            className={classes.media}
-            image={`${process.env.PUBLIC_URL}/images/${courseData.image}`}
-            title={courseData.name}
-          />
+          <LazyLoadImage
+            height={300}
+            src={`${process.env.PUBLIC_URL}/images/${courseData.image}`}
+            width={300}
+            effect="blur"
+            />
           <Box className={classes.details}>
             <Typography variant="body1" className={classes.subheading}>
               {courseData.description}
             </Typography>
 
-            {courseData.published && (
+            {courseData.published && !pathName && (
               <Box className={classes.enroll}>
                 <Enroll courseId={courseData._id} />
               </Box>
@@ -296,13 +297,6 @@ const Course = ({ match }) => {
           </Box>
         </Box>
 
-        {values.errorMsg && (
-          <Box onClick={() => closeErrors()}>
-            <Typography className={classes.error} component="div">
-              {values.errorMsg}
-            </Typography>
-          </Box>
-        )}
         <Divider />
         <Box>
           <CardHeader
@@ -327,8 +321,8 @@ const Course = ({ match }) => {
             }
           />
           <List>
-            {courseData.lessons &&
-              courseData.lessons.map((lesson, idx) => {
+            {
+              courseData.lessons?.map((lesson, idx) => {
                 return (
                   <span key={idx}>
                     <ListItem>
@@ -345,34 +339,6 @@ const Course = ({ match }) => {
         </Box>
       </Card>
 
-      <Dialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">
-            {`Publish course "${courseData.name}" ?`}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            color="primary"
-            onClick={() => setOpenDialog(false)}
-            variant="contained"
-          >
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => handlePublish()}
-            variant="contained"
-          >
-            CONFIRM
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };

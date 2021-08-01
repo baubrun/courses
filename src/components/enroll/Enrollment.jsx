@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { unwrapResult } from '@reduxjs/toolkit'
 
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -27,11 +28,13 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import {
   enrollmentState,
-  clearError,
   completeEnrollment,
   readEnrollment,
+  clearError,
 } from "../../redux/enrollmentSlice";
 import { userState } from "../../redux/userSlice";
+import { showToaster } from "../../redux/layoutSlice";
+
 import authAPI from "../../api/auth";
 import _ from "lodash";
 
@@ -144,7 +147,6 @@ const Enrollment = ({ match }) => {
   const dispatch = useDispatch();
   const [totalComplete, setTotalComplete] = useState(0);
   const [values, setValues] = useState({
-    errorMsg: "",
     drawer: -1,
   });
   const [enrollmentData, setEnrollmentData] = useState({});
@@ -153,7 +155,7 @@ const Enrollment = ({ match }) => {
 
 
   const totalCompleted = () => {
-    if (enrollment && enrollment.lessonStatus) {
+    if ( enrollment?.lessonStatus) {
         const count = enrollment.lessonStatus.reduce((total, lesson) => {
           return total + (lesson.complete ? 1 : 0)
       }, 0)
@@ -162,14 +164,10 @@ const Enrollment = ({ match }) => {
     }
   };
 
-  const closeErrors = () => {
-    setValues({ ...values, errorMsg: "" });
-    dispatch(clearError());
-  };
 
   useEffect(() => {
     dispatch(readEnrollment(enrollId));
-  }, []);
+  }, [enrollment]);
 
   useEffect(() => {
     if (enrollment) {
@@ -181,23 +179,29 @@ const Enrollment = ({ match }) => {
       totalCompleted();
   }, [enrollment]);
 
-  useEffect(() => {
-    if (error) {
-      setValues({ ...values, errorMsg: error });
-    }
-  }, [error]);
-
   const selectDrawer = (evt, idx) => {
     setValues({ ...values, drawer: idx });
   };
 
+  useEffect(() => {
+    if (error) {
+       dispatch(showToaster({
+            message: error,
+            status: "error"
+          }))
+    }
+    return () => {
+      if (error) dispatch(clearError())
+    }
+  }, [error]);
 
-  const markComplete = () => {
+
+
+  const markComplete = async () => {
     if (!enrollmentData.lessonStatus[values.drawer].complete) {
       const lessonStatus = _.cloneDeep(enrollmentData.lessonStatus);
 
       lessonStatus[values.drawer].complete = true;
-
 
       let data = {
         enrollment: {
@@ -216,7 +220,8 @@ const Enrollment = ({ match }) => {
         data.enrollment.courseCompleted = Date.now();
       }
 
-      dispatch(completeEnrollment(data));
+      dispatch(completeEnrollment(data))
+  
     }
   };
 
@@ -293,7 +298,7 @@ const Enrollment = ({ match }) => {
                   to={`/user/${enrollmentData.course.instructor._id}`}
                   className={classes.sub}
                 >
-                  {`By ${enrollmentData.course.instructor.name}`}
+                  {`By ${enrollmentData.course.instructor?.name}`}
                 </Link>
                 <span className={classes.category}>
                   {enrollmentData.course.category}
@@ -393,7 +398,7 @@ const Enrollment = ({ match }) => {
                 {enrollmentData.course.lessons[values.drawer].content}
               </Typography>
             </CardContent>
-            <CardActions>
+            {/* <CardActions>
               <a
                 style={{ textDecoration: "none" }}
                 href={enrollmentData.course.lessons[values.drawer].resource_url}
@@ -402,17 +407,9 @@ const Enrollment = ({ match }) => {
                   Resource Link
                 </Button>
               </a>
-            </CardActions>
+            </CardActions> */}
           </Card>
         </>
-      )}
-
-      {values.errorMsg && (
-        <Box onClick={() => closeErrors()}>
-          <Typography className={classes.error} component="div">
-            {values.errorMsg}
-          </Typography>
-        </Box>
       )}
     </Box>
   );

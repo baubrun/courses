@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { unwrapResult } from '@reduxjs/toolkit'
 
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -11,8 +10,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { signIn, userState } from "../../redux/userSlice";
-import { hideLoader,  showLoader,  showToaster } from "../../redux/layoutSlice";
+import { signIn, userState, clearError } from "../../redux/userSlice";
+import { showToaster } from "../../redux/layoutSlice";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -55,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 const SignIn = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { loggedIn } = useSelector(userState);
+  const { loggedIn, error } = useSelector(userState);
   const [values, setValues] = useState({
     created: "",
     email: "",
@@ -89,21 +88,22 @@ const SignIn = (props) => {
       email: values.email,
       password: values.password,
     };
-    
-    try {
-      dispatch(showLoader())
-      const resultAction = await dispatch(signIn(userData))
-      unwrapResult(resultAction)
-    } catch (error) {
-      dispatch(showToaster({
-        message: error.message,
-        status: "error"
-      }))
-    } finally {
-      dispatch(hideLoader())
-    }
-    
+
+    dispatch(signIn(userData))
   };
+
+  useEffect(() => {
+    if (error) {
+       dispatch(showToaster({
+            message: error,
+            status: "error"
+          }))
+    }
+    return () => {
+      if (error) dispatch(clearError())
+    }
+  }, [error]);
+
 
   if (values.redirect) {
     return <Redirect to="/" />;

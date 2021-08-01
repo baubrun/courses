@@ -4,17 +4,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Add from "@material-ui/icons/AddBox";
 import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 
 import courseAPI from "../../api/course";
 import { clearError, courseState } from "../../redux/courseSlice";
-
+import { hideLoader, showLoader, showToaster } from "../../redux/layoutSlice";
 const useStyles = makeStyles((theme) => ({
   error: {
     backgroundColor: "#ff3333",
@@ -34,7 +32,6 @@ const NewLesson = (props) => {
   const { error } = useSelector(courseState);
   const [openDialog, setOpenDialog] = useState(false);
   const [values, setValues] = useState({
-    errorMsg: "",
     content: "",
     resource_url: "",
     title: "",
@@ -42,14 +39,16 @@ const NewLesson = (props) => {
 
   useEffect(() => {
     if (error) {
-      setValues({ ...values, errorMsg: error });
+       dispatch(showToaster({
+            message: error,
+            status: "error"
+          }))
+    }
+    return () => {
+      if (error) dispatch(clearError())
     }
   }, [error]);
 
-  const closeErrors = () => {
-    setValues({ ...values, errorMsg: "" });
-    dispatch(clearError());
-  };
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -67,12 +66,26 @@ const NewLesson = (props) => {
       resource_url: values.resource_url,
     };
 
-    const data = await courseAPI.createNewLesson(lesson, props.courseId);
-    if (data) {
-      if (data.error){
-        setValues({ ...values, errorMsg: data.error });
-      }
-     else {
+  //   const data = await courseAPI.createNewLesson(lesson, props.courseId);
+  //   if (data) {
+  //     if (data.error){
+  //       setValues({ ...values, errorMsg: data.error });
+  //     }
+  //    else {
+  //     props.addLesson(data.course);
+  //     setValues({
+  //       ...values,
+  //       title: "",
+  //       content: "",
+  //       resource_url: "",
+  //     });
+  //     setOpenDialog(false)
+  //    }
+  // }
+
+    try {
+      dispatch(showLoader())
+      const data = await courseAPI.createNewLesson(lesson, props.courseId);
       props.addLesson(data.course);
       setValues({
         ...values,
@@ -81,8 +94,15 @@ const NewLesson = (props) => {
         resource_url: "",
       });
       setOpenDialog(false)
-     }
-  }
+    } catch (err) {
+      const errMsg = err.response ? err.response.data : err.message;
+      dispatch(showToaster({
+        message: errMsg,
+        status: "error"
+      }))
+    } finally {
+      dispatch(hideLoader())
+    }
 }
 
   return (
@@ -134,13 +154,7 @@ const NewLesson = (props) => {
               value={values.resource_url}
             />
           </DialogContent>
-          {values.errorMsg && (
-            <Box onClick={() => closeErrors()}>
-              <Typography className={classes.error} component="p">
-                {values.errorMsg}
-              </Typography>
-            </Box>
-          )}
+          
           <DialogActions>
             <Button
               onClick={() => setOpenDialog(false)}

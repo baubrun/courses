@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
 import theme from "./css/theme";
@@ -16,8 +16,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import EditCourse from "./components/course/EditCourse"
 import Enrollment from "./components/enroll/Enrollment"
 import Layout from "./components/Layout/Layout";
-import { useSelector, useDispatch } from "react-redux";
-import { showLoader } from "./redux/layoutSlice";
 
 const routes = () => {
   return (
@@ -29,11 +27,12 @@ const routes = () => {
       <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
       <Route path="/user/:userId" component={Profile} />
       <Route path="/course/:courseId" component={Course} />
-      <PrivateRoute path="/teach/courses" component={MyCourses} />
 
-      <PrivateRoute path="/teach/course/new" component={NewCourse} />
-      <PrivateRoute path="/teach/course/edit/:courseId" component={EditCourse} />
       <PrivateRoute path="/teach/course/:courseId" component={Course} />
+      <PrivateRoute path="/teach/course/edit/:courseId" component={EditCourse} />
+
+      <PrivateRoute path="/teach/courses" component={MyCourses} />
+      <PrivateRoute path="/teach/course/new" component={NewCourse} />
       <PrivateRoute path="/learn/:enrollmentId" component={Enrollment} />
       <Redirect to="/" component={Home} />
     </Switch>
@@ -42,11 +41,6 @@ const routes = () => {
 
 
 const App = () => {
-  const dispatch = useDispatch()
-
-  // useEffect(() => {
-  //   dispatch(showLoader())
-  // }, [])
 
   return (
     <BrowserRouter>

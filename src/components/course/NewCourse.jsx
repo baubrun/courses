@@ -10,7 +10,6 @@ import Button from "@material-ui/core/Button";
 import FileUpload from "@material-ui/icons/AddPhotoAlternate";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 
@@ -18,7 +17,9 @@ import { userState } from "../../redux/userSlice";
 import {
   courseState,
   createCourse,
+  clearError
 } from "../../redux/courseSlice";
+import { showToaster } from "../../redux/layoutSlice";
 
 // import courseAPI from "../../api/course";
 
@@ -81,7 +82,6 @@ const NewCourse = () => {
   const [values, setValues] = useState({
     category: "",
     description: "",
-    errorMsg: "",
     image: "",
     name: "",
     redirect: false,
@@ -90,21 +90,24 @@ const NewCourse = () => {
 
   useEffect(() => {
     if (error) {
-      setValues({ ...values, errorMsg: error });
+       dispatch(showToaster({
+            message: error,
+            status: "error"
+          }))
+    }
+    return () => {
+      if (error) dispatch(clearError())
     }
   }, [error]);
 
 
   useEffect(() => {
-    if(values.createdNew && !values.errorMsg){
+    if(values.createdNew && !error){
       setValues({...values, redirect: true})
     }
   })
 
 
-  const closeErrors = () => {
-    setValues({ ...values, errorMsg: "" });
-  };
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -202,13 +205,6 @@ const NewCourse = () => {
           />
           <br />
 
-          {values.errorMsg && (
-            <Box onClick={() => closeErrors()}>
-              <Typography className={classes.error} component="p">
-                {values.errorMsg}
-              </Typography>
-            </Box>
-          )}
         </CardContent>
         <CardActions>
           <Button

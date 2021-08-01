@@ -66,7 +66,6 @@ const MyCourses = () => {
     dispatch(listCourseByInstructor(user._id));
   }, []);
 
-
   useEffect(() => {
     if (courses){
       setValues({...values, myCourses: courses})
@@ -79,15 +78,6 @@ const MyCourses = () => {
     return <Redirect to="/signin" />;
   }
 
-  if (values.errorMsg) {
-    return (
-      <>
-        <Typography color="error" variant="h6" component="p">
-          {values.errorMsg}
-        </Typography>
-      </>
-    );
-  }
 
   return (
     <>
@@ -103,8 +93,8 @@ const MyCourses = () => {
           </span>
         </Typography>
         <List dense>
-          {values.myCourses &&
-            values.myCourses.map((course, idx) => {
+          {
+            values.myCourses?.map((course, idx) => {
               return (
                 <Link
                   className={classes.link}

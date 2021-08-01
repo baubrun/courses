@@ -37,10 +37,10 @@ const AlertDialog = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleCancel()} color="secondary">
-            ANNULER
+            CANCEL
           </Button>
           <Button onClick={() => handleContinue()} color="primary" autoFocus>
-            CONTINUER
+            CONTINUE
           </Button>
         </DialogActions>
       </Dialog>

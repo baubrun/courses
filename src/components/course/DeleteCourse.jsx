@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -11,7 +11,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import courseAPI from "../../api/course";
-import { courseState, setError } from "../../redux/courseSlice";
+import { courseState, setError, clearError } from "../../redux/courseSlice";
+import { showToaster } from "../../redux/layoutSlice";
 
 const DeleteCourse = (props) => {
   const dispatch = useDispatch();
@@ -31,6 +32,18 @@ const DeleteCourse = (props) => {
   const handleDelete = () => {
     delCourse();
   };
+
+  useEffect(() => {
+    if (error) {
+       dispatch(showToaster({
+            message: error,
+            status: "error"
+          }))
+    }
+    return () => {
+      if (error) dispatch(clearError())
+    }
+  }, [error]);
 
   return (
     <span>

@@ -30,7 +30,6 @@ export const createCourse = async (data) => {
 
 const createNewLesson = async (lesson, courseId) => {
     const token = authAPI.isAuthenticated();
-    try {
         const res = await axios.put(
             `/api/courses/${courseId}/lesson/new`,
             lesson, {
@@ -39,11 +38,6 @@ const createNewLesson = async (lesson, courseId) => {
                 },
             });
         return res.data;
-    } catch (error) {
-        return {
-            error: error.response.data.error
-        };
-    }
 };
 
 

@@ -28,10 +28,12 @@ import {
   updateCourse,
   readCourse,
   courseState,
+  clearError,
 } from "../../redux/courseSlice";
 
 import authAPI from "../../api/auth";
 import _ from "lodash"
+import { showToaster } from "../../redux/layoutSlice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -111,7 +113,6 @@ const EditCourse = ({ match }) => {
   const [values, setValues] = useState({
     category: "",
     description: "",
-    errorMsg: "",
     image: "",
     instructor: {},
     lessons: [],
@@ -197,6 +198,19 @@ const EditCourse = ({ match }) => {
       setValues({ ...values, redirect: true });
     }
   };
+
+ 
+  useEffect(() => {
+    if (error) {
+       dispatch(showToaster({
+            message: error,
+            status: "error"
+          }))
+    }
+    return () => {
+      dispatch(clearError())
+    }
+  }, [error]);
 
   if (values.redirect) {
     return <Redirect to={`/teach/course/${values._id}`} />;

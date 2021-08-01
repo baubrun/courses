@@ -7,12 +7,12 @@ import {
   domain
 } from "../api/utils"
 import authAPI from "../api/auth";
-import { showToaster, showLoader, hideLoader } from "../redux/layoutSlice"
-import { STATUS_ERROR } from "../constants/layout";
+import { showLoader, hideLoader } from "./layoutSlice"
 
 export const createEnrollment = createAsyncThunk(
   "/createEnrollment",
   async (courseId, thunkAPI) => {
+    thunkAPI.dispatch(showLoader())
     const token = authAPI.isAuthenticated();
     try {
       const res = await axios.post(
@@ -24,20 +24,18 @@ export const createEnrollment = createAsyncThunk(
         });
       return res.data;
     } catch (error) {
-      // return {
-      //   error: error.response.data.error
-      // };
-      thunkAPI.dispatch(showToaster({
-        message: error.response.data.error,
-        toasterStatus: STATUS_ERROR,
-      }))
+      thunkAPI.dispatch(hideLoader())
+      return thunkAPI.rejectWithValue(error.response.data);
+    } finally {
+      thunkAPI.dispatch(hideLoader())
     }
   })
 
 
 export const completeEnrollment = createAsyncThunk(
   "/completeEnrollment",
-  async (data) => {
+  async (data, thunkAPI) => {
+    thunkAPI.dispatch(showLoader())
     const token = authAPI.isAuthenticated();
     try {
       const res = await axios.put(
@@ -49,19 +47,18 @@ export const completeEnrollment = createAsyncThunk(
         });
       return res.data;
     } catch (error) {
-      return {
-        error: error.response.data.error
-      };
+      thunkAPI.dispatch(hideLoader())
+      return thunkAPI.rejectWithValue(error.response.data);
+    } finally {
+      thunkAPI.dispatch(hideLoader())
     }
   })
-
 
 
 
 export const readEnrollment = createAsyncThunk(
   "/readEnrollment",
   async (enrollmentId, thunkAPI) => {
-    thunkAPI.dispatch(showLoader())
     const token = authAPI.isAuthenticated();
     try {
       const res = await axios.get(
@@ -73,17 +70,16 @@ export const readEnrollment = createAsyncThunk(
 
       return res.data;
     } catch (error) {
-      return {
-        error: error.response.data.error
-      };
-    }
-  });
+      thunkAPI.dispatch(hideLoader())
+      return thunkAPI.rejectWithValue(error.response.data);
+    } 
+});
 
 
 
 export const listEnrollments = createAsyncThunk(
   "/listEnrollments",
-  async () => {
+  async (_, thunkAPI) => {
     const token = authAPI.isAuthenticated();
     try {
       const res = await axios.get(
@@ -94,16 +90,15 @@ export const listEnrollments = createAsyncThunk(
       });
       return res.data;
     } catch (error) {
-      return {
-        error: error.response.data.error
-      };
+      thunkAPI.dispatch(hideLoader())
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   });
 
 
 export const readEnrollmentStats = createAsyncThunk(
   "/readEnrollmentStats",
-  async (courseId) => {
+  async (courseId, thunkAPI) => {
     const token = authAPI.isAuthenticated();
     try {
       const res = await axios.get(
@@ -114,13 +109,10 @@ export const readEnrollmentStats = createAsyncThunk(
       });
       return res.data;
     } catch (error) {
-      return {
-        error: error.response.data.error
-      };
-    }
+      thunkAPI.dispatch(hideLoader())
+      return thunkAPI.rejectWithValue(error.response.data);
+    } 
   });
-
-
 
 
 
@@ -130,123 +122,72 @@ const enrollmentSlice = createSlice({
     enrollment: {},
     enrollments: [],
     loading: false,
-    statsError: "",
     stats: {},
+    error: null,
   },
   reducers: {
     clearEnrollment: (state) => {
       state.enrollments = []
     },
-    clearEnrollmentError: (state) => {
-      state.error = ""
+    clearError: (state) => {
+      state.error = null
     },
   },
   extraReducers: {
 
-
-    [createEnrollment.pending]: (state) => {
-      state.loading = true;
-    },
     [createEnrollment.fulfilled]: (state, action) => {
-
-      state.loading = false;
       const {
-        error,
         enrollment
       } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
         state.enrollments = [...state.enrollments, enrollment]
-      }
+      
     },
     [createEnrollment.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
-    [completeEnrollment.pending]: (state) => {
-      state.loading = true;
-    },
+  
     [completeEnrollment.fulfilled]: (state, action) => {
-      state.loading = false;
       const {
-        error,
         enrollment
       } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
         state.enrollment = enrollment
-      }
     },
     [completeEnrollment.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
 
-    [readEnrollment.pending]: (state) => {
-      state.loading = true;
-    },
     [readEnrollment.fulfilled]: (state, action) => {
-
-      state.loading = false;
       const {
-        error,
         enrollment
       } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
         state.enrollment = enrollment
-      }
     },
     [readEnrollment.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
 
-    [readEnrollmentStats.pending]: (state) => {
-      state.loading = true;
-    },
     [readEnrollmentStats.fulfilled]: (state, action) => {
-      state.loading = false;
       const {
-        error,
         stats
       } = action.payload;
-      if (error) {
-        state.statsError = error;
-      } else {
         state.stats = stats
-      }
     },
     [readEnrollmentStats.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
 
-    [listEnrollments.pending]: (state) => {
-      state.loading = true;
-    },
     [listEnrollments.fulfilled]: (state, action) => {
-      state.loading = false;
       const {
-        error,
         enrollments
       } = action.payload;
-      if (error) {
-        state.error = error;
-      } else {
         state.enrollments = enrollments
-      }
     },
     [listEnrollments.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     },
 
 
@@ -255,7 +196,6 @@ const enrollmentSlice = createSlice({
 
 export const {
   clearError,
-  clearEnrollmentError,
   clearEnrollment
 } = enrollmentSlice.actions
 export const enrollmentState = (state) => state.enrollment;

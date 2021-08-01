@@ -16,43 +16,39 @@ const layoutSlice = createSlice({
     loadingMessage: null,
     alertContinue: false,
     alertData: null,
-    alertType: null,
     isAlertOpen: false,
     alertMessage: null,
     alertTitle: null,
   },
 
   reducers: {
-    cancelAlert: (state) => (
-      state.alertData = null,
-      state.alertMessage = null,
-      state.alertTitle = null,
-      state.alertType = null,
-      state.alertContinue = false,
-      state.isAlertOpen = false
-    ),
-    continueAlert: (state, action) => (
-      state.alertData = action.payload
-    ),
-    showAlert: (state, action) => (
-      state.alertData = action.payload.alertData,
-      state.alertMessage = action.payload.message,
-      state.alertTitle = action.payload.title,
-      state.alertType = action.payload.alertType,
-      state.isAlertOpen = true
-    ),
+    cancelAlert: (state) => {
+      state.alertData = null;
+      state.alertMessage = null;
+      state.alertTitle = null;
+      state.alertContinue = false;
+      state.isAlertOpen = false;
+  },
+    continueAlert: (state) => {
+      state.alertContinue = true;
+      state.isAlertOpen = false;
+    },
+    showAlert: (state, action) => {
+      state.alertData = action.payload?.alertData;
+      state.alertMessage = action.payload?.message;
+      state.alertTitle = action.payload?.title;
+      state.isAlertOpen = true;
+  },
     hideLoader: (state) => {
       state.isLoading = false;
       state.loadingMessage = null;
   },
     showLoader: (state, action) => {
-      state.isLoading = true
+      state.isLoading = true;
       state.loadingMessage = action.payload?.message;
   },
     hideToaster: (state) => {
       state.isToasterShow = false;
-      state.toasterMessage = null;
-      state.toasterStatus = STATUS_INFO;
   },
     showToaster: (state, action) => {
       state.isToasterShow = true;

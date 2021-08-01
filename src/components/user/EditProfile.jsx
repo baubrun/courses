@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { unwrapResult } from '@reduxjs/toolkit'
 
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
@@ -13,7 +14,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { userState, updateUser, clearError } from "../../redux/userSlice";
+import { userState, updateUser } from "../../redux/userSlice";
+import { hideLoader,  showLoader,  showToaster } from "../../redux/layoutSlice";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -51,7 +53,6 @@ const EditProfile = () => {
   const { user, error } = useSelector(userState);
   const [values, setValues] = useState({
     instructor: false,
-    errorMsg: "",
     email: "",
     name: "",
     password: "",
@@ -75,10 +76,6 @@ const EditProfile = () => {
     }
   }, [user]);
 
-  const closeErrors = () => {
-    setValues({ ...values, errorMsg: "" });
-    dispatch(clearError())
-  };
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -97,7 +94,7 @@ const EditProfile = () => {
   };
 
  
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
 
     const newData = {
@@ -109,10 +106,20 @@ const EditProfile = () => {
     };
 
 
-    dispatch(updateUser(newData))
-    if (!values.errorMsg){
-      setValues({...values, redirect: true})
+    try {
+      dispatch(showLoader())
+      const resultAction = await dispatch(updateUser(newData))
+      unwrapResult(resultAction)
+      dispatch(showToaster({
+        message: "Updated profile !",
+        status: "success"
+      }))
+    } catch (error) {
+      if (error.message) setValues({...values, redirect: true})
+    } finally {
+      dispatch(hideLoader())
     }
+
   }
 
 
@@ -128,16 +135,6 @@ const EditProfile = () => {
         <Typography className={classes.title} variant="h6">
           Edit Profile
         </Typography>
-
-        {values.errorMsg && (
-               <Box 
-               onClick={() => closeErrors()}
-               >
-                 <Typography className={classes.error} component="p">
-                   {values.errorMsg}
-                 </Typography>
-               </Box>
-          )}
 
         <TextField
           className={classes.textField}

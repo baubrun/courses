@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Redirect, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { unwrapResult } from '@reduxjs/toolkit'
 
-import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const SignIn = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { loggedIn, error, isLoading } = useSelector(userState);
+  const { loggedIn } = useSelector(userState);
   const [values, setValues] = useState({
     created: "",
     email: "",
@@ -73,19 +73,6 @@ const SignIn = (props) => {
     }
   }, [loggedIn]);
 
-  // useEffect(() => {
-  //   if (!isLoading) dispatch(hideLoader())
-  // }, [isLoading])
-
-
-  useEffect(() => {
-    if (error) {
-      dispatch(showToaster({
-        status: "error",
-        message: error
-      }))
-    }
-  }, [error]);
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -95,16 +82,27 @@ const SignIn = (props) => {
     });
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
 
     const userData = {
       email: values.email,
       password: values.password,
     };
-    dispatch(showLoader())
-    dispatch(signIn(userData))
-    dispatch(hideLoader())
+    
+    try {
+      dispatch(showLoader())
+      const resultAction = await dispatch(signIn(userData))
+      unwrapResult(resultAction)
+    } catch (error) {
+      dispatch(showToaster({
+        message: error.message,
+        status: "error"
+      }))
+    } finally {
+      dispatch(hideLoader())
+    }
+    
   };
 
   if (values.redirect) {

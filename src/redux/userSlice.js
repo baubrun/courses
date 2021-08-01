@@ -90,14 +90,10 @@ export const readUser = createAsyncThunk(
 
 export const signIn = createAsyncThunk(
   "/signIn",
-  async (data, thunkAPI) => {
-    try {
+  async (data) => {
       const res = await axios.post(
         `${domain}/auth/signIn`, data)
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data) 
-    } 
+      return res.data
   });
 
 
